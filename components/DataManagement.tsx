@@ -8,7 +8,6 @@ interface DataManagementProps {
   unlockedAchievements: UnlockedAchievements;
   setLogs: React.Dispatch<React.SetStateAction<LogEntry[]>>;
   setGoals: React.Dispatch<React.SetStateAction<Goals>>;
-  setLongestStreak: React.Dispatch<React.SetStateAction<number>>;
   setUnlockedAchievements: React.Dispatch<React.SetStateAction<UnlockedAchievements>>;
 }
 
@@ -19,7 +18,6 @@ const DataManagement: React.FC<DataManagementProps> = ({
   unlockedAchievements,
   setLogs,
   setGoals,
-  setLongestStreak,
   setUnlockedAchievements,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -28,7 +26,6 @@ const DataManagement: React.FC<DataManagementProps> = ({
     const data = {
       logs,
       goals,
-      longestStreak,
       unlockedAchievements,
       exportDate: new Date().toISOString(),
     };
@@ -67,10 +64,9 @@ const DataManagement: React.FC<DataManagementProps> = ({
         const importedData = JSON.parse(text);
 
         // Basic validation
-        if (Array.isArray(importedData.logs) && importedData.goals && typeof importedData.longestStreak === 'number' && typeof importedData.unlockedAchievements === 'object') {
+        if (Array.isArray(importedData.logs) && importedData.goals && typeof importedData.unlockedAchievements === 'object') {
           setLogs(importedData.logs);
           setGoals(importedData.goals);
-          setLongestStreak(importedData.longestStreak);
           setUnlockedAchievements(importedData.unlockedAchievements || {});
           alert("Data imported successfully!");
         } else {

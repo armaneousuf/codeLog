@@ -17,7 +17,6 @@ import { ALL_ACHIEVEMENTS } from './lib/achievements';
 const App: React.FC = () => {
   const [logs, setLogs] = useLocalStorage<LogEntry[]>('codingLogs', []);
   const [goals, setGoals] = useLocalStorage<Goals>('codingGoals', { weekly: 20, monthly: 80, yearly: 1000 });
-  const [longestStreak, setLongestStreak] = useLocalStorage<number>('codingLongestStreak', 0);
   const [unlockedAchievements, setUnlockedAchievements] = useLocalStorage<UnlockedAchievements>('unlockedAchievements', {});
   
   const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false);
@@ -119,11 +118,39 @@ const App: React.FC = () => {
     return streak;
   }, [logs]);
 
-  useEffect(() => {
-    if (currentStreak > longestStreak) {
-      setLongestStreak(currentStreak);
+  const longestStreak = useMemo(() => {
+    if (logs.length === 0) return 0;
+
+    // Get unique dates and sort them
+    const sortedDates = [...new Set(logs.map(l => l.date))].sort();
+    
+    if (sortedDates.length < 2) return sortedDates.length;
+
+    let maxStreak = 1;
+    let currentStreakLength = 1;
+
+    for (let i = 1; i < sortedDates.length; i++) {
+        const currentDate = new Date(sortedDates[i] + 'T00:00:00');
+        const prevDate = new Date(sortedDates[i-1] + 'T00:00:00');
+        
+        const diffTime = currentDate.getTime() - prevDate.getTime();
+        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 1) {
+            currentStreakLength++;
+        } else {
+            // Reset streak if dates are not consecutive
+            currentStreakLength = 1;
+        }
+
+        if (currentStreakLength > maxStreak) {
+            maxStreak = currentStreakLength;
+        }
     }
-  }, [currentStreak, longestStreak, setLongestStreak]);
+
+    return maxStreak;
+}, [logs]);
+
 
   useEffect(() => {
     const newUnlockedState: UnlockedAchievements = {};
@@ -196,7 +223,6 @@ const App: React.FC = () => {
               unlockedAchievements={unlockedAchievements}
               setLogs={setLogs}
               setGoals={setGoals}
-              setLongestStreak={setLongestStreak}
               setUnlockedAchievements={setUnlockedAchievements}
             />
           </div>
