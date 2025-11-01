@@ -10,30 +10,44 @@ const AchievementToast: React.FC<AchievementToastProps> = ({ newlyUnlocked, onCo
   const [visible, setVisible] = useState(false);
   const [currentAchievement, setCurrentAchievement] = useState<(typeof ALL_ACHIEVEMENTS[0]) | null>(null);
 
+  // Effect to pick the next achievement from the queue
   useEffect(() => {
-    if (newlyUnlocked.length > 0 && !currentAchievement) {
-      const nextId = newlyUnlocked[0];
-      const achievement = ALL_ACHIEVEMENTS.find(a => a.id === nextId);
-      if (achievement) {
-        setCurrentAchievement(achievement);
-        setVisible(true);
-        
-        const timer = setTimeout(() => {
-          setVisible(false);
-        }, 4000);
-        
-        const exitTimer = setTimeout(() => {
-          setCurrentAchievement(null);
-          onComplete(nextId);
-        }, 4500);
-
-        return () => {
-          clearTimeout(timer);
-          clearTimeout(exitTimer);
-        };
-      }
+    // If there's nothing to show or if we are already showing something, do nothing.
+    if (newlyUnlocked.length === 0 || currentAchievement) {
+      return;
     }
-  }, [newlyUnlocked, onComplete, currentAchievement]);
+
+    // Pick the first achievement from the queue
+    const nextId = newlyUnlocked[0];
+    const achievement = ALL_ACHIEVEMENTS.find(a => a.id === nextId);
+
+    if (achievement) {
+      setCurrentAchievement(achievement);
+    }
+  }, [newlyUnlocked, currentAchievement]);
+
+  // Effect to manage the display lifecycle of the current achievement
+  useEffect(() => {
+    if (currentAchievement) {
+      setVisible(true);
+
+      const visibilityTimer = setTimeout(() => {
+        setVisible(false);
+      }, 4000);
+
+      const completionTimer = setTimeout(() => {
+        // Use the ID from the state to ensure we're completing the right one
+        onComplete(currentAchievement.id); 
+        setCurrentAchievement(null); // Clear to allow the next one to be picked up
+      }, 4500); // 500ms for fade-out animation
+
+      return () => {
+        clearTimeout(visibilityTimer);
+        clearTimeout(completionTimer);
+      };
+    }
+  }, [currentAchievement, onComplete]);
+
 
   if (!currentAchievement) {
     return null;
