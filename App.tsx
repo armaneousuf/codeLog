@@ -126,23 +126,40 @@ const App: React.FC = () => {
   }, [currentStreak, longestStreak, setLongestStreak]);
 
   useEffect(() => {
-    const justUnlocked: string[] = [];
-    const updatedAchievements = { ...unlockedAchievements };
-    let changed = false;
+    const newUnlockedState: UnlockedAchievements = {};
+    const justUnlockedIds: string[] = [];
 
     ALL_ACHIEVEMENTS.forEach(achievement => {
-        if (!unlockedAchievements[achievement.id] && achievement.isUnlocked(logs, currentStreak)) {
-            updatedAchievements[achievement.id] = { date: new Date().toISOString() };
-            justUnlocked.push(achievement.id);
-            changed = true;
+      // Re-evaluate every achievement based on the current logs and streak
+      if (achievement.isUnlocked(logs, currentStreak)) {
+        // If the condition is met, ensure it's in our new state object
+        const existingUnlock = unlockedAchievements[achievement.id];
+        if (existingUnlock) {
+          // If it was already unlocked, keep its original data (like the date)
+          newUnlockedState[achievement.id] = existingUnlock;
+        } else {
+          // If it wasn't unlocked before, it's newly unlocked now
+          newUnlockedState[achievement.id] = { date: new Date().toISOString() };
+          justUnlockedIds.push(achievement.id);
         }
+      }
+      // If the condition is NOT met, we simply don't add it to newUnlockedState,
+      // effectively "revoking" it if it was previously unlocked.
     });
 
-    if (changed) {
-        setUnlockedAchievements(updatedAchievements);
-        setNewlyUnlocked(prev => [...prev, ...justUnlocked]);
+    // To prevent unnecessary re-renders, compare the old and new state.
+    const currentUnlockedIds = Object.keys(unlockedAchievements).sort();
+    const newUnlockedIds = Object.keys(newUnlockedState).sort();
+
+    if (JSON.stringify(currentUnlockedIds) !== JSON.stringify(newUnlockedIds)) {
+      setUnlockedAchievements(newUnlockedState);
     }
-  }, [logs, currentStreak, unlockedAchievements, setUnlockedAchievements]);
+
+    // If we found any achievements that were just unlocked, trigger the toast notification.
+    if (justUnlockedIds.length > 0) {
+      setNewlyUnlocked(prev => [...prev, ...justUnlockedIds]);
+    }
+  }, [logs, currentStreak, unlockedAchievements, setUnlockedAchievements, setNewlyUnlocked]);
 
 
   return (
