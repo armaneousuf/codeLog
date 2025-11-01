@@ -1,0 +1,5 @@
+{
+  "name": "CodeLog: Daily Hour Tracker",
+  "description": "A simple web page to manually log your daily coding hours. It automatically calculates and displays total hours for the week, month, and year, allows you to set goals with progress bars, and visualizes your consistency with a GitHub-style heatmap. All data is saved in your browser.",
+  "requestFramePermissions": []
+}
