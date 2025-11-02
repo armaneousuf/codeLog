@@ -25,7 +25,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
-  const firstDayOfWeek = (startDate.getDay() + 6) % 7; 
+  const firstDayOfWeek = startDate.getDay(); // Sunday is 0, so this aligns the grid correctly.
   const paddingDays = Array(firstDayOfWeek).fill(null);
 
   const getColor = (hours: number | undefined) => {

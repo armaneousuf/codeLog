@@ -56,7 +56,7 @@ const App: React.FC = () => {
     const now = new Date();
     
     const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay() + (now.getDay() === 0 ? -6 : 1)); // Monday as start of week
+    startOfWeek.setDate(now.getDate() - now.getDay()); // Sunday as start of week
     startOfWeek.setHours(0, 0, 0, 0);
 
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -86,30 +86,21 @@ const App: React.FC = () => {
 
   const currentStreak = useMemo(() => {
     if (logs.length === 0) return 0;
-
     const logDates = new Set(logs.map(log => log.date));
     let streak = 0;
     const today = new Date();
-    
-    if (logDates.has(today.toISOString().split('T')[0])) {
-        streak = 1;
-    } else {
-        today.setDate(today.getDate() - 1);
-        if(!logDates.has(today.toISOString().split('T')[0])) {
-            return 0;
+    let currentDate = new Date(today);
+
+    // If no log today, start check from yesterday. If no log yesterday either, streak is 0.
+    if (!logDates.has(currentDate.toISOString().split('T')[0])) {
+        currentDate.setDate(currentDate.getDate() - 1);
+        if (!logDates.has(currentDate.toISOString().split('T')[0])) {
+            return 0; 
         }
     }
-    
-    let currentDate = new Date(today);
-    currentDate.setDate(currentDate.getDate() -1);
 
-    while(true) {
-        const dateString = currentDate.toISOString().split('T')[0];
-        if (logDates.has(dateString)) {
-            streak++;
-        } else {
-            break;
-        }
+    while (logDates.has(currentDate.toISOString().split('T')[0])) {
+        streak++;
         currentDate.setDate(currentDate.getDate() - 1);
     }
     return streak;

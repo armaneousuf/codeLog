@@ -106,10 +106,10 @@ export const ALL_ACHIEVEMENTS: Achievement[] = [
             const d = new Date(log.date + 'T00:00:00');
             const day = d.getDay();
             if (day === 0 || day === 6) {
-                const monday = new Date(d);
-                monday.setDate(d.getDate() - day + (day === 0 ? -6 : 1));
-                monday.setHours(0, 0, 0, 0);
-                weekendWeeks.add(monday.getTime());
+                const sunday = new Date(d);
+                sunday.setDate(d.getDate() - day);
+                sunday.setHours(0, 0, 0, 0);
+                weekendWeeks.add(sunday.getTime());
             }
         }
         if (weekendWeeks.size < 4) return false;
@@ -191,8 +191,8 @@ export const ALL_ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: 'full_week',
-    name: 'Full Week',
-    description: 'Log hours every day of a single calendar week (Mon-Sun).',
+    name: 'Complete Week',
+    description: 'Log hours every day of a single calendar week (Sun-Sat).',
     icon: '📅',
     isUnlocked: (logs) => {
         const weeks = new Map<number, Set<number>>();
@@ -200,14 +200,14 @@ export const ALL_ACHIEVEMENTS: Achievement[] = [
             const d = new Date(log.date + 'T00:00:00');
             const day = d.getDay();
             
-            const monday = new Date(d);
-            monday.setDate(d.getDate() - day + (day === 0 ? -6 : 1));
-            monday.setHours(0, 0, 0, 0);
+            const sunday = new Date(d);
+            sunday.setDate(d.getDate() - day);
+            sunday.setHours(0, 0, 0, 0);
 
-            if (!weeks.has(monday.getTime())) {
-                weeks.set(monday.getTime(), new Set());
+            if (!weeks.has(sunday.getTime())) {
+                weeks.set(sunday.getTime(), new Set());
             }
-            weeks.get(monday.getTime())!.add(day);
+            weeks.get(sunday.getTime())!.add(day);
         }
         for (const daysInWeek of weeks.values()) {
             if (daysInWeek.size === 7) return true;
