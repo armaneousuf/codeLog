@@ -4,6 +4,13 @@ export interface LogEntry {
   hours: number;
   note?: string;
   tags?: string[];
+  projectId?: string;
+}
+
+export interface Project {
+  id: string;
+  name: string;
+  color: string;
 }
 
 export interface Goals {

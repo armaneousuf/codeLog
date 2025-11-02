@@ -7,10 +7,7 @@ interface HeatmapProps {
 }
 
 const formatDate = (date: Date): string => {
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  return `${day}.${month}.${year}`;
+  return date.toLocaleDateString('en-CA');
 };
 
 const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
@@ -28,8 +25,6 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
-  // If Monday is the start of the week (1), we need 0 padding days.
-  // If Sunday is the start of the week (0), we need 6 padding days.
   const firstDayOfWeek = (startDate.getDay() + 6) % 7; 
   const paddingDays = Array(firstDayOfWeek).fill(null);
 
@@ -51,7 +46,6 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
     const month = day.getMonth();
     const weekIndex = Math.floor((index + paddingDays.length) / 7);
     if (month !== lastMonth) {
-        // Prevent month labels from overlapping
         if (monthLabels.length === 0 || weekIndex > monthLabels[monthLabels.length - 1].index + 3) {
             monthLabels.push({ label: monthNames[month], index: weekIndex });
         }

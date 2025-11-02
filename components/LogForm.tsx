@@ -1,18 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { LogEntry } from '../types';
+import { LogEntry, Project } from '../types';
 import { TECHNOLOGIES } from '../lib/technologies';
 
 interface LogFormProps {
   onAddLog: (log: LogEntry) => void;
   logs: LogEntry[];
+  projects: Project[];
   date: string;
   onDateChange: (date: string) => void;
 }
 
-const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange }) => {
+const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, projects, date, onDateChange }) => {
   const today = new Date().toISOString().split('T')[0];
   const [hours, setHours] = useState('');
   const [note, setNote] = useState('');
+  const [projectId, setProjectId] = useState<string>('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -27,6 +29,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
     setHours(existingLog ? String(existingLog.hours) : '');
     setNote(existingLog?.note || '');
     setSelectedTags(existingLog?.tags || []);
+    setProjectId(existingLog?.projectId || '');
   }, [date, logs]);
 
   useEffect(() => {
@@ -46,7 +49,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
     const hoursNum = parseFloat(hours) || 0;
     
     if (date) {
-      onAddLog({ date, hours: hoursNum, note, tags: selectedTags });
+      onAddLog({ date, hours: hoursNum, note, tags: selectedTags, projectId: projectId || undefined });
       justSaved.current = true;
     }
   };
@@ -86,11 +89,25 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
             min="0"
           />
         </div>
+         <div>
+          <label htmlFor="project" className="block text-sm font-medium text-gray-400 mb-1">Project (Optional)</label>
+          <select
+            id="project"
+            value={projectId}
+            onChange={(e) => setProjectId(e.target.value)}
+            className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-mint-500 focus:border-mint-500"
+          >
+            <option value="">No Project</option>
+            {projects.map(p => (
+              <option key={p.id} value={p.id}>{p.name}</option>
+            ))}
+          </select>
+        </div>
         <div>
           <label htmlFor="note" className="block text-sm font-medium text-gray-400 mb-1">Note (Optional)</label>
           <textarea
             id="note"
-            rows={3}
+            rows={2}
             value={note}
             onChange={(e) => setNote(e.target.value)}
             className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-mint-500 focus:border-mint-500"
@@ -104,7 +121,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
             {selectedTags.length > 0 ? `${selectedTags.length} selected` : 'Select technologies...'}
           </button>
           {isDropdownOpen && (
-            <div className="mt-2 bg-gray-800 border border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
+            <div className="mt-2 bg-gray-800 border border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto z-10 relative">
               <div className="p-2 grid grid-cols-2 gap-2">
                 {TECHNOLOGIES.map(tech => (
                   <label key={tech} className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-700 cursor-pointer">

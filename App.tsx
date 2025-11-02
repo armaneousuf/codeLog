@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { LogEntry, Goals, UnlockedAchievements } from './types';
+import { LogEntry, Goals, UnlockedAchievements, Project } from './types';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import Header from './components/Header';
 import LogForm from './components/LogForm';
@@ -13,16 +13,35 @@ import Achievements from './components/Achievements';
 import AchievementsModal from './components/AchievementsModal';
 import AchievementToast from './components/AchievementToast';
 import { ALL_ACHIEVEMENTS } from './lib/achievements';
+import ProjectManager from './components/ProjectManager';
+import FilterControls from './components/FilterControls';
+import WeeklyReviewModal from './components/WeeklyReviewModal';
 
 const App: React.FC = () => {
   const [logs, setLogs] = useLocalStorage<LogEntry[]>('codingLogs', []);
   const [goals, setGoals] = useLocalStorage<Goals>('codingGoals', { weekly: 20, monthly: 80, yearly: 1000 });
+  const [projects, setProjects] = useLocalStorage<Project[]>('codingProjects', []);
   const [unlockedAchievements, setUnlockedAchievements] = useLocalStorage<UnlockedAchievements>('unlockedAchievements', {});
   
   const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false);
   const [isAchievementsModalOpen, setIsAchievementsModalOpen] = useState(false);
+  const [isWeeklyReviewModalOpen, setIsWeeklyReviewModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [newlyUnlocked, setNewlyUnlocked] = useState<string[]>([]);
+  const [activeFilter, setActiveFilter] = useState<{ type: 'tag' | 'project' | null; value: string | null }>({ type: null, value: null });
+
+  const filteredLogs = useMemo(() => {
+    if (!activeFilter.type || !activeFilter.value) {
+      return logs;
+    }
+    if (activeFilter.type === 'tag') {
+      return logs.filter(log => log.tags?.includes(activeFilter.value as string));
+    }
+    if (activeFilter.type === 'project') {
+      return logs.filter(log => log.projectId === activeFilter.value);
+    }
+    return logs;
+  }, [logs, activeFilter]);
 
 
   const handleAddLog = (newLog: LogEntry) => {
@@ -69,7 +88,7 @@ const App: React.FC = () => {
     let monthly = 0;
     let yearly = 0;
 
-    for (const log of logs) {
+    for (const log of filteredLogs) {
       const logDate = new Date(log.date + 'T00:00:00'); // Ensure date is parsed in local time
       if (logDate >= startOfYear) {
         yearly += log.hours;
@@ -82,8 +101,9 @@ const App: React.FC = () => {
       }
     }
     return { weeklyTotal: weekly, monthlyTotal: monthly, yearlyTotal: yearly };
-  }, [logs]);
+  }, [filteredLogs]);
 
+  // Streaks and achievements should always be calculated on unfiltered logs.
   const currentStreak = useMemo(() => {
     if (logs.length === 0) return 0;
 
@@ -91,20 +111,17 @@ const App: React.FC = () => {
     let streak = 0;
     const today = new Date();
     
-    // Check if today has a log
     if (logDates.has(today.toISOString().split('T')[0])) {
         streak = 1;
     } else {
-        // If no log today, check if yesterday had one to determine if streak is active
         today.setDate(today.getDate() - 1);
         if(!logDates.has(today.toISOString().split('T')[0])) {
-            return 0; // No log today or yesterday, so streak is 0.
+            return 0;
         }
-        // Streak count will start from yesterday
     }
     
     let currentDate = new Date(today);
-    currentDate.setDate(currentDate.getDate() -1); // Start from the day before the last logged day
+    currentDate.setDate(currentDate.getDate() -1);
 
     while(true) {
         const dateString = currentDate.toISOString().split('T')[0];
@@ -120,34 +137,23 @@ const App: React.FC = () => {
 
   const longestStreak = useMemo(() => {
     if (logs.length === 0) return 0;
-
-    // Get unique dates and sort them
     const sortedDates = [...new Set(logs.map(l => l.date))].sort();
-    
     if (sortedDates.length < 2) return sortedDates.length;
-
     let maxStreak = 1;
     let currentStreakLength = 1;
-
     for (let i = 1; i < sortedDates.length; i++) {
         const currentDate = new Date(sortedDates[i] + 'T00:00:00');
         const prevDate = new Date(sortedDates[i-1] + 'T00:00:00');
-        
-        const diffTime = currentDate.getTime() - prevDate.getTime();
-        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-
+        const diffDays = Math.round((currentDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24));
         if (diffDays === 1) {
             currentStreakLength++;
         } else {
-            // Reset streak if dates are not consecutive
             currentStreakLength = 1;
         }
-
         if (currentStreakLength > maxStreak) {
             maxStreak = currentStreakLength;
         }
     }
-
     return maxStreak;
 }, [logs]);
 
@@ -157,24 +163,17 @@ const App: React.FC = () => {
     const justUnlockedIds: string[] = [];
 
     ALL_ACHIEVEMENTS.forEach(achievement => {
-      // Re-evaluate every achievement based on the current logs and streak
       if (achievement.isUnlocked(logs, currentStreak)) {
-        // If the condition is met, ensure it's in our new state object
         const existingUnlock = unlockedAchievements[achievement.id];
         if (existingUnlock) {
-          // If it was already unlocked, keep its original data (like the date)
           newUnlockedState[achievement.id] = existingUnlock;
         } else {
-          // If it wasn't unlocked before, it's newly unlocked now
           newUnlockedState[achievement.id] = { date: new Date().toISOString() };
           justUnlockedIds.push(achievement.id);
         }
       }
-      // If the condition is NOT met, we simply don't add it to newUnlockedState,
-      // effectively "revoking" it if it was previously unlocked.
     });
 
-    // To prevent unnecessary re-renders, compare the old and new state.
     const currentUnlockedIds = Object.keys(unlockedAchievements).sort();
     const newUnlockedIds = Object.keys(newUnlockedState).sort();
 
@@ -182,7 +181,6 @@ const App: React.FC = () => {
       setUnlockedAchievements(newUnlockedState);
     }
 
-    // If we found any achievements that were just unlocked, trigger the toast notification.
     if (justUnlockedIds.length > 0) {
       setNewlyUnlocked(prev => [...prev, ...justUnlockedIds]);
     }
@@ -192,12 +190,21 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-950 font-sans p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
-        <Header />
+        <Header onWeeklyReviewClick={() => setIsWeeklyReviewModalOpen(true)} />
+        <FilterControls
+            logs={logs}
+            projects={projects}
+            activeFilter={activeFilter}
+            onSetFilter={setActiveFilter}
+            onClearFilter={() => setActiveFilter({ type: null, value: null })}
+        />
         <main className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1 space-y-8">
+             <ProjectManager projects={projects} setProjects={setProjects} />
             <LogForm 
               onAddLog={handleAddLog} 
               logs={logs}
+              projects={projects}
               date={selectedDate}
               onDateChange={setSelectedDate} 
             />
@@ -215,20 +222,21 @@ const App: React.FC = () => {
               totalCount={ALL_ACHIEVEMENTS.length}
               onView={() => setIsAchievementsModalOpen(true)}
             />
-            <TagAnalysis logs={logs} />
+            <TagAnalysis logs={filteredLogs} />
             <DataManagement
               logs={logs}
               goals={goals}
-              longestStreak={longestStreak}
+              projects={projects}
               unlockedAchievements={unlockedAchievements}
               setLogs={setLogs}
               setGoals={setGoals}
+              setProjects={setProjects}
               setUnlockedAchievements={setUnlockedAchievements}
             />
           </div>
           <div className="lg:col-span-2 space-y-8">
-             <Heatmap logs={logs} onDateSelect={setSelectedDate} />
-             <ProductivityChart logs={logs} />
+             <Heatmap logs={filteredLogs} onDateSelect={setSelectedDate} />
+             <ProductivityChart logs={filteredLogs} />
           </div>
         </main>
       </div>
@@ -242,6 +250,12 @@ const App: React.FC = () => {
         isOpen={isAchievementsModalOpen}
         onClose={() => setIsAchievementsModalOpen(false)}
         unlockedAchievements={unlockedAchievements}
+      />
+       <WeeklyReviewModal
+        isOpen={isWeeklyReviewModalOpen}
+        onClose={() => setIsWeeklyReviewModalOpen(false)}
+        logs={logs}
+        projects={projects}
       />
       <AchievementToast
         newlyUnlocked={newlyUnlocked}

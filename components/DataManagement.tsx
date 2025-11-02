@@ -1,23 +1,25 @@
 import React, { useRef } from 'react';
-import { LogEntry, Goals, UnlockedAchievements } from '../types';
+import { LogEntry, Goals, UnlockedAchievements, Project } from '../types';
 
 interface DataManagementProps {
   logs: LogEntry[];
   goals: Goals;
-  longestStreak: number;
+  projects: Project[];
   unlockedAchievements: UnlockedAchievements;
   setLogs: React.Dispatch<React.SetStateAction<LogEntry[]>>;
   setGoals: React.Dispatch<React.SetStateAction<Goals>>;
+  setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
   setUnlockedAchievements: React.Dispatch<React.SetStateAction<UnlockedAchievements>>;
 }
 
 const DataManagement: React.FC<DataManagementProps> = ({
   logs,
   goals,
-  longestStreak,
+  projects,
   unlockedAchievements,
   setLogs,
   setGoals,
+  setProjects,
   setUnlockedAchievements,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -26,6 +28,7 @@ const DataManagement: React.FC<DataManagementProps> = ({
     const data = {
       logs,
       goals,
+      projects,
       unlockedAchievements,
       exportDate: new Date().toISOString(),
     };
@@ -50,7 +53,6 @@ const DataManagement: React.FC<DataManagementProps> = ({
     if (!file) return;
 
     if (!window.confirm("Are you sure? Importing a file will overwrite your current data.")) {
-        // Reset file input value so the same file can be selected again
         if(fileInputRef.current) fileInputRef.current.value = "";
         return;
     }
@@ -64,9 +66,10 @@ const DataManagement: React.FC<DataManagementProps> = ({
         const importedData = JSON.parse(text);
 
         // Basic validation
-        if (Array.isArray(importedData.logs) && importedData.goals && typeof importedData.unlockedAchievements === 'object') {
-          setLogs(importedData.logs);
+        if (Array.isArray(importedData.logs) && importedData.goals) {
+          setLogs(importedData.logs || []);
           setGoals(importedData.goals);
+          setProjects(importedData.projects || []);
           setUnlockedAchievements(importedData.unlockedAchievements || {});
           alert("Data imported successfully!");
         } else {
@@ -76,7 +79,6 @@ const DataManagement: React.FC<DataManagementProps> = ({
         console.error("Failed to import data:", error);
         alert(`Failed to import data. Please check the file format. Error: ${error instanceof Error ? error.message : "Unknown error"}`);
       } finally {
-        // Reset file input value
         if(fileInputRef.current) fileInputRef.current.value = "";
       }
     };

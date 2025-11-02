@@ -9,7 +9,6 @@ const ProductivityChart: React.FC<ProductivityChartProps> = ({ logs }) => {
   const productivityData = useMemo(() => {
     const hoursByDay = Array(7).fill(0); // 0: Sunday, 1: Monday, ..., 6: Saturday
     logs.forEach(log => {
-      // The 'T00:00:00' is crucial to avoid timezone issues where the date might shift
       const dayIndex = new Date(log.date + 'T00:00:00').getDay();
       hoursByDay[dayIndex] += log.hours;
     });
@@ -19,8 +18,14 @@ const ProductivityChart: React.FC<ProductivityChartProps> = ({ logs }) => {
   const maxHours = Math.max(...productivityData);
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-  if (maxHours === 0) {
-    return null; // Don't render the chart if there's no data
+  if (logs.length === 0) {
+     return (
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 shadow-lg">
+            <h2 className="text-xl font-semibold text-gray-200 mb-4">Productivity Breakdown</h2>
+            <p className="text-sm text-gray-400 mb-6 -mt-3">Total Hours per Day of Week</p>
+            <p className="text-gray-400 text-sm">No data for this period. Log some hours to see your productivity breakdown.</p>
+        </div>
+     )
   }
 
   return (
@@ -37,7 +42,7 @@ const ProductivityChart: React.FC<ProductivityChartProps> = ({ logs }) => {
               <div className="flex-1 bg-gray-700 rounded-full h-4">
                 <div
                   className="bg-mint-500 h-4 rounded-full transition-all duration-500 ease-out"
-                  style={{ width: `${percentage}%` }}
+                  style={{ width: `${percentage > 0 ? Math.max(percentage, 3) : 0}%` }} // min width for visibility
                 />
               </div>
               <span className="w-16 text-right font-mono text-white">{hours.toFixed(1)} hrs</span>

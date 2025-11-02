@@ -26,7 +26,12 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
   }, [logs]);
 
   if (tagData.length === 0) {
-    return null; // Don't render if there are no tags
+    return (
+      <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 shadow-lg">
+         <h2 className="text-xl font-semibold text-gray-200 mb-4">Technology Breakdown</h2>
+         <p className="text-gray-400 text-sm">Log your hours with tags to see a breakdown here.</p>
+      </div>
+    );
   }
   
   const totalHours = tagData.reduce((sum, item) => sum + item.hours, 0);
