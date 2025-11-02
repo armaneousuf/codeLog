@@ -6,10 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CodeLog: Daily Hour Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         theme: {
           extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
             colors: {
               'gray-950': '#0d1117',
               'gray-900': '#161b22',
@@ -29,12 +35,26 @@
                 '900': '#064e3b',
                 '950': '#022c22'
               }
+            },
+            animation: {
+              'progress': 'progress 4s linear forwards',
+            },
+            keyframes: {
+              progress: {
+                '0%': { width: '100%' },
+                '100%': { width: '0%' },
+              }
             }
           }
         }
       }
     </script>
     <style>
+      body {
+        background-color: #0d1117;
+        background-image: radial-gradient(circle at 1px 1px, #30363d 1px, transparent 0);
+        background-size: 2rem 2rem;
+      }
       /* For Webkit-based browsers (Chrome, Safari, Edge) */
       ::-webkit-scrollbar {
         width: 12px;
@@ -55,6 +75,20 @@
         scrollbar-width: thin;
         scrollbar-color: #059669 #161b22;
       }
+      *:focus-visible {
+        outline: 1px solid #000 !important;
+        outline-offset: 1px !important;
+      }
+      .heatmap-tooltip::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 100%;
+        transform: translateX(-50%);
+        border-width: 5px;
+        border-style: solid;
+        border-color: #0d1117 transparent transparent transparent;
+      }
     </style>
   <script type="importmap">
 {
@@ -66,7 +100,7 @@
 }
 </script>
 </head>
-  <body class="bg-gray-950 text-white">
+  <body class="bg-gray-950 text-white font-sans">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 const CodeIcon: React.FC = () => (
@@ -12,7 +11,7 @@ const Header: React.FC = () => {
     <header className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
             <CodeIcon />
-            <h1 className="text-3xl font-bold text-gray-100 tracking-tight">
+            <h1 className="text-3xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-mint-300 to-mint-500">
                 CodeLog
             </h1>
         </div>

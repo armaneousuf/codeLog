@@ -7,7 +7,7 @@ interface HeatmapProps {
 }
 
 const formatDate = (date: Date): string => {
-  return date.toLocaleDateString('en-CA');
+  return date.toLocaleDateString('en-GB');
 };
 
 const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
@@ -77,7 +77,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
                 </div>
                 <div className="grid grid-flow-col grid-rows-7 gap-1" style={{ gridTemplateColumns: 'repeat(53, minmax(0, 1fr))' }}>
                 {paddingDays.map((_, index) => (
-                    <div key={`pad-${index}`} className="aspect-square rounded" />
+                    <div key={`pad-${index}`} className="aspect-square rounded-sm" />
                 ))}
                 {days.map((day) => {
                     const dateString = day.toISOString().split('T')[0];
@@ -95,9 +95,9 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
                       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onDateSelect(dateString); }}
                     >
                         <div
-                          className={`aspect-square rounded ${getColor(hours)} transition-all duration-150 group-hover:ring-2 group-hover:ring-mint-400 ring-offset-2 ring-offset-gray-900`}
+                          className={`aspect-square rounded-sm ${getColor(hours)} transition-all duration-150 group-hover:ring-2 group-hover:ring-mint-400 ring-offset-2 ring-offset-gray-900 group-hover:scale-110`}
                         />
-                        <div className="absolute bottom-full mb-2 w-max px-3 py-2 bg-gray-950 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 -translate-x-1/2 left-1/2">
+                        <div className="heatmap-tooltip absolute bottom-full mb-2 w-max px-3 py-2 bg-gray-950 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 -translate-x-1/2 left-1/2 shadow-lg border border-gray-700">
                           <p className="font-bold">{hours ? `${hours.toFixed(1)} hours` : 'No activity'}</p>
                           <p className="text-gray-400">{formattedDate}</p>
                         </div>

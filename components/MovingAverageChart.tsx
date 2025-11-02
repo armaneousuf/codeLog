@@ -77,8 +77,8 @@ const MovingAverageChart: React.FC<MovingAverageChartProps> = ({ logs }) => {
             <polygon fill="url(#movingAvgGradient)" points={`0,100 ${points} 100,100`} />
         </svg>
         <div className="absolute -bottom-4 left-0 right-0 flex justify-between text-xs text-gray-500 px-1">
-            <span>{new Date(chartData[0].date + 'T00:00:00').toLocaleDateString('en-us',{month:'short', day:'numeric'})}</span>
-            <span>{new Date(chartData[chartData.length-1].date + 'T00:00:00').toLocaleDateString('en-us',{month:'short', day:'numeric'})}</span>
+            <span>{new Date(chartData[0].date + 'T00:00:00').toLocaleDateString('en-GB')}</span>
+            <span>{new Date(chartData[chartData.length-1].date + 'T00:00:00').toLocaleDateString('en-GB')}</span>
         </div>
        </div>
     </div>

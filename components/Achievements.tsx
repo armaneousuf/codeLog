@@ -28,7 +28,7 @@ const Achievements: React.FC<AchievementsProps> = ({ unlockedCount, totalCount, 
       </div>
       <div className="w-full bg-gray-700 rounded-full h-2.5">
         <div 
-          className="bg-amber-500 h-2.5 rounded-full transition-all duration-500 ease-out" 
+          className="bg-gradient-to-r from-amber-500 to-yellow-400 h-2.5 rounded-full transition-all duration-500 ease-out" 
           style={{ width: `${percentage}%` }}
         ></div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { LogEntry } from '../types';
 import { TECHNOLOGY_COLORS } from '../lib/techColors';
 
@@ -12,6 +12,8 @@ const FALLBACK_COLORS = [
 ];
 
 const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
+  const [hoveredTag, setHoveredTag] = useState<string | null>(null);
+
   const tagData = useMemo(() => {
     const tagMap = new Map<string, number>();
     logs.forEach(log => {
@@ -37,32 +39,13 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
   
   const totalHours = tagData.reduce((sum, item) => sum + item.hours, 0);
 
-  const getCoordinatesForPercent = (percent: number) => {
-    const x = Math.cos(2 * Math.PI * percent);
-    const y = Math.sin(2 * Math.PI * percent);
-    return [x, y];
-  };
-
   const getTagColor = (tag: string, index: number): string => {
     return TECHNOLOGY_COLORS[tag] || FALLBACK_COLORS[index % FALLBACK_COLORS.length];
   };
 
-  let cumulativePercent = 0;
-
   const chartData = tagData.map(item => {
     const percent = item.hours / totalHours;
-    const [startX, startY] = getCoordinatesForPercent(cumulativePercent);
-    cumulativePercent += percent;
-    const [endX, endY] = getCoordinatesForPercent(cumulativePercent);
-    const largeArcFlag = percent > 0.5 ? 1 : 0;
-    
-    const pathData = [
-      `M ${startX} ${startY}`, // Move
-      `A 1 1 0 ${largeArcFlag} 1 ${endX} ${endY}`, // Arc
-      `L 0 0` // Line to center
-    ].join(' ');
-
-    return { ...item, percent, pathData };
+    return { ...item, percent };
   });
 
   return (
@@ -82,13 +65,22 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
                         strokeWidth="0.4"
                         strokeDasharray={`${item.percent * (2 * Math.PI)}, ${2 * Math.PI}`}
                         strokeDashoffset={`-${(chartData.slice(0, index).reduce((acc, d) => acc + d.percent, 0)) * (2 * Math.PI)}`}
+                        className="transition-transform duration-200"
+                        transform={hoveredTag === item.tag ? 'scale(1.05)' : 'scale(1)'}
+                        onMouseEnter={() => setHoveredTag(item.tag)}
+                        onMouseLeave={() => setHoveredTag(null)}
                     />
                 ))}
             </svg>
         </div>
         <div className="space-y-2 text-sm">
             {tagData.slice(0, 10).map(({ tag, hours }, index) => (
-                <div key={tag} className="flex items-center justify-between">
+                <div 
+                  key={tag} 
+                  className={`flex items-center justify-between p-1 rounded-md transition-colors ${hoveredTag === tag ? 'bg-gray-800' : ''}`}
+                  onMouseEnter={() => setHoveredTag(tag)}
+                  onMouseLeave={() => setHoveredTag(null)}
+                >
                     <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: getTagColor(tag, index) }}></div>
                         <span className="text-gray-300 truncate">{tag}</span>
