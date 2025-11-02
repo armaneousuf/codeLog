@@ -1,13 +1,14 @@
 import React, { useMemo } from 'react';
 import { LogEntry } from '../types';
+import { TECHNOLOGY_COLORS } from '../lib/techColors';
 
 interface TagAnalysisProps {
   logs: LogEntry[];
 }
 
-const COLORS = [
-  '#34d399', '#10b981', '#f97316', '#ec4899', '#8b5cf6', 
-  '#ef4444', '#f59e0b', '#22c55e', '#06b6d4', '#6366f1'
+const FALLBACK_COLORS = [
+  '#f97316', '#ec4899', '#8b5cf6', '#ef4444', '#f59e0b', 
+  '#22c55e', '#06b6d4', '#6366f1', '#f43f5e', '#eab308'
 ];
 
 const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
@@ -42,6 +43,10 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
     return [x, y];
   };
 
+  const getTagColor = (tag: string, index: number): string => {
+    return TECHNOLOGY_COLORS[tag] || FALLBACK_COLORS[index % FALLBACK_COLORS.length];
+  };
+
   let cumulativePercent = 0;
 
   const chartData = tagData.map(item => {
@@ -73,7 +78,7 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
                         cy="0" 
                         r="1" 
                         fill="none"
-                        stroke={COLORS[index % COLORS.length]}
+                        stroke={getTagColor(item.tag, index)}
                         strokeWidth="0.4"
                         strokeDasharray={`${item.percent * (2 * Math.PI)}, ${2 * Math.PI}`}
                         strokeDashoffset={`-${(chartData.slice(0, index).reduce((acc, d) => acc + d.percent, 0)) * (2 * Math.PI)}`}
@@ -85,7 +90,7 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
             {tagData.slice(0, 10).map(({ tag, hours }, index) => (
                 <div key={tag} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
+                        <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: getTagColor(tag, index) }}></div>
                         <span className="text-gray-300 truncate">{tag}</span>
                     </div>
                     <span className="font-mono text-gray-400">{hours.toFixed(1)} hrs</span>
