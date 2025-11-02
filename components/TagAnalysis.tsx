@@ -81,11 +81,11 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
                   onMouseEnter={() => setHoveredTag(tag)}
                   onMouseLeave={() => setHoveredTag(null)}
                 >
-                    <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: getTagColor(tag, index) }}></div>
+                    <div className="flex items-center gap-2 min-w-0">
+                        <div className="w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: getTagColor(tag, index) }}></div>
                         <span className="text-gray-300 truncate">{tag}</span>
                     </div>
-                    <span className="font-mono text-gray-400">{hours.toFixed(1)} hrs</span>
+                    <span className="font-mono text-gray-400 pl-4 flex-shrink-0">{hours.toFixed(1)} hrs</span>
                 </div>
             ))}
         </div>
