@@ -14,37 +14,92 @@ import AchievementsModal from './components/AchievementsModal';
 import AchievementToast from './components/AchievementToast';
 import { ALL_ACHIEVEMENTS } from './lib/achievements';
 import MovingAverageChart from './components/MovingAverageChart';
+import QuoteCard from './components/QuoteCard';
+import { GoogleGenAI } from "@google/genai";
+import WeeklyReviewModal from './components/WeeklyReviewModal';
 
 const App: React.FC = () => {
   const [logs, setLogs] = useLocalStorage<LogEntry[]>('codingLogs', []);
   const [goals, setGoals] = useLocalStorage<Goals>('codingGoals', { weekly: 20, monthly: 80, yearly: 1000 });
   const [unlockedAchievements, setUnlockedAchievements] = useLocalStorage<UnlockedAchievements>('unlockedAchievements', {});
-  
+  const [lastSeenWeeklyReview, setLastSeenWeeklyReview] = useLocalStorage<string>('lastSeenWeeklyReview', '');
+
+
   const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false);
   const [isAchievementsModalOpen, setIsAchievementsModalOpen] = useState(false);
+  const [isWeeklyReviewOpen, setIsWeeklyReviewOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [newlyUnlocked, setNewlyUnlocked] = useState<string[]>([]);
+  const [quote, setQuote] = useState({ text: '', author: '' });
+  const [isQuoteLoading, setIsQuoteLoading] = useState(true);
+  const [showSaveToast, setShowSaveToast] = useState(false);
+  
+  const fallbackQuotes = [
+    { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+    { text: "Code is like humor. When you have to explain it, it’s bad.", author: "Cory House" },
+    { text: "First, solve the problem. Then, write the code.", author: "John Johnson" },
+    { text: "The best way to predict the future is to create it.", author: "Abraham Lincoln" },
+    { text: "Talk is cheap. Show me the code.", author: "Linus Torvalds" }
+  ];
+
+  const fetchQuote = async () => {
+    setIsQuoteLoading(true);
+    try {
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: `Provide a random, high-quality, inspiring quote for a software developer about coding, problem-solving, or logic from a list of classic, well-known programming quotes. Return a single quote in a JSON array like this: [{"quote": "The quote text.", "author": "Author"}]`,
+        config: { 
+          temperature: 1,
+          responseMimeType: "application/json",
+        },
+      });
+      const rawText = response.text.trim();
+      const quotes = JSON.parse(rawText);
+      
+      if (quotes && quotes.length > 0) {
+        setQuote({ text: quotes[0].quote, author: quotes[0].author });
+      } else {
+         throw new Error("Empty response from API");
+      }
+
+    } catch (error) {
+      console.error("Failed to fetch quote:", error);
+      setQuote(fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)]);
+    } finally {
+      setIsQuoteLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchQuote();
+  }, []);
 
   const handleAddLog = (newLog: LogEntry) => {
+    let wasUpdated = false;
     setLogs(prevLogs => {
       const existingLogIndex = prevLogs.findIndex(log => log.date === newLog.date);
       if (existingLogIndex > -1) {
+        wasUpdated = true;
         const updatedLogs = [...prevLogs];
         if (newLog.hours <= 0) {
-          // Remove the log if hours are 0 or less
           updatedLogs.splice(existingLogIndex, 1);
         } else {
-          // Update existing log
           updatedLogs[existingLogIndex] = newLog;
         }
         return updatedLogs;
       }
       if (newLog.hours > 0) {
-          // Add new log if hours are positive
+          wasUpdated = true;
           return [...prevLogs, newLog].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
       }
       return prevLogs;
     });
+
+    if (wasUpdated) {
+        setShowSaveToast(true);
+        setTimeout(() => setShowSaveToast(false), 3000);
+    }
   };
 
   const handleSetGoals = (newGoals: Goals) => {
@@ -52,11 +107,11 @@ const App: React.FC = () => {
     setIsGoalsModalOpen(false);
   };
   
-  const { weeklyTotal, monthlyTotal, yearlyTotal } = useMemo(() => {
+  const { weeklyTotal, monthlyTotal, yearlyTotal, totalHours } = useMemo(() => {
     const now = new Date();
     
     const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay()); // Sunday as start of week
+    startOfWeek.setDate(now.getDate() - now.getDay());
     startOfWeek.setHours(0, 0, 0, 0);
 
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -70,7 +125,7 @@ const App: React.FC = () => {
     let yearly = 0;
 
     for (const log of logs) {
-      const logDate = new Date(log.date + 'T00:00:00'); // Ensure date is parsed in local time
+      const logDate = new Date(log.date + 'T00:00:00');
       if (logDate >= startOfYear) {
         yearly += log.hours;
         if (logDate >= startOfMonth) {
@@ -81,24 +136,20 @@ const App: React.FC = () => {
         }
       }
     }
-    return { weeklyTotal: weekly, monthlyTotal: monthly, yearlyTotal: yearly };
+    const allTimeTotal = logs.reduce((sum, log) => sum + log.hours, 0);
+    return { weeklyTotal: weekly, monthlyTotal: monthly, yearlyTotal: yearly, totalHours: allTimeTotal };
   }, [logs]);
 
   const currentStreak = useMemo(() => {
     if (logs.length === 0) return 0;
     const logDates = new Set(logs.map(log => log.date));
     let streak = 0;
-    const today = new Date();
-    let currentDate = new Date(today);
+    let currentDate = new Date();
 
-    // If no log today, start check from yesterday. If no log yesterday either, streak is 0.
     if (!logDates.has(currentDate.toISOString().split('T')[0])) {
         currentDate.setDate(currentDate.getDate() - 1);
-        if (!logDates.has(currentDate.toISOString().split('T')[0])) {
-            return 0; 
-        }
     }
-
+    
     while (logDates.has(currentDate.toISOString().split('T')[0])) {
         streak++;
         currentDate.setDate(currentDate.getDate() - 1);
@@ -157,47 +208,111 @@ const App: React.FC = () => {
     }
   }, [logs, currentStreak, unlockedAchievements, setUnlockedAchievements, setNewlyUnlocked]);
 
+  // Weekly Review Modal Logic
+  useEffect(() => {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday
+    const isMonday = dayOfWeek === 1;
+
+    if (isMonday) {
+      const thisMonday = new Date(today);
+      thisMonday.setHours(0, 0, 0, 0);
+      const thisMondayStr = thisMonday.toISOString().split('T')[0];
+      
+      if(lastSeenWeeklyReview !== thisMondayStr) {
+        setIsWeeklyReviewOpen(true);
+      }
+    }
+  }, [lastSeenWeeklyReview]);
+
+  const handleCloseWeeklyReview = () => {
+    const today = new Date();
+    const thisMonday = new Date(today);
+    thisMonday.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1));
+    thisMonday.setHours(0, 0, 0, 0);
+    setLastSeenWeeklyReview(thisMonday.toISOString().split('T')[0]);
+    setIsWeeklyReviewOpen(false);
+  };
+
+  const lastWeekLogs = useMemo(() => {
+    const today = new Date();
+    const lastSunday = new Date(today);
+    lastSunday.setDate(today.getDate() - today.getDay() - 7);
+    lastSunday.setHours(0,0,0,0);
+    const lastSaturday = new Date(lastSunday);
+    lastSaturday.setDate(lastSunday.getDate() + 6);
+    lastSaturday.setHours(23,59,59,999);
+
+    return logs.filter(log => {
+      const logDate = new Date(log.date);
+      return logDate >= lastSunday && logDate <= lastSaturday;
+    });
+  }, [logs, isWeeklyReviewOpen]);
 
   return (
-    <div className="min-h-screen bg-gray-950 font-sans p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen font-sans p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
-        <Header />
+        <Header totalHours={totalHours} />
         <main className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1 space-y-8">
-            <LogForm 
-              onAddLog={handleAddLog} 
-              logs={logs}
-              date={selectedDate}
-              onDateChange={setSelectedDate} 
-            />
-            <StatsDashboard 
-              weeklyTotal={weeklyTotal}
-              monthlyTotal={monthlyTotal}
-              yearlyTotal={yearlyTotal}
-              goals={goals}
-              onEditGoals={() => setIsGoalsModalOpen(true)}
-              currentStreak={currentStreak}
-              longestStreak={longestStreak}
-            />
-            <Achievements
-              unlockedCount={Object.keys(unlockedAchievements).length}
-              totalCount={ALL_ACHIEVEMENTS.length}
-              onView={() => setIsAchievementsModalOpen(true)}
-            />
-            <TagAnalysis logs={logs} />
-            <DataManagement
-              logs={logs}
-              goals={goals}
-              unlockedAchievements={unlockedAchievements}
-              setLogs={setLogs}
-              setGoals={setGoals}
-              setUnlockedAchievements={setUnlockedAchievements}
-            />
+            <div className="animate-fade-in-up" style={{animationDelay: '100ms', animationFillMode: 'backwards'}}>
+              <LogForm 
+                onAddLog={handleAddLog} 
+                logs={logs}
+                date={selectedDate}
+                onDateChange={setSelectedDate}
+              />
+            </div>
+             <div className="animate-fade-in-up" style={{animationDelay: '200ms', animationFillMode: 'backwards'}}>
+              <StatsDashboard 
+                weeklyTotal={weeklyTotal}
+                monthlyTotal={monthlyTotal}
+                yearlyTotal={yearlyTotal}
+                goals={goals}
+                onEditGoals={() => setIsGoalsModalOpen(true)}
+                currentStreak={currentStreak}
+                longestStreak={longestStreak}
+              />
+            </div>
+             <div className="animate-fade-in-up" style={{animationDelay: '300ms', animationFillMode: 'backwards'}}>
+              <QuoteCard
+                quote={quote.text}
+                author={quote.author}
+                isLoading={isQuoteLoading}
+                onRefresh={fetchQuote}
+              />
+            </div>
+             <div className="animate-fade-in-up" style={{animationDelay: '400ms', animationFillMode: 'backwards'}}>
+              <Achievements
+                unlockedCount={Object.keys(unlockedAchievements).length}
+                totalCount={ALL_ACHIEVEMENTS.length}
+                onView={() => setIsAchievementsModalOpen(true)}
+              />
+            </div>
+             <div className="animate-fade-in-up" style={{animationDelay: '500ms', animationFillMode: 'backwards'}}>
+              <TagAnalysis logs={logs} />
+            </div>
+            <div className="animate-fade-in-up" style={{animationDelay: '600ms', animationFillMode: 'backwards'}}>
+              <DataManagement
+                logs={logs}
+                goals={goals}
+                unlockedAchievements={unlockedAchievements}
+                setLogs={setLogs}
+                setGoals={setGoals}
+                setUnlockedAchievements={setUnlockedAchievements}
+              />
+            </div>
           </div>
           <div className="lg:col-span-2 space-y-8">
-             <Heatmap logs={logs} onDateSelect={setSelectedDate} />
-             <MovingAverageChart logs={logs} />
-             <ProductivityChart logs={logs} />
+             <div className="animate-fade-in-up" style={{animationDelay: '300ms', animationFillMode: 'backwards'}}>
+              <Heatmap logs={logs} onDateSelect={setSelectedDate} />
+             </div>
+             <div className="animate-fade-in-up" style={{animationDelay: '400ms', animationFillMode: 'backwards'}}>
+              <MovingAverageChart logs={logs} />
+             </div>
+             <div className="animate-fade-in-up" style={{animationDelay: '500ms', animationFillMode: 'backwards'}}>
+              <ProductivityChart logs={logs} />
+             </div>
           </div>
         </main>
       </div>
@@ -212,10 +327,20 @@ const App: React.FC = () => {
         onClose={() => setIsAchievementsModalOpen(false)}
         unlockedAchievements={unlockedAchievements}
       />
+      <WeeklyReviewModal
+        isOpen={isWeeklyReviewOpen}
+        onClose={handleCloseWeeklyReview}
+        lastWeekLogs={lastWeekLogs}
+      />
       <AchievementToast
         newlyUnlocked={newlyUnlocked}
         onComplete={(id) => setNewlyUnlocked(prev => prev.filter(aId => aId !== id))}
       />
+      <div className={`fixed bottom-5 right-5 z-50 transition-all duration-300 ${showSaveToast ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+        <div className="bg-gray-800 border border-mint-500/50 rounded-lg shadow-2xl p-4 flex items-center space-x-4 max-w-sm overflow-hidden backdrop-blur-sm bg-opacity-80">
+          <p className="font-semibold text-mint-400">Log Saved!</p>
+        </div>
+      </div>
     </div>
   );
 };

@@ -6,14 +6,25 @@ const CodeIcon: React.FC = () => (
   </svg>
 );
 
-const Header: React.FC = () => {
+interface HeaderProps {
+    totalHours: number;
+}
+
+const Header: React.FC<HeaderProps> = ({ totalHours }) => {
   return (
-    <header className="flex items-center justify-between">
+    <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center space-x-4">
             <CodeIcon />
-            <h1 className="text-3xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-mint-300 to-mint-500">
-                CodeLog
-            </h1>
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-mint-300 to-mint-500">
+                  CodeLog
+              </h1>
+              <p className="text-sm text-gray-400 -mt-1">Your personal coding companion.</p>
+            </div>
+        </div>
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl px-4 py-2 text-right">
+            <p className="text-sm text-gray-400">Total Hours Logged</p>
+            <p className="text-2xl font-bold text-white">{totalHours.toFixed(1)}</p>
         </div>
     </header>
   );

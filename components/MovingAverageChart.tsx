@@ -41,8 +41,8 @@ const MovingAverageChart: React.FC<MovingAverageChartProps> = ({ logs }) => {
 
   if (chartData.length === 0) {
     return (
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 shadow-lg">
-            <h2 className="text-xl font-semibold text-gray-200 mb-4">7-Day Moving Average</h2>
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-100 mb-4">7-Day Moving Average</h2>
              <p className="text-sm text-gray-400 mb-6 -mt-3">Daily Hours</p>
             <p className="text-gray-400 text-sm">Log at least 7 days of data to see your moving average trend.</p>
         </div>
@@ -57,8 +57,8 @@ const MovingAverageChart: React.FC<MovingAverageChartProps> = ({ logs }) => {
   }).join(' ');
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 shadow-lg">
-      <h2 className="text-xl font-semibold text-gray-200 mb-4">7-Day Moving Average</h2>
+    <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-lg p-6">
+      <h2 className="text-xl font-semibold text-gray-100 mb-4">7-Day Moving Average</h2>
        <p className="text-sm text-gray-400 mb-6 -mt-3">Daily Hours</p>
        <div className="h-48 relative">
         <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">

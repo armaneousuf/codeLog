@@ -25,11 +25,11 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
-  const firstDayOfWeek = startDate.getDay(); // Sunday is 0, so this aligns the grid correctly.
-  const paddingDays = Array(firstDayOfWeek).fill(null);
+  const firstDayOfWeek = startDate.getDay();
+  const paddingDays = Array(firstDayOfWeek === 0 ? 6 : firstDayOfWeek -1).fill(null); // Adjust for Monday start
 
   const getColor = (hours: number | undefined) => {
-    if (hours === undefined || hours <= 0) return 'bg-gray-800';
+    if (hours === undefined || hours <= 0) return 'bg-gray-800/80';
     if (hours <= 1.5) return 'bg-mint-900';
     if (hours <= 3) return 'bg-mint-800';
     if (hours <= 4.5) return 'bg-mint-700';
@@ -54,11 +54,10 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
   });
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 shadow-lg">
-      <h2 className="text-xl font-semibold text-gray-200 mb-4">Last Year's Activity</h2>
+    <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-lg p-6">
+      <h2 className="text-xl font-semibold text-gray-100 mb-4">Last Year's Activity</h2>
       <div className="flex">
         <div className="flex flex-col text-xs text-gray-500 pr-2 space-y-2 justify-around pt-8">
-            <span className="h-full"></span>
             <span>Mon</span>
             <span className="h-full"></span>
             <span>Wed</span>
@@ -95,9 +94,9 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
                       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onDateSelect(dateString); }}
                     >
                         <div
-                          className={`aspect-square rounded-sm ${getColor(hours)} transition-all duration-150 group-hover:ring-2 group-hover:ring-mint-400 ring-offset-2 ring-offset-gray-900 group-hover:scale-110`}
+                          className={`aspect-square rounded-sm ${getColor(hours)} transition-all duration-150 group-hover:ring-2 group-hover:ring-mint-300 ring-offset-2 ring-offset-gray-950`}
                         />
-                        <div className="heatmap-tooltip absolute bottom-full mb-2 w-max px-3 py-2 bg-gray-950 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 -translate-x-1/2 left-1/2 shadow-lg border border-gray-700">
+                        <div className="heatmap-tooltip absolute bottom-full mb-2 w-max px-3 py-2 bg-gray-900/80 backdrop-blur-sm text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 -translate-x-1/2 left-1/2 shadow-lg border border-white/10">
                           <p className="font-bold">{hours ? `${hours.toFixed(1)} hours` : 'No activity'}</p>
                           <p className="text-gray-400">{formattedDate}</p>
                         </div>

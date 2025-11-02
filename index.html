@@ -17,11 +17,11 @@
               sans: ['Inter', 'sans-serif'],
             },
             colors: {
-              'gray-950': '#0d1117',
-              'gray-900': '#161b22',
-              'gray-800': '#21262d',
-              'gray-700': '#30363d',
-              'gray-600': '#484f58',
+              'gray-950': '#0A0A0A',
+              'gray-900': '#111111',
+              'gray-800': '#181818',
+              'gray-700': '#282828',
+              'gray-600': '#404040',
               'mint': {
                 '50': '#f0fdfa',
                 '100': '#ccfbf1',
@@ -34,15 +34,26 @@
                 '800': '#065f46',
                 '900': '#064e3b',
                 '950': '#022c22'
+              },
+              'amber': {
+                '300': '#fcd34d',
+                '400': '#fbbf24',
+                '500': '#f59e0b',
+                '600': '#d97706',
               }
             },
             animation: {
               'progress': 'progress 4s linear forwards',
+              'fade-in-up': 'fade-in-up 0.5s ease-out both',
             },
             keyframes: {
               progress: {
                 '0%': { width: '100%' },
                 '100%': { width: '0%' },
+              },
+              'fade-in-up': {
+                '0%': { transform: 'translateY(20px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
               }
             }
           }
@@ -51,21 +62,18 @@
     </script>
     <style>
       body {
-        background-color: #0d1117;
-        background-image: radial-gradient(circle at 1px 1px, #30363d 1px, transparent 0);
-        background-size: 2rem 2rem;
+        background-color: #0A0A0A;
       }
       /* For Webkit-based browsers (Chrome, Safari, Edge) */
       ::-webkit-scrollbar {
-        width: 12px;
+        width: 10px;
       }
       ::-webkit-scrollbar-track {
-        background: #161b22; /* gray-900 */
+        background: #0A0A0A;
       }
       ::-webkit-scrollbar-thumb {
         background-color: #059669; /* mint-600 */
-        border-radius: 6px;
-        border: 3px solid #161b22; /* gray-900 */
+        border-radius: 5px;
       }
       ::-webkit-scrollbar-thumb:hover {
         background-color: #10b981; /* mint-500 */
@@ -73,11 +81,11 @@
       /* For Firefox */
       html {
         scrollbar-width: thin;
-        scrollbar-color: #059669 #161b22;
+        scrollbar-color: #059669 #0A0A0A;
       }
       *:focus-visible {
-        outline: 1px solid #000 !important;
-        outline-offset: 1px !important;
+        outline: 2px solid #6ee7b7 !important; /* mint-300 */
+        outline-offset: 2px !important;
       }
       .heatmap-tooltip::after {
         content: '';
@@ -87,7 +95,7 @@
         transform: translateX(-50%);
         border-width: 5px;
         border-style: solid;
-        border-color: #0d1117 transparent transparent transparent;
+        border-color: rgba(17, 17, 17, 0.8) transparent transparent transparent; /* gray-900 with opacity */
       }
     </style>
   <script type="importmap">
@@ -95,12 +103,13 @@
   "imports": {
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.28.0"
   }
 }
 </script>
 </head>
-  <body class="bg-gray-950 text-white font-sans">
+  <body class="bg-gray-950 text-gray-200 font-sans">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

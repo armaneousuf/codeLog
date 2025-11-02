@@ -15,13 +15,13 @@ const ProductivityChart: React.FC<ProductivityChartProps> = ({ logs }) => {
     return hoursByDay;
   }, [logs]);
 
-  const maxHours = Math.max(...productivityData);
+  const maxHours = Math.max(...productivityData, 1);
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   if (logs.length === 0) {
      return (
-        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 shadow-lg">
-            <h2 className="text-xl font-semibold text-gray-200 mb-4">Productivity Breakdown</h2>
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-100 mb-4">Productivity Breakdown</h2>
             <p className="text-sm text-gray-400 mb-6 -mt-3">Total Hours per Day of Week</p>
             <p className="text-gray-400 text-sm">No data for this period. Log some hours to see your productivity breakdown.</p>
         </div>
@@ -29,8 +29,8 @@ const ProductivityChart: React.FC<ProductivityChartProps> = ({ logs }) => {
   }
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 shadow-lg">
-      <h2 className="text-xl font-semibold text-gray-200 mb-4">Productivity Breakdown</h2>
+    <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-lg p-6">
+      <h2 className="text-xl font-semibold text-gray-100 mb-4">Productivity Breakdown</h2>
        <p className="text-sm text-gray-400 mb-6 -mt-3">Total Hours per Day of Week</p>
       <div className="space-y-3">
         {daysOfWeek.map((day, index) => {
@@ -39,7 +39,7 @@ const ProductivityChart: React.FC<ProductivityChartProps> = ({ logs }) => {
           return (
             <div key={day} className="flex items-center gap-4 text-sm">
               <span className="w-8 text-gray-400 font-medium">{day}</span>
-              <div className="flex-1 bg-gray-700 rounded-full h-4">
+              <div className="flex-1 bg-gray-700/50 rounded-full h-4">
                 <div
                   className="bg-mint-500 h-4 rounded-full transition-all duration-500 ease-out"
                   style={{ width: `${percentage > 0 ? Math.max(percentage, 3) : 0}%` }} // min width for visibility

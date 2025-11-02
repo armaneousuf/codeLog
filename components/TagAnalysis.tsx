@@ -30,8 +30,8 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
 
   if (tagData.length === 0) {
     return (
-      <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 shadow-lg">
-         <h2 className="text-xl font-semibold text-gray-200 mb-4">Technology Breakdown</h2>
+      <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-lg p-6">
+         <h2 className="text-xl font-semibold text-gray-100 mb-4">Tech Breakdown</h2>
          <p className="text-gray-400 text-sm">Log your hours with tags to see a breakdown here.</p>
       </div>
     );
@@ -49,8 +49,8 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
   });
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 shadow-lg">
-      <h2 className="text-xl font-semibold text-gray-200 mb-4">Technology Breakdown</h2>
+    <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-lg p-6">
+      <h2 className="text-xl font-semibold text-gray-100 mb-4">Tech Breakdown</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
         <div className="relative w-40 h-40 mx-auto">
             <svg viewBox="-1.2 -1.2 2.4 2.4" style={{transform: 'rotate(-90deg)'}}>
@@ -66,6 +66,7 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
                         strokeDasharray={`${item.percent * (2 * Math.PI)}, ${2 * Math.PI}`}
                         strokeDashoffset={`-${(chartData.slice(0, index).reduce((acc, d) => acc + d.percent, 0)) * (2 * Math.PI)}`}
                         className="transition-transform duration-200"
+                        style={{ transformOrigin: 'center center' }}
                         transform={hoveredTag === item.tag ? 'scale(1.05)' : 'scale(1)'}
                         onMouseEnter={() => setHoveredTag(item.tag)}
                         onMouseLeave={() => setHoveredTag(null)}
@@ -73,19 +74,30 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
                 ))}
             </svg>
         </div>
-        <div className="space-y-2 text-sm">
+        <div className="space-y-2 text-sm max-h-52 overflow-y-auto pr-2 -mr-2">
             {tagData.slice(0, 10).map(({ tag, hours }, index) => (
                 <div 
                   key={tag} 
-                  className={`flex items-center justify-between p-1 rounded-md transition-colors ${hoveredTag === tag ? 'bg-gray-800' : ''}`}
+                  className={`p-1.5 rounded-md transition-colors ${hoveredTag === tag ? 'bg-black/20' : ''}`}
                   onMouseEnter={() => setHoveredTag(tag)}
                   onMouseLeave={() => setHoveredTag(null)}
                 >
-                    <div className="flex items-center gap-2 min-w-0">
-                        <div className="w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: getTagColor(tag, index) }}></div>
-                        <span className="text-gray-300 truncate">{tag}</span>
+                    <div className="flex items-center justify-between mb-0.5">
+                      <div className="flex items-center gap-2 min-w-0">
+                          <div className="w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: getTagColor(tag, index) }}></div>
+                          <span className="text-gray-300 truncate">{tag}</span>
+                      </div>
+                      <span className="font-mono text-gray-400 flex-shrink-0 pl-2">{hours.toFixed(1)} hrs</span>
                     </div>
-                    <span className="font-mono text-gray-400 pl-4 flex-shrink-0">{hours.toFixed(1)} hrs</span>
+                    <div className="w-full bg-gray-700/50 rounded-full h-1">
+                      <div
+                        className="h-1 rounded-full"
+                        style={{
+                          backgroundColor: getTagColor(tag, index),
+                          width: `${(hours / (tagData[0]?.hours || 1)) * 100}%`
+                        }}
+                      ></div>
+                    </div>
                 </div>
             ))}
         </div>

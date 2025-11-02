@@ -80,13 +80,13 @@ const DataManagement: React.FC<DataManagementProps> = ({
   };
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 shadow-lg">
-      <h2 className="text-xl font-semibold text-gray-200 mb-4">Data Management</h2>
+    <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-lg p-6">
+      <h2 className="text-xl font-semibold text-gray-100 mb-4">Data Management</h2>
       <div className="flex flex-col sm:flex-row gap-4">
-        <button onClick={handleExport} className="flex-1 text-center bg-gray-700 text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-mint-500 transition-colors duration-200">
+        <button onClick={handleExport} className="flex-1 text-center bg-gray-700/80 text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-950 focus:ring-mint-500 transition-colors duration-200">
           Export Data
         </button>
-        <button onClick={handleImportClick} className="flex-1 text-center bg-gray-700 text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-mint-500 transition-colors duration-200">
+        <button onClick={handleImportClick} className="flex-1 text-center bg-gray-700/80 text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-950 focus:ring-mint-500 transition-colors duration-200">
           Import Data
         </button>
         <input

@@ -13,15 +13,16 @@ interface StatsDashboardProps {
 }
 
 const FireIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-orange-400" viewBox="0 0 20 20" fill="currentColor">
-        <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM10 18a1 1 0 01.707.293l2 2a1 1 0 11-1.414 1.414l-2-2A1 1 0 0110 18zm-7.707-4.293a1 1 0 010-1.414l2-2a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0zM10 4a1 1 0 01-1-1V1a1 1 0 112 0v2a1 1 0 01-1 1zm-4.293 2.293a1 1 0 011.414 0l2 2a1 1 0 11-1.414 1.414l-2-2a1 1 0 010-1.414z" clipRule="evenodd" />
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7.014A8.003 8.003 0 0117.657 18.657z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 16.121A3 3 0 1014.12 11.88a3 3 0 00-4.242 4.241zM12 18a6 6 0 00-6-6c0 2 1 5 6 5s6-3 6-5a6 6 0 00-6 6z" />
     </svg>
 );
 
 const TrophyIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
-        <path d="M11 3a1 1 0 100 2h2.586l-2.293 2.293a1 1 0 000 1.414L15 12.414V15a1 1 0 01-1 1H6a1 1 0 01-1-1v-2.586l3.707-3.707a1 1 0 000-1.414L6.414 5H9a1 1 0 100-2H5a1 1 0 00-1 1v4a1 1 0 00.293.707l3 3-2 2A1 1 0 006 17h8a1 1 0 00.707-1.707l-2-2 3-3A1 1 0 0016 9V4a1 1 0 00-1-1h-4z" />
-    </svg>
+   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
+     <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v1.999l4.873.696a1 1 0 01.878 1.128l-.755 4.152a1 1 0 01-.966.768H4.97a1 1 0 01-.966-.768l-.755-4.152a1 1 0 01.878-1.128L8 3.999V2a1 1 0 01.7-1.046l2.6-.52a1 1 0 011.362.565l.038.085.038-.085a1 1 0 011.362-.565l2.6.52zM4 12h12v2a1 1 0 01-1 1H5a1 1 0 01-1-1v-2z" clipRule="evenodd" />
+   </svg>
 );
 
 
@@ -35,26 +36,26 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({
   longestStreak,
 }) => {
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 shadow-lg">
-       <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-200">Stats</h2>
-            <button 
-                onClick={onEditGoals}
-                className="text-sm text-mint-400 hover:text-mint-300 transition-colors"
-            >
-                Edit Goals
-            </button>
+    <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-lg p-6">
+       <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold text-gray-100">Dashboard</h2>
+        <button 
+          onClick={onEditGoals}
+          className="text-sm text-mint-400 hover:text-mint-300 transition-colors font-medium"
+        >
+          Edit Goals
+        </button>
        </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-6 text-center">
-        <div className="flex flex-col items-center justify-center">
+      <div className="grid grid-cols-2 gap-4 mb-6 text-center border-b border-white/10 pb-6">
+        <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-black/10 transition-transform duration-200 hover:scale-105">
             <p className="text-gray-400 text-sm mb-1">Current Streak</p>
             <div className="flex items-center gap-2">
                 <FireIcon />
                 <p className="text-3xl font-bold text-white">{currentStreak}</p>
             </div>
         </div>
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-black/10 transition-transform duration-200 hover:scale-105">
             <p className="text-gray-400 text-sm mb-1">Longest Streak</p>
             <div className="flex items-center gap-2">
                 <TrophyIcon />
@@ -63,7 +64,7 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({
         </div>
       </div>
        
-      <div className="space-y-6 mt-6 pt-6 border-t border-gray-800">
+      <div className="grid grid-cols-3 gap-4 text-center">
         <StatCard title="This Week" currentHours={weeklyTotal} goalHours={goals.weekly} />
         <StatCard title="This Month" currentHours={monthlyTotal} goalHours={goals.monthly} />
         <StatCard title="This Year" currentHours={yearlyTotal} goalHours={goals.yearly} />
