@@ -28,7 +28,9 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
     currentDate.setDate(currentDate.getDate() + 1);
   }
 
-  const firstDayOfWeek = startDate.getDay();
+  // If Monday is the start of the week (1), we need 0 padding days.
+  // If Sunday is the start of the week (0), we need 6 padding days.
+  const firstDayOfWeek = (startDate.getDay() + 6) % 7; 
   const paddingDays = Array(firstDayOfWeek).fill(null);
 
   const getColor = (hours: number | undefined) => {
@@ -49,7 +51,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
     const month = day.getMonth();
     const weekIndex = Math.floor((index + paddingDays.length) / 7);
     if (month !== lastMonth) {
-        // Prevent month labels from overlapping on smaller screens
+        // Prevent month labels from overlapping
         if (monthLabels.length === 0 || weekIndex > monthLabels[monthLabels.length - 1].index + 3) {
             monthLabels.push({ label: monthNames[month], index: weekIndex });
         }
@@ -70,8 +72,8 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
             <span>Fri</span>
             <span className="h-full"></span>
         </div>
-        <div className="flex-1">
-            <div className="relative">
+        <div className="flex-1 overflow-x-auto pb-2">
+            <div className="relative" style={{ minWidth: '850px' }}>
                 <div className="flex text-xs text-gray-500 mb-2 h-4">
                     {monthLabels.map((month, i) => (
                         <div key={i} className="absolute" style={{left: `calc(${(month.index / 53) * 100}%)`}}>
