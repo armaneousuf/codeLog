@@ -35,12 +35,12 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
 
   const getColor = (hours: number | undefined) => {
     if (hours === undefined || hours <= 0) return 'bg-gray-800';
-    if (hours <= 1.5) return 'bg-green-900';
-    if (hours <= 3) return 'bg-green-800';
-    if (hours <= 4.5) return 'bg-green-700';
-    if (hours <= 6) return 'bg-green-600';
-    if (hours <= 7.5) return 'bg-green-500';
-    return 'bg-green-400';
+    if (hours <= 1.5) return 'bg-mint-900';
+    if (hours <= 3) return 'bg-mint-800';
+    if (hours <= 4.5) return 'bg-mint-700';
+    if (hours <= 6) return 'bg-mint-600';
+    if (hours <= 7.5) return 'bg-mint-500';
+    return 'bg-mint-400';
   };
   
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -101,7 +101,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
                       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onDateSelect(dateString); }}
                     >
                         <div
-                          className={`aspect-square rounded ${getColor(hours)} transition-all duration-150 group-hover:ring-2 group-hover:ring-blue-400 ring-offset-2 ring-offset-gray-900`}
+                          className={`aspect-square rounded ${getColor(hours)} transition-all duration-150 group-hover:ring-2 group-hover:ring-mint-400 ring-offset-2 ring-offset-gray-900`}
                         />
                         <div className="absolute bottom-full mb-2 w-max px-3 py-2 bg-gray-950 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 -translate-x-1/2 left-1/2">
                           <p className="font-bold">{hours ? `${hours.toFixed(1)} hours` : 'No activity'}</p>
@@ -117,12 +117,12 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
       <div className="flex justify-end items-center mt-4 space-x-2 text-xs text-gray-500">
         <span>Less</span>
         <div className="w-3 h-3 bg-gray-800 rounded-sm"></div>
-        <div className="w-3 h-3 bg-green-900 rounded-sm"></div>
-        <div className="w-3 h-3 bg-green-800 rounded-sm"></div>
-        <div className="w-3 h-3 bg-green-700 rounded-sm"></div>
-        <div className="w-3 h-3 bg-green-600 rounded-sm"></div>
-        <div className="w-3 h-3 bg-green-500 rounded-sm"></div>
-        <div className="w-3 h-3 bg-green-400 rounded-sm"></div>
+        <div className="w-3 h-3 bg-mint-900 rounded-sm"></div>
+        <div className="w-3 h-3 bg-mint-800 rounded-sm"></div>
+        <div className="w-3 h-3 bg-mint-700 rounded-sm"></div>
+        <div className="w-3 h-3 bg-mint-600 rounded-sm"></div>
+        <div className="w-3 h-3 bg-mint-500 rounded-sm"></div>
+        <div className="w-3 h-3 bg-mint-400 rounded-sm"></div>
         <span>More</span>
       </div>
     </div>

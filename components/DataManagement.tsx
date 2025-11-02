@@ -87,10 +87,10 @@ const DataManagement: React.FC<DataManagementProps> = ({
     <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 shadow-lg">
       <h2 className="text-xl font-semibold text-gray-200 mb-4">Data Management</h2>
       <div className="flex flex-col sm:flex-row gap-4">
-        <button onClick={handleExport} className="flex-1 text-center bg-gray-700 text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-blue-500 transition-colors duration-200">
+        <button onClick={handleExport} className="flex-1 text-center bg-gray-700 text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-mint-500 transition-colors duration-200">
           Export Data
         </button>
-        <button onClick={handleImportClick} className="flex-1 text-center bg-gray-700 text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-blue-500 transition-colors duration-200">
+        <button onClick={handleImportClick} className="flex-1 text-center bg-gray-700 text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-mint-500 transition-colors duration-200">
           Import Data
         </button>
         <input

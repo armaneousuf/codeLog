@@ -6,7 +6,7 @@ interface TagAnalysisProps {
 }
 
 const COLORS = [
-  '#3b82f6', '#10b981', '#f97316', '#ec4899', '#8b5cf6', 
+  '#34d399', '#10b981', '#f97316', '#ec4899', '#8b5cf6', 
   '#ef4444', '#f59e0b', '#22c55e', '#06b6d4', '#6366f1'
 ];
 

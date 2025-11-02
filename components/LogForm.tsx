@@ -48,9 +48,6 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
     if (date) {
       onAddLog({ date, hours: hoursNum, note, tags: selectedTags });
       justSaved.current = true;
-      setHours('');
-      setNote('');
-      setSelectedTags([]);
     }
   };
   
@@ -71,7 +68,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
             id="date"
             value={date}
             onChange={(e) => onDateChange(e.target.value)}
-            className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-mint-500 focus:border-mint-500"
             max={today}
             required
           />
@@ -83,72 +80,66 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
             id="hours"
             value={hours}
             onChange={(e) => setHours(e.target.value)}
-            className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-mint-500 focus:border-mint-500"
             placeholder="e.g., 4.5"
             step="0.1"
             min="0"
           />
         </div>
         <div>
-          <label htmlFor="note" className="block text-sm font-medium text-gray-400 mb-1">Notes</label>
+          <label htmlFor="note" className="block text-sm font-medium text-gray-400 mb-1">Note (Optional)</label>
           <textarea
             id="note"
+            rows={3}
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            className="w-full h-24 bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-mint-500 focus:border-mint-500"
             placeholder="What did you work on?"
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-400 mb-1">Technologies</label>
-          <div className="relative" ref={dropdownRef}>
-            <button
-              type="button"
-              onClick={() => setDropdownOpen(!isDropdownOpen)}
-              className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-left text-white flex justify-between items-center"
-            >
-              <span className={selectedTags.length === 0 ? 'text-gray-400' : ''}>
-                {selectedTags.length > 0 ? `${selectedTags.length} selected` : 'Select technologies...'}
-              </span>
-              <svg className={`w-4 h-4 text-gray-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.23 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" /></svg>
-            </button>
-            {isDropdownOpen && (
-              <div className="absolute z-10 w-full mt-1 bg-gray-800 border border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
+        
+        <div ref={dropdownRef}>
+          <label className="block text-sm font-medium text-gray-400 mb-1">Technologies (Optional)</label>
+          <button type="button" onClick={() => setDropdownOpen(!isDropdownOpen)} className="w-full text-left bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-mint-500">
+            {selectedTags.length > 0 ? `${selectedTags.length} selected` : 'Select technologies...'}
+          </button>
+          {isDropdownOpen && (
+            <div className="mt-2 bg-gray-800 border border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
+              <div className="p-2 grid grid-cols-2 gap-2">
                 {TECHNOLOGIES.map(tech => (
-                  <label key={tech} className="flex items-center px-3 py-2 text-sm text-gray-200 hover:bg-gray-700 cursor-pointer">
+                  <label key={tech} className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-700 cursor-pointer">
                     <input
                       type="checkbox"
-                      className="h-4 w-4 rounded bg-gray-900 border-gray-600 text-blue-600 focus:ring-blue-500 focus:ring-offset-0"
                       checked={selectedTags.includes(tech)}
                       onChange={() => handleTagToggle(tech)}
+                      className="h-4 w-4 rounded bg-gray-700 border-gray-600 text-mint-600 focus:ring-mint-500"
                     />
-                    <span className="ml-3">{tech}</span>
+                    <span className="text-sm text-gray-300">{tech}</span>
                   </label>
                 ))}
               </div>
-            )}
-            {selectedTags.length > 0 && (
-              <div className="mt-2 flex flex-wrap gap-2">
-                {selectedTags.map(tag => (
-                  <span key={tag} className="flex items-center bg-blue-900/50 text-blue-300 text-xs font-medium px-2.5 py-1 rounded-full">
-                    {tag}
-                    <button
-                      type="button"
-                      onClick={() => handleTagToggle(tag)}
-                      className="ml-1.5 -mr-1 p-0.5 text-blue-300 hover:text-white rounded-full hover:bg-blue-800/50"
-                      aria-label={`Remove ${tag}`}
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
-                    </button>
-                  </span>
-                ))}
-              </div>
-            )}
+            </div>
+          )}
+          <div className="mt-2 flex flex-wrap gap-2">
+            {selectedTags.map(tag => (
+              <span key={tag} className="inline-flex items-center px-2.5 py-1 bg-mint-800 text-mint-100 text-xs font-medium rounded-full">
+                {tag}
+                <button type="button" onClick={() => handleTagToggle(tag)} className="ml-1.5 text-mint-200 hover:text-white">
+                  &times;
+                </button>
+              </span>
+            ))}
           </div>
         </div>
-        <button type="submit" className="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-blue-500 transition-colors duration-200">
-          Save Log
-        </button>
+
+        <div>
+          <button
+            type="submit"
+            className="w-full bg-mint-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-mint-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-mint-500 transition-colors duration-200"
+          >
+            Save Log
+          </button>
+        </div>
       </form>
     </div>
   );

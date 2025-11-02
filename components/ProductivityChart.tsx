@@ -36,7 +36,7 @@ const ProductivityChart: React.FC<ProductivityChartProps> = ({ logs }) => {
               <span className="w-8 text-gray-400 font-medium">{day}</span>
               <div className="flex-1 bg-gray-700 rounded-full h-4">
                 <div
-                  className="bg-sky-500 h-4 rounded-full transition-all duration-500 ease-out"
+                  className="bg-mint-500 h-4 rounded-full transition-all duration-500 ease-out"
                   style={{ width: `${percentage}%` }}
                 />
               </div>

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF--8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='16 18 22 12 16 6'%3E%3C/polyline%3E%3Cpolyline points='8 6 2 12 8 18'%3E%3C/polyline%3E%3C/svg%3E" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236ee7b7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='16 18 22 12 16 6'%3E%3C/polyline%3E%3Cpolyline points='8 6 2 12 8 18'%3E%3C/polyline%3E%3C/svg%3E" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CodeLog: Daily Hour Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -16,11 +16,46 @@
               'gray-800': '#21262d',
               'gray-700': '#30363d',
               'gray-600': '#484f58',
+              'mint': {
+                '50': '#f0fdfa',
+                '100': '#ccfbf1',
+                '200': '#99f6e4',
+                '300': '#6ee7b7',
+                '400': '#34d399',
+                '500': '#10b981',
+                '600': '#059669',
+                '700': '#047857',
+                '800': '#065f46',
+                '900': '#064e3b',
+                '950': '#022c22'
+              }
             }
           }
         }
       }
     </script>
+    <style>
+      /* For Webkit-based browsers (Chrome, Safari, Edge) */
+      ::-webkit-scrollbar {
+        width: 12px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #161b22; /* gray-900 */
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: #059669; /* mint-600 */
+        border-radius: 6px;
+        border: 3px solid #161b22; /* gray-900 */
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: #10b981; /* mint-500 */
+      }
+      /* For Firefox */
+      html {
+        scrollbar-width: thin;
+        scrollbar-color: #059669 #161b22;
+      }
+    </style>
   <script type="importmap">
 {
   "imports": {

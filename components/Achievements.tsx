@@ -15,7 +15,7 @@ const Achievements: React.FC<AchievementsProps> = ({ unlockedCount, totalCount, 
         <h2 className="text-xl font-semibold text-gray-200">Achievements</h2>
         <button 
           onClick={onView}
-          className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+          className="text-sm text-mint-400 hover:text-mint-300 transition-colors"
         >
           View All
         </button>

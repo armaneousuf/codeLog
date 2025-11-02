@@ -99,12 +99,12 @@ const MovingAverageChart: React.FC<MovingAverageChartProps> = ({ logs }) => {
           )}
 
           {/* Main Path */}
-          <path d={pathData} fill="none" stroke="#38bdf8" strokeWidth="2" />
+          <path d={pathData} fill="none" stroke="#10b981" strokeWidth="2" />
 
           {/* Tooltip */}
           {tooltip && (
             <g>
-              <circle cx={tooltip.x} cy={tooltip.y} r="4" fill="#38bdf8" stroke="white" strokeWidth="2" />
+              <circle cx={tooltip.x} cy={tooltip.y} r="4" fill="#10b981" stroke="white" strokeWidth="2" />
               <rect x={tooltip.x > width / 2 ? tooltip.x - 90 : tooltip.x + 10} y={tooltip.y - 20} width="80" height="35" fill="rgba(17, 24, 39, 0.8)" rx="4"/>
               <text x={tooltip.x > width / 2 ? tooltip.x - 85 : tooltip.x + 15} y={tooltip.y - 5} fill="white" fontSize="12" fontWeight="bold">{tooltip.text}</text>
               <text x={tooltip.x > width / 2 ? tooltip.x - 85 : tooltip.x + 15} y={tooltip.y + 10} fill="#9ca3af" fontSize="10">{tooltip.date}</text>
