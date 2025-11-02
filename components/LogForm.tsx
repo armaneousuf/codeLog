@@ -1,20 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { LogEntry, Project } from '../types';
+import { LogEntry } from '../types';
 import { TECHNOLOGIES } from '../lib/technologies';
 
 interface LogFormProps {
   onAddLog: (log: LogEntry) => void;
   logs: LogEntry[];
-  projects: Project[];
   date: string;
   onDateChange: (date: string) => void;
 }
 
-const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, projects, date, onDateChange }) => {
+const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange }) => {
   const today = new Date().toISOString().split('T')[0];
   const [hours, setHours] = useState('');
   const [note, setNote] = useState('');
-  const [projectId, setProjectId] = useState<string>('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -29,7 +27,6 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, projects, date, onDat
     setHours(existingLog ? String(existingLog.hours) : '');
     setNote(existingLog?.note || '');
     setSelectedTags(existingLog?.tags || []);
-    setProjectId(existingLog?.projectId || '');
   }, [date, logs]);
 
   useEffect(() => {
@@ -49,7 +46,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, projects, date, onDat
     const hoursNum = parseFloat(hours) || 0;
     
     if (date) {
-      onAddLog({ date, hours: hoursNum, note, tags: selectedTags, projectId: projectId || undefined });
+      onAddLog({ date, hours: hoursNum, note, tags: selectedTags });
       justSaved.current = true;
     }
   };
@@ -88,20 +85,6 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, projects, date, onDat
             step="0.1"
             min="0"
           />
-        </div>
-         <div>
-          <label htmlFor="project" className="block text-sm font-medium text-gray-400 mb-1">Project (Optional)</label>
-          <select
-            id="project"
-            value={projectId}
-            onChange={(e) => setProjectId(e.target.value)}
-            className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-mint-500 focus:border-mint-500"
-          >
-            <option value="">No Project</option>
-            {projects.map(p => (
-              <option key={p.id} value={p.id}>{p.name}</option>
-            ))}
-          </select>
         </div>
         <div>
           <label htmlFor="note" className="block text-sm font-medium text-gray-400 mb-1">Note (Optional)</label>

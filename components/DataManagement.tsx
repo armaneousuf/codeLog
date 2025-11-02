@@ -1,25 +1,21 @@
 import React, { useRef } from 'react';
-import { LogEntry, Goals, UnlockedAchievements, Project } from '../types';
+import { LogEntry, Goals, UnlockedAchievements } from '../types';
 
 interface DataManagementProps {
   logs: LogEntry[];
   goals: Goals;
-  projects: Project[];
   unlockedAchievements: UnlockedAchievements;
   setLogs: React.Dispatch<React.SetStateAction<LogEntry[]>>;
   setGoals: React.Dispatch<React.SetStateAction<Goals>>;
-  setProjects: React.Dispatch<React.SetStateAction<Project[]>>;
   setUnlockedAchievements: React.Dispatch<React.SetStateAction<UnlockedAchievements>>;
 }
 
 const DataManagement: React.FC<DataManagementProps> = ({
   logs,
   goals,
-  projects,
   unlockedAchievements,
   setLogs,
   setGoals,
-  setProjects,
   setUnlockedAchievements,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -28,7 +24,6 @@ const DataManagement: React.FC<DataManagementProps> = ({
     const data = {
       logs,
       goals,
-      projects,
       unlockedAchievements,
       exportDate: new Date().toISOString(),
     };
@@ -69,7 +64,6 @@ const DataManagement: React.FC<DataManagementProps> = ({
         if (Array.isArray(importedData.logs) && importedData.goals) {
           setLogs(importedData.logs || []);
           setGoals(importedData.goals);
-          setProjects(importedData.projects || []);
           setUnlockedAchievements(importedData.unlockedAchievements || {});
           alert("Data imported successfully!");
         } else {

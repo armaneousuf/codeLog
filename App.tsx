@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { LogEntry, Goals, UnlockedAchievements, Project } from './types';
+import { LogEntry, Goals, UnlockedAchievements } from './types';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import Header from './components/Header';
 import LogForm from './components/LogForm';
@@ -13,36 +13,17 @@ import Achievements from './components/Achievements';
 import AchievementsModal from './components/AchievementsModal';
 import AchievementToast from './components/AchievementToast';
 import { ALL_ACHIEVEMENTS } from './lib/achievements';
-import ProjectManager from './components/ProjectManager';
-import FilterControls from './components/FilterControls';
-import WeeklyReviewModal from './components/WeeklyReviewModal';
+import MovingAverageChart from './components/MovingAverageChart';
 
 const App: React.FC = () => {
   const [logs, setLogs] = useLocalStorage<LogEntry[]>('codingLogs', []);
   const [goals, setGoals] = useLocalStorage<Goals>('codingGoals', { weekly: 20, monthly: 80, yearly: 1000 });
-  const [projects, setProjects] = useLocalStorage<Project[]>('codingProjects', []);
   const [unlockedAchievements, setUnlockedAchievements] = useLocalStorage<UnlockedAchievements>('unlockedAchievements', {});
   
   const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false);
   const [isAchievementsModalOpen, setIsAchievementsModalOpen] = useState(false);
-  const [isWeeklyReviewModalOpen, setIsWeeklyReviewModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [newlyUnlocked, setNewlyUnlocked] = useState<string[]>([]);
-  const [activeFilter, setActiveFilter] = useState<{ type: 'tag' | 'project' | null; value: string | null }>({ type: null, value: null });
-
-  const filteredLogs = useMemo(() => {
-    if (!activeFilter.type || !activeFilter.value) {
-      return logs;
-    }
-    if (activeFilter.type === 'tag') {
-      return logs.filter(log => log.tags?.includes(activeFilter.value as string));
-    }
-    if (activeFilter.type === 'project') {
-      return logs.filter(log => log.projectId === activeFilter.value);
-    }
-    return logs;
-  }, [logs, activeFilter]);
-
 
   const handleAddLog = (newLog: LogEntry) => {
     setLogs(prevLogs => {
@@ -88,7 +69,7 @@ const App: React.FC = () => {
     let monthly = 0;
     let yearly = 0;
 
-    for (const log of filteredLogs) {
+    for (const log of logs) {
       const logDate = new Date(log.date + 'T00:00:00'); // Ensure date is parsed in local time
       if (logDate >= startOfYear) {
         yearly += log.hours;
@@ -101,9 +82,8 @@ const App: React.FC = () => {
       }
     }
     return { weeklyTotal: weekly, monthlyTotal: monthly, yearlyTotal: yearly };
-  }, [filteredLogs]);
+  }, [logs]);
 
-  // Streaks and achievements should always be calculated on unfiltered logs.
   const currentStreak = useMemo(() => {
     if (logs.length === 0) return 0;
 
@@ -190,21 +170,12 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-950 font-sans p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
-        <Header onWeeklyReviewClick={() => setIsWeeklyReviewModalOpen(true)} />
-        <FilterControls
-            logs={logs}
-            projects={projects}
-            activeFilter={activeFilter}
-            onSetFilter={setActiveFilter}
-            onClearFilter={() => setActiveFilter({ type: null, value: null })}
-        />
+        <Header />
         <main className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1 space-y-8">
-             <ProjectManager projects={projects} setProjects={setProjects} />
             <LogForm 
               onAddLog={handleAddLog} 
               logs={logs}
-              projects={projects}
               date={selectedDate}
               onDateChange={setSelectedDate} 
             />
@@ -222,21 +193,20 @@ const App: React.FC = () => {
               totalCount={ALL_ACHIEVEMENTS.length}
               onView={() => setIsAchievementsModalOpen(true)}
             />
-            <TagAnalysis logs={filteredLogs} />
+            <TagAnalysis logs={logs} />
             <DataManagement
               logs={logs}
               goals={goals}
-              projects={projects}
               unlockedAchievements={unlockedAchievements}
               setLogs={setLogs}
               setGoals={setGoals}
-              setProjects={setProjects}
               setUnlockedAchievements={setUnlockedAchievements}
             />
           </div>
           <div className="lg:col-span-2 space-y-8">
-             <Heatmap logs={filteredLogs} onDateSelect={setSelectedDate} />
-             <ProductivityChart logs={filteredLogs} />
+             <Heatmap logs={logs} onDateSelect={setSelectedDate} />
+             <MovingAverageChart logs={logs} />
+             <ProductivityChart logs={logs} />
           </div>
         </main>
       </div>
@@ -250,12 +220,6 @@ const App: React.FC = () => {
         isOpen={isAchievementsModalOpen}
         onClose={() => setIsAchievementsModalOpen(false)}
         unlockedAchievements={unlockedAchievements}
-      />
-       <WeeklyReviewModal
-        isOpen={isWeeklyReviewModalOpen}
-        onClose={() => setIsWeeklyReviewModalOpen(false)}
-        logs={logs}
-        projects={projects}
       />
       <AchievementToast
         newlyUnlocked={newlyUnlocked}
