@@ -23,6 +23,13 @@ export const ALL_ACHIEVEMENTS: Achievement[] = [
     isUnlocked: (logs) => logs.length >= 50,
   },
   {
+    id: 'hundred_logs',
+    name: 'Century Mark',
+    description: 'Log 100 different coding sessions.',
+    icon: '🎯',
+    isUnlocked: (logs) => logs.length >= 100,
+  },
+  {
     id: 'hundred_hours',
     name: '100 Hour Club',
     description: 'Log a total of 100 hours of coding.',
@@ -37,6 +44,20 @@ export const ALL_ACHIEVEMENTS: Achievement[] = [
     isUnlocked: (logs) => logs.reduce((sum, log) => sum + log.hours, 0) >= 500,
   },
   {
+    id: 'thousand_hours',
+    name: '1K Hour Club',
+    description: 'Log a total of 1000 hours of coding.',
+    icon: '🌌',
+    isUnlocked: (logs) => logs.reduce((sum, log) => sum + log.hours, 0) >= 1000,
+  },
+  {
+    id: 'two_thousand_hours',
+    name: 'Code Master',
+    description: 'Log a total of 2000 hours of coding.',
+    icon: '🧙',
+    isUnlocked: (logs) => logs.reduce((sum, log) => sum + log.hours, 0) >= 2000,
+  },
+  {
     id: 'seven_day_streak',
     name: 'Perfect Week',
     description: 'Maintain a 7-day coding streak.',
@@ -44,11 +65,25 @@ export const ALL_ACHIEVEMENTS: Achievement[] = [
     isUnlocked: (_, streak) => streak >= 7,
   },
   {
+    id: 'fourteen_day_streak',
+    name: 'Two Week Warrior',
+    description: 'Maintain a 14-day coding streak.',
+    icon: '⚔️',
+    isUnlocked: (_, streak) => streak >= 14,
+  },
+  {
     id: 'thirty_day_streak',
     name: 'Consistent Coder',
     description: 'Maintain a 30-day coding streak.',
     icon: '🧘',
     isUnlocked: (_, streak) => streak >= 30,
+  },
+  {
+    id: 'hundred_day_streak',
+    name: 'The Centurion',
+    description: 'Maintain a 100-day coding streak.',
+    icon: '🏛️',
+    isUnlocked: (_, streak) => streak >= 100,
   },
   {
     id: 'weekend_warrior',
@@ -59,6 +94,34 @@ export const ALL_ACHIEVEMENTS: Achievement[] = [
       const day = new Date(log.date + 'T00:00:00').getDay();
       return day === 0 || day === 6;
     }),
+  },
+  {
+    id: 'weekend_champion',
+    name: 'Weekend Champion',
+    description: 'Log hours on four consecutive weekends.',
+    icon: '🏅',
+    isUnlocked: (logs) => {
+        const weekendWeeks = new Set<number>();
+        for (const log of logs) {
+            const d = new Date(log.date + 'T00:00:00');
+            const day = d.getDay();
+            if (day === 0 || day === 6) {
+                const monday = new Date(d);
+                monday.setDate(d.getDate() - day + (day === 0 ? -6 : 1));
+                monday.setHours(0, 0, 0, 0);
+                weekendWeeks.add(monday.getTime());
+            }
+        }
+        if (weekendWeeks.size < 4) return false;
+        const sortedWeeks = Array.from(weekendWeeks).sort((a, b) => a - b);
+        const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+        for (let i = 0; i <= sortedWeeks.length - 4; i++) {
+            if (sortedWeeks[i+3] - sortedWeeks[i] === 3 * ONE_WEEK_MS) {
+                return true;
+            }
+        }
+        return false;
+    }
   },
   {
     id: 'overachiever',
@@ -82,40 +145,6 @@ export const ALL_ACHIEVEMENTS: Achievement[] = [
     isUnlocked: (logs) => logs.some(log => log.hours > 12),
   },
   {
-    id: 'elite_average',
-    name: 'Elite Coder',
-    description: 'Maintain a 10+ hour daily average over the last 30 days.',
-    icon: '⭐',
-    isUnlocked: (logs) => {
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-        const thirtyDaysAgoStr = thirtyDaysAgo.toISOString().split('T')[0];
-        
-        const logsLast30Days = logs.filter(log => log.date >= thirtyDaysAgoStr);
-        const totalHours30 = logsLast30Days.reduce((sum, log) => sum + log.hours, 0);
-        
-        return (totalHours30 / 30) >= 10;
-    }
-  },
-  {
-    id: 'tag_pro',
-    name: 'Organized',
-    description: 'Use at least 5 different tags.',
-    icon: '🏷️',
-    isUnlocked: (logs) => {
-        const allTags = new Set<string>();
-        logs.forEach(log => log.tags?.forEach(tag => allTags.add(tag)));
-        return allTags.size >= 5;
-    }
-  },
-  {
-    id: 'note_taker',
-    name: 'Detail Oriented',
-    description: 'Write notes for at least 10 log entries.',
-    icon: '📝',
-    isUnlocked: (logs) => logs.filter(log => log.note && log.note.trim() !== '').length >= 10,
-  },
-  {
     id: 'marathoner',
     name: 'Marathoner',
     description: 'Log over 40 hours in a single week.',
@@ -131,5 +160,153 @@ export const ALL_ACHIEVEMENTS: Achievement[] = [
       });
       return Array.from(weekMap.values()).some(total => total > 40);
     }
-  }
+  },
+  {
+    id: 'monthly_marathon',
+    name: 'Monthly Marathon',
+    description: 'Log over 100 hours in a single calendar month.',
+    icon: '🌕',
+    isUnlocked: (logs) => {
+      const monthMap = new Map<string, number>();
+      logs.forEach(log => {
+        const monthKey = log.date.substring(0, 7); // YYYY-MM
+        monthMap.set(monthKey, (monthMap.get(monthKey) || 0) + log.hours);
+      });
+      return Array.from(monthMap.values()).some(total => total > 100);
+    }
+  },
+  {
+    id: 'yearly_dedication',
+    name: 'Yearly Dedication',
+    description: 'Log over 1000 hours in a single calendar year.',
+    icon: '🎇',
+    isUnlocked: (logs) => {
+      const yearMap = new Map<string, number>();
+      logs.forEach(log => {
+        const yearKey = log.date.substring(0, 4); // YYYY
+        yearMap.set(yearKey, (yearMap.get(yearKey) || 0) + log.hours);
+      });
+      return Array.from(yearMap.values()).some(total => total > 1000);
+    }
+  },
+  {
+    id: 'full_week',
+    name: 'Full Week',
+    description: 'Log hours every day of a single calendar week (Mon-Sun).',
+    icon: '📅',
+    isUnlocked: (logs) => {
+        const weeks = new Map<number, Set<number>>();
+        for (const log of logs) {
+            const d = new Date(log.date + 'T00:00:00');
+            const day = d.getDay();
+            
+            const monday = new Date(d);
+            monday.setDate(d.getDate() - day + (day === 0 ? -6 : 1));
+            monday.setHours(0, 0, 0, 0);
+
+            if (!weeks.has(monday.getTime())) {
+                weeks.set(monday.getTime(), new Set());
+            }
+            weeks.get(monday.getTime())!.add(day);
+        }
+        for (const daysInWeek of weeks.values()) {
+            if (daysInWeek.size === 7) return true;
+        }
+        return false;
+    }
+  },
+  {
+    id: 'all_week_long',
+    name: 'All Week Long',
+    description: 'Log hours on every day of the week (a Mon, a Tue, etc.).',
+    icon: '🌐',
+    isUnlocked: (logs) => {
+        const days = new Set();
+        for (const log of logs) {
+            days.add(new Date(log.date + 'T00:00:00').getDay());
+        }
+        return days.size === 7;
+    }
+  },
+  {
+    id: 'tag_pro',
+    name: 'Organized',
+    description: 'Use at least 5 different tags.',
+    icon: '🏷️',
+    isUnlocked: (logs) => {
+        const allTags = new Set<string>();
+        logs.forEach(log => log.tags?.forEach(tag => allTags.add(tag)));
+        return allTags.size >= 5;
+    }
+  },
+  {
+    id: 'polyglot',
+    name: 'Polyglot',
+    description: 'Use at least 10 different technology tags.',
+    icon: '🗣️',
+    isUnlocked: (logs) => {
+        const allTags = new Set<string>();
+        logs.forEach(log => log.tags?.forEach(tag => allTags.add(tag)));
+        return allTags.size >= 10;
+    }
+  },
+  {
+    id: 'specialist',
+    name: 'Specialist',
+    description: 'Log over 100 hours with a single technology tag.',
+    icon: '🔬',
+    isUnlocked: (logs) => {
+        const tagHours = new Map<string, number>();
+        logs.forEach(log => {
+            log.tags?.forEach(tag => {
+                tagHours.set(tag, (tagHours.get(tag) || 0) + log.hours);
+            });
+        });
+        return Array.from(tagHours.values()).some(hours => hours >= 100);
+    }
+  },
+  {
+    id: 'note_taker',
+    name: 'Detail Oriented',
+    description: 'Write notes for at least 10 log entries.',
+    icon: '📝',
+    isUnlocked: (logs) => logs.filter(log => log.note && log.note.trim() !== '').length >= 10,
+  },
+  {
+    id: 'scribe',
+    name: 'The Scribe',
+    description: 'Write notes for 50 log entries.',
+    icon: '📜',
+    isUnlocked: (logs) => logs.filter(log => log.note && log.note.trim() !== '').length >= 50,
+  },
+  {
+    id: 'elite_average',
+    name: 'Elite Coder',
+    description: 'Maintain a 10+ hour daily average over the last 30 days.',
+    icon: '⭐',
+    isUnlocked: (logs) => {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        thirtyDaysAgo.setHours(0,0,0,0);
+        
+        const logsLast30Days = logs.filter(log => new Date(log.date) >= thirtyDaysAgo);
+        const totalHours30 = logsLast30Days.reduce((sum, log) => sum + log.hours, 0);
+        
+        return (totalHours30 / 30) >= 10;
+    }
+  },
+  {
+    id: 'new_year_res',
+    name: 'New Year\'s Resolution',
+    description: 'Log hours on January 1st.',
+    icon: '🎉',
+    isUnlocked: (logs) => logs.some(log => log.date.endsWith('-01-01')),
+  },
+  {
+    id: 'leap_day',
+    name: 'Leap Day Coder',
+    description: 'Log hours on February 29th.',
+    icon: '🦎',
+    isUnlocked: (logs) => logs.some(log => log.date.endsWith('-02-29')),
+  },
 ];
