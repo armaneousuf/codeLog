@@ -255,64 +255,46 @@ const App: React.FC = () => {
         <Header totalHours={totalHours} />
         <main className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1 space-y-8">
-            <div className="animate-fade-in-up" style={{animationDelay: '100ms', animationFillMode: 'backwards'}}>
-              <LogForm 
-                onAddLog={handleAddLog} 
-                logs={logs}
-                date={selectedDate}
-                onDateChange={setSelectedDate}
-              />
-            </div>
-             <div className="animate-fade-in-up" style={{animationDelay: '200ms', animationFillMode: 'backwards'}}>
-              <StatsDashboard 
-                weeklyTotal={weeklyTotal}
-                monthlyTotal={monthlyTotal}
-                yearlyTotal={yearlyTotal}
-                goals={goals}
-                onEditGoals={() => setIsGoalsModalOpen(true)}
-                currentStreak={currentStreak}
-                longestStreak={longestStreak}
-              />
-            </div>
-             <div className="animate-fade-in-up" style={{animationDelay: '300ms', animationFillMode: 'backwards'}}>
-              <QuoteCard
-                quote={quote.text}
-                author={quote.author}
-                isLoading={isQuoteLoading}
-                onRefresh={fetchQuote}
-              />
-            </div>
-             <div className="animate-fade-in-up" style={{animationDelay: '400ms', animationFillMode: 'backwards'}}>
-              <Achievements
-                unlockedCount={Object.keys(unlockedAchievements).length}
-                totalCount={ALL_ACHIEVEMENTS.length}
-                onView={() => setIsAchievementsModalOpen(true)}
-              />
-            </div>
-             <div className="animate-fade-in-up" style={{animationDelay: '500ms', animationFillMode: 'backwards'}}>
-              <TagAnalysis logs={logs} />
-            </div>
-            <div className="animate-fade-in-up" style={{animationDelay: '600ms', animationFillMode: 'backwards'}}>
-              <DataManagement
-                logs={logs}
-                goals={goals}
-                unlockedAchievements={unlockedAchievements}
-                setLogs={setLogs}
-                setGoals={setGoals}
-                setUnlockedAchievements={setUnlockedAchievements}
-              />
-            </div>
+            <LogForm 
+              onAddLog={handleAddLog} 
+              logs={logs}
+              date={selectedDate}
+              onDateChange={setSelectedDate}
+            />
+            <StatsDashboard 
+              weeklyTotal={weeklyTotal}
+              monthlyTotal={monthlyTotal}
+              yearlyTotal={yearlyTotal}
+              goals={goals}
+              onEditGoals={() => setIsGoalsModalOpen(true)}
+              currentStreak={currentStreak}
+              longestStreak={longestStreak}
+            />
+            <QuoteCard
+              quote={quote.text}
+              author={quote.author}
+              isLoading={isQuoteLoading}
+              onRefresh={fetchQuote}
+            />
+            <Achievements
+              unlockedCount={Object.keys(unlockedAchievements).length}
+              totalCount={ALL_ACHIEVEMENTS.length}
+              onView={() => setIsAchievementsModalOpen(true)}
+            />
+            <TagAnalysis logs={logs} />
+            <DataManagement
+              logs={logs}
+              goals={goals}
+              unlockedAchievements={unlockedAchievements}
+              setLogs={setLogs}
+              setGoals={setGoals}
+              setUnlockedAchievements={setUnlockedAchievements}
+            />
           </div>
           <div className="lg:col-span-2 space-y-8">
-             <div className="animate-fade-in-up" style={{animationDelay: '300ms', animationFillMode: 'backwards'}}>
-              <Heatmap logs={logs} onDateSelect={setSelectedDate} />
-             </div>
-             <div className="animate-fade-in-up" style={{animationDelay: '400ms', animationFillMode: 'backwards'}}>
-              <MovingAverageChart logs={logs} />
-             </div>
-             <div className="animate-fade-in-up" style={{animationDelay: '500ms', animationFillMode: 'backwards'}}>
-              <ProductivityChart logs={logs} />
-             </div>
+            <Heatmap logs={logs} onDateSelect={setSelectedDate} />
+            <MovingAverageChart logs={logs} />
+            <ProductivityChart logs={logs} />
           </div>
         </main>
       </div>
