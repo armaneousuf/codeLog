@@ -352,6 +352,20 @@ const App: React.FC = () => {
             />
           </div>
         </main>
+        <footer className="text-center text-gray-400 text-sm mt-12 py-4 border-t border-gray-800">
+          <p>
+            This website was created by{' '}
+            <a
+              href="https://github.com/armaneousuf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-200 hover:text-white underline transition-colors"
+            >
+              Arman Eousuf
+            </a>{' '}
+            with the help of Google Gemini.
+          </p>
+        </footer>
       </div>
       <GoalsModal
         isOpen={isGoalsModalOpen}
