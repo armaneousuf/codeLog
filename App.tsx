@@ -15,8 +15,6 @@ import AchievementToast from './components/AchievementToast';
 // Fix: Corrected typo in imported member name to match the export from './lib/achievements'.
 import { ALL_ACHIEVEMENTS } from './lib/achievements';
 import MovingAverageChart from './components/MovingAverageChart';
-import QuoteCard from './components/QuoteCard';
-import { GoogleGenAI } from "@google/genai";
 import WeeklyReviewModal from './components/WeeklyReviewModal';
 
 const App: React.FC = () => {
@@ -31,51 +29,8 @@ const App: React.FC = () => {
   const [isWeeklyReviewOpen, setIsWeeklyReviewOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [newlyUnlocked, setNewlyUnlocked] = useState<string[]>([]);
-  const [quote, setQuote] = useState({ text: '', author: '' });
-  const [isQuoteLoading, setIsQuoteLoading] = useState(true);
   const [showSaveToast, setShowSaveToast] = useState(false);
   
-  const fallbackQuotes = [
-    { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
-    { text: "Code is like humor. When you have to explain it, it’s bad.", author: "Cory House" },
-    { text: "First, solve the problem. Then, write the code.", author: "John Johnson" },
-    { text: "The best way to predict the future is to create it.", author: "Abraham Lincoln" },
-    { text: "Talk is cheap. Show me the code.", author: "Linus Torvalds" }
-  ];
-
-  const fetchQuote = async () => {
-    setIsQuoteLoading(true);
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: `Provide a random, high-quality, inspiring quote for a software developer about coding, problem-solving, or logic from a list of classic, well-known programming quotes. Return a single quote in a JSON array like this: [{"quote": "The quote text.", "author": "Author"}]`,
-        config: { 
-          temperature: 1,
-          responseMimeType: "application/json",
-        },
-      });
-      const rawText = response.text.trim();
-      const quotes = JSON.parse(rawText);
-      
-      if (quotes && quotes.length > 0) {
-        setQuote({ text: quotes[0].quote, author: quotes[0].author });
-      } else {
-         throw new Error("Empty response from API");
-      }
-
-    } catch (error) {
-      console.error("Failed to fetch quote:", error);
-      setQuote(fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)]);
-    } finally {
-      setIsQuoteLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchQuote();
-  }, []);
-
   const handleAddLog = (newLog: LogEntry) => {
     let wasUpdated = false;
     setLogs(prevLogs => {
@@ -320,24 +275,15 @@ const App: React.FC = () => {
             <ProductivityChart logs={logs} />
           </div>
 
-          <div className="col-span-12 md:col-span-6 xl:col-span-4">
+          <div className="col-span-12 md:col-span-6">
             <TagAnalysis logs={logs} />
           </div>
 
-          <div className="col-span-12 md:col-span-6 xl:col-span-4">
+          <div className="col-span-12 md:col-span-6">
             <Achievements
               unlockedCount={Object.keys(unlockedAchievements).length}
               totalCount={ALL_ACHIEVEMENTS.length}
               onView={() => setIsAchievementsModalOpen(true)}
-            />
-          </div>
-
-          <div className="col-span-12 xl:col-span-4">
-            <QuoteCard
-              quote={quote.text}
-              author={quote.author}
-              isLoading={isQuoteLoading}
-              onRefresh={fetchQuote}
             />
           </div>
           
