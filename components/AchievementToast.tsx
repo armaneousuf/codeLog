@@ -47,13 +47,13 @@ const AchievementToast: React.FC<AchievementToastProps> = ({ newlyUnlocked, onCo
 
   return (
     <div className={`fixed bottom-5 right-5 z-50 transition-all duration-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
-      <div className="relative bg-gray-800/70 border border-amber-400/60 rounded-lg shadow-2xl p-4 flex items-center space-x-4 max-w-sm overflow-hidden backdrop-blur-md">
+      <div className="relative bg-gray-900/70 border border-violet-500/60 rounded-lg shadow-2xl p-4 flex items-center space-x-4 max-w-sm overflow-hidden backdrop-blur-md">
         <div className="text-3xl animate-pulse">{currentAchievement.icon}</div>
         <div>
-          <p className="font-semibold text-amber-400">Achievement Unlocked!</p>
+          <p className="font-semibold text-violet-400">Achievement Unlocked!</p>
           <p className="text-sm text-gray-200">{currentAchievement.name}</p>
         </div>
-        <div className="absolute bottom-0 left-0 h-1 bg-amber-400/70 animate-progress"></div>
+        <div className="absolute bottom-0 left-0 h-1 bg-violet-500/70 animate-progress"></div>
       </div>
     </div>
   );

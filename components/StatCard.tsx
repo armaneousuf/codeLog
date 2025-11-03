@@ -37,7 +37,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, currentHours, goalHours, col
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
   
-  const progressColor = colorTag ? getTagColor(colorTag) : '#fafafa'; // default is white
+  const progressColor = colorTag ? getTagColor(colorTag) : '#a78bfa'; // default is violet-400
 
   return (
     <div className="flex flex-col items-center transition-transform duration-200 hover:scale-105">

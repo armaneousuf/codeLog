@@ -27,10 +27,14 @@
               'gray-700': '#222222',
               'gray-800': '#111111',
               'gray-900': '#0a0a0a',
-              blue: {
-                '400': '#60a5fa',
-                '500': '#3b82f6',
-                '600': '#2563eb',
+              violet: {
+                '300': '#c4b5fd',
+                '400': '#a78bfa',
+                '500': '#8b5cf6',
+                '600': '#7c3aed',
+                '700': '#6d28d9',
+                '800': '#5b21b6',
+                '900': '#4c1d95',
               },
               amber: {
                 '300': '#fcd34d',
@@ -53,21 +57,20 @@
     </script>
     <style>
       body {
-        background-color: #000;
-        background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
-        background-size: 20px 20px;
+        background-color: #030712; /* gray-950 */
+        background-image: radial-gradient(circle at top left, #4c1d9530, transparent 40%), radial-gradient(circle at bottom right, #1e40af30, transparent 40%);
       }
       /* For Webkit-based browsers (Chrome, Safari, Edge) */
       ::-webkit-scrollbar {
         width: 10px;
       }
       ::-webkit-scrollbar-track {
-        background: #000;
+        background: #030712;
       }
       ::-webkit-scrollbar-thumb {
         background-color: #444444;
         border-radius: 5px;
-        border: 2px solid #000;
+        border: 2px solid #030712;
       }
       ::-webkit-scrollbar-thumb:hover {
         background-color: #555555;
@@ -75,10 +78,10 @@
       /* For Firefox */
       html {
         scrollbar-width: thin;
-        scrollbar-color: #444444 #000;
+        scrollbar-color: #444444 #030712;
       }
       *:focus-visible {
-        outline: 2px solid #3b82f6 !important; /* blue-500 */
+        outline: 2px solid #a78bfa !important; /* violet-400 */
         outline-offset: 2px !important;
       }
       .heatmap-tooltip::after {

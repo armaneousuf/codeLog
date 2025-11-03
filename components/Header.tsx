@@ -30,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ totalHours }) => {
         <div className="flex items-center space-x-4">
             <CodeIcon />
             <div>
-              <h1 className="text-5xl font-extrabold tracking-tight text-white">
+              <h1 className="text-5xl font-extrabold tracking-tight text-violet-400">
                   CodeLog
               </h1>
               <p className="text-sm text-gray-300 -mt-1">Your personal coding companion.</p>
@@ -40,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({ totalHours }) => {
               </p>
             </div>
         </div>
-        <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl px-6 py-2 text-right transition-colors hover:border-gray-600">
+        <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 px-6 py-2 text-right">
             <p className="text-sm text-gray-300">Total Hours Logged</p>
             <p className="text-2xl font-bold text-white">{totalHours.toFixed(1)}</p>
         </div>

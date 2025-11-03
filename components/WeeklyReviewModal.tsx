@@ -53,9 +53,9 @@ const WeeklyReviewModal: React.FC<WeeklyReviewModalProps> = ({ isOpen, onClose, 
   if (!isOpen || !stats) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 transition-opacity duration-300" onClick={onClose}>
       <div 
-        className="bg-gray-900 border border-gray-700 rounded-xl p-6 sm:p-8 shadow-2xl w-full max-w-md transform transition-transform duration-300 scale-95" 
+        className="bg-gray-900/60 border border-white/10 rounded-2xl shadow-lg p-6 sm:p-8 w-full max-w-md transform transition-transform duration-300 scale-95" 
         onClick={e => e.stopPropagation()}
       >
         <div className="text-center">
@@ -64,16 +64,16 @@ const WeeklyReviewModal: React.FC<WeeklyReviewModalProps> = ({ isOpen, onClose, 
         </div>
         
         <div className="space-y-4">
-            <div className="bg-gray-800 p-4 rounded-lg text-center">
+            <div className="bg-black/20 p-4 rounded-lg text-center">
                 <p className="text-sm text-gray-300">Total Hours Coded</p>
                 <p className="text-4xl font-bold text-white">{stats.totalHours.toFixed(1)}</p>
             </div>
             <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-800 p-4 rounded-lg text-center">
+                <div className="bg-black/20 p-4 rounded-lg text-center">
                     <p className="text-sm text-gray-300">Busiest Day</p>
                     <p className="text-xl font-semibold text-white">{stats.busiestDay}</p>
                 </div>
-                 <div className="bg-gray-800 p-4 rounded-lg">
+                 <div className="bg-black/20 p-4 rounded-lg">
                     <p className="text-sm text-center text-gray-300 mb-2">Top Tech</p>
                     {stats.topTags.length > 0 ? (
                          <ul className="space-y-1 text-sm text-center">

@@ -88,7 +88,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
   }, [tagSearch, selectedTags]);
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-6 transition-colors hover:border-gray-600">
+    <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-6">
       <h2 className="text-2xl font-bold text-white mb-4">Log Your Hours</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -98,7 +98,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
             id="date"
             value={date}
             onChange={(e) => onDateChange(e.target.value)}
-            className="w-full bg-black/30 border border-gray-700 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full bg-black/30 border border-gray-700 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
             max={today}
             required
           />
@@ -113,7 +113,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
                 id="hours"
                 value={h}
                 onChange={(e) => setH(e.target.value)}
-                className="w-full bg-black/30 border border-gray-700 rounded-lg pl-3 pr-10 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full bg-black/30 border border-gray-700 rounded-lg pl-3 pr-10 py-2 text-white focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
                 placeholder="Hours"
                 min="0"
                 aria-label="Hours coded"
@@ -131,7 +131,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
                     setM(val);
                   }
                 }}
-                className="w-full bg-black/30 border border-gray-700 rounded-lg pl-3 pr-10 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full bg-black/30 border border-gray-700 rounded-lg pl-3 pr-10 py-2 text-white focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
                 placeholder="Mins"
                 min="0"
                 max="59"
@@ -150,7 +150,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
             rows={2}
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            className="w-full bg-black/30 border border-gray-700 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full bg-black/30 border border-gray-700 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
             placeholder="What did you work on?"
           />
         </div>
@@ -163,7 +163,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
                 placeholder="Search technologies..."
                 value={tagSearch}
                 onChange={(e) => setTagSearch(e.target.value)}
-                className="w-full bg-black/30 border border-gray-600 rounded-lg px-3 py-1.5 text-white focus:ring-2 focus:ring-blue-500 text-sm mb-2"
+                className="w-full bg-black/30 border border-gray-600 rounded-lg px-3 py-1.5 text-white focus:ring-2 focus:ring-violet-500 text-sm mb-2"
             />
             <div className="max-h-36 overflow-y-auto pr-1">
               <div className="flex flex-wrap gap-2">
@@ -185,7 +185,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
         <div>
           <button
             type="submit"
-            className="w-full bg-white text-black font-semibold py-2.5 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-blue-500 transition-all duration-200 hover:bg-gray-200 hover:shadow-[0_0_10px_rgba(255,255,255,0.2)]"
+            className="w-full bg-violet-600 text-white font-semibold py-2.5 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-violet-500 transition-all duration-200 hover:bg-violet-700 hover:shadow-[0_0_15px_rgba(124,58,237,0.5)]"
           >
             Save Log
           </button>

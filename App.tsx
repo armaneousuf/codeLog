@@ -237,7 +237,7 @@ const App: React.FC = () => {
     <div className="min-h-screen font-sans p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
         <Header totalHours={totalHours} />
-        <main className="mt-8 grid grid-cols-12 gap-6 lg:gap-8">
+        <main className="mt-8 grid grid-cols-12 gap-8">
           
           <div className="col-span-12 lg:col-span-5 xl:col-span-4">
             <LogForm 
@@ -298,7 +298,7 @@ const App: React.FC = () => {
             />
           </div>
         </main>
-        <footer className="text-center text-gray-400 text-sm mt-12 py-4 border-t border-gray-800">
+        <footer className="text-center text-gray-400 text-sm mt-12 py-4">
           <p>
             This website was created by{' '}
             <a

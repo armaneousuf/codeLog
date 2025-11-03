@@ -80,13 +80,13 @@ const DataManagement: React.FC<DataManagementProps> = ({
   };
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6 transition-colors hover:border-gray-600">
+    <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-6">
       <h2 className="text-xl font-semibold text-white mb-4">Data Management</h2>
       <div className="flex flex-col sm:flex-row gap-4">
-        <button onClick={handleExport} className="flex-1 text-center bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-blue-500 transition-colors duration-200">
+        <button onClick={handleExport} className="flex-1 text-center bg-white/5 text-white font-semibold py-2 px-4 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-violet-500 transition-colors duration-200">
           Export Data
         </button>
-        <button onClick={handleImportClick} className="flex-1 text-center bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-blue-500 transition-colors duration-200">
+        <button onClick={handleImportClick} className="flex-1 text-center bg-white/5 text-white font-semibold py-2 px-4 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-violet-500 transition-colors duration-200">
           Import Data
         </button>
         <input

@@ -29,13 +29,13 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
   const paddingDays = Array(firstDayOfWeek === 0 ? 6 : firstDayOfWeek -1).fill(null); // Adjust for Monday start
 
   const getColor = (hours: number | undefined) => {
-    if (hours === undefined || hours <= 0) return 'bg-gray-800';
-    if (hours <= 1.5) return 'bg-gray-700';
-    if (hours <= 3) return 'bg-gray-600';
-    if (hours <= 4.5) return 'bg-gray-500';
-    if (hours <= 6) return 'bg-gray-400';
-    if (hours <= 7.5) return 'bg-gray-300';
-    return 'bg-gray-200';
+    if (hours === undefined || hours <= 0) return 'bg-gray-800/50';
+    if (hours <= 1.5) return 'bg-violet-900';
+    if (hours <= 3) return 'bg-violet-800';
+    if (hours <= 4.5) return 'bg-violet-700';
+    if (hours <= 6) return 'bg-violet-600';
+    if (hours <= 7.5) return 'bg-violet-500';
+    return 'bg-violet-400';
   };
   
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -54,7 +54,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
   });
 
   return (
-    <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6 transition-colors hover:border-gray-600">
+    <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-6">
       <h2 className="text-xl font-semibold text-white mb-4">Last Year's Activity</h2>
       <div className="flex">
         <div className="flex flex-col text-xs text-gray-400 pr-2 space-y-2 justify-around pt-8">
@@ -109,11 +109,11 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
       </div>
       <div className="flex justify-end items-center mt-4 space-x-2 text-xs text-gray-400">
         <span>Less</span>
-        <div className="w-3 h-3 bg-gray-800 rounded-sm"></div>
-        <div className="w-3 h-3 bg-gray-700 rounded-sm"></div>
-        <div className="w-3 h-3 bg-gray-600 rounded-sm"></div>
-        <div className="w-3 h-3 bg-gray-400 rounded-sm"></div>
-        <div className="w-3 h-3 bg-gray-200 rounded-sm"></div>
+        <div className="w-3 h-3 bg-gray-800/50 rounded-sm"></div>
+        <div className="w-3 h-3 bg-violet-900 rounded-sm"></div>
+        <div className="w-3 h-3 bg-violet-700 rounded-sm"></div>
+        <div className="w-3 h-3 bg-violet-500 rounded-sm"></div>
+        <div className="w-3 h-3 bg-violet-400 rounded-sm"></div>
         <span>More</span>
       </div>
     </div>
