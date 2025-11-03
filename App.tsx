@@ -108,7 +108,7 @@ const App: React.FC = () => {
     setIsGoalsModalOpen(false);
   };
   
-  const { weeklyTotal, monthlyTotal, yearlyTotal, totalHours } = useMemo(() => {
+  const { weeklyTotal, monthlyTotal, yearlyTotal, totalHours, mostUsedTechWeek, mostUsedTechMonth, mostUsedTechYear } = useMemo(() => {
     const now = new Date();
     
     const startOfWeek = new Date(now);
@@ -124,21 +124,49 @@ const App: React.FC = () => {
     let weekly = 0;
     let monthly = 0;
     let yearly = 0;
+    
+    const weeklyTagHours = new Map<string, number>();
+    const monthlyTagHours = new Map<string, number>();
+    const yearlyTagHours = new Map<string, number>();
 
     for (const log of logs) {
       const logDate = new Date(log.date + 'T00:00:00');
+      
+      const processTags = (map: Map<string, number>) => {
+        log.tags?.forEach(tag => {
+          map.set(tag, (map.get(tag) || 0) + log.hours);
+        });
+      };
+
       if (logDate >= startOfYear) {
         yearly += log.hours;
+        processTags(yearlyTagHours);
         if (logDate >= startOfMonth) {
           monthly += log.hours;
+          processTags(monthlyTagHours);
           if (logDate >= startOfWeek) {
             weekly += log.hours;
+            processTags(weeklyTagHours);
           }
         }
       }
     }
+    
+    const findTopTag = (map: Map<string, number>): string | undefined => {
+        if (map.size === 0) return undefined;
+        return Array.from(map.entries()).sort((a, b) => b[1] - a[1])[0][0];
+    };
+
     const allTimeTotal = logs.reduce((sum, log) => sum + log.hours, 0);
-    return { weeklyTotal: weekly, monthlyTotal: monthly, yearlyTotal: yearly, totalHours: allTimeTotal };
+    return { 
+        weeklyTotal: weekly, 
+        monthlyTotal: monthly, 
+        yearlyTotal: yearly, 
+        totalHours: allTimeTotal,
+        mostUsedTechWeek: findTopTag(weeklyTagHours),
+        mostUsedTechMonth: findTopTag(monthlyTagHours),
+        mostUsedTechYear: findTopTag(yearlyTagHours),
+    };
   }, [logs]);
 
   const currentStreak = useMemo(() => {
@@ -274,6 +302,9 @@ const App: React.FC = () => {
               onEditGoals={() => setIsGoalsModalOpen(true)}
               currentStreak={currentStreak}
               longestStreak={longestStreak}
+              mostUsedTechWeek={mostUsedTechWeek}
+              mostUsedTechMonth={mostUsedTechMonth}
+              mostUsedTechYear={mostUsedTechYear}
             />
           </div>
 

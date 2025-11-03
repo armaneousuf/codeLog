@@ -10,6 +10,9 @@ interface StatsDashboardProps {
   onEditGoals: () => void;
   currentStreak: number;
   longestStreak: number;
+  mostUsedTechWeek?: string;
+  mostUsedTechMonth?: string;
+  mostUsedTechYear?: string;
 }
 
 const FireIcon = () => (
@@ -33,6 +36,9 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({
   onEditGoals, 
   currentStreak, 
   longestStreak,
+  mostUsedTechWeek,
+  mostUsedTechMonth,
+  mostUsedTechYear
 }) => {
   return (
     <div className="bg-gray-900/60 backdrop-blur-lg border border-white/5 rounded-xl shadow-2xl p-6 transition-all duration-300 hover:border-white/10 hover:shadow-mint-500/10 h-full flex flex-col">
@@ -62,9 +68,9 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({
             </div>
         </div>
         <div className="bg-gray-800/60 rounded-xl p-6 sm:col-span-2 flex flex-col sm:flex-row justify-around items-center text-center gap-6">
-          <StatCard title="This Week" currentHours={weeklyTotal} goalHours={goals.weekly} />
-          <StatCard title="This Month" currentHours={monthlyTotal} goalHours={goals.monthly} />
-          <StatCard title="This Year" currentHours={yearlyTotal} goalHours={goals.yearly} />
+          <StatCard title="This Week" currentHours={weeklyTotal} goalHours={goals.weekly} colorTag={mostUsedTechWeek} />
+          <StatCard title="This Month" currentHours={monthlyTotal} goalHours={goals.monthly} colorTag={mostUsedTechMonth} />
+          <StatCard title="This Year" currentHours={yearlyTotal} goalHours={goals.yearly} colorTag={mostUsedTechYear} />
         </div>
       </div>
     </div>
