@@ -80,13 +80,13 @@ const DataManagement: React.FC<DataManagementProps> = ({
   };
 
   return (
-    <div className="bg-gray-900/60 backdrop-blur-lg border border-white/5 rounded-xl shadow-2xl p-6 transition-all duration-300 hover:border-white/10 hover:shadow-mint-500/10">
-      <h2 className="text-xl font-semibold text-gray-100 mb-4">Data Management</h2>
+    <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6 transition-colors hover:border-gray-600">
+      <h2 className="text-xl font-semibold text-white mb-4">Data Management</h2>
       <div className="flex flex-col sm:flex-row gap-4">
-        <button onClick={handleExport} className="flex-1 text-center bg-gray-700/80 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700/60 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-950 focus:ring-mint-500 transition-colors duration-200">
+        <button onClick={handleExport} className="flex-1 text-center bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-blue-500 transition-colors duration-200">
           Export Data
         </button>
-        <button onClick={handleImportClick} className="flex-1 text-center bg-gray-700/80 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700/60 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-950 focus:ring-mint-500 transition-colors duration-200">
+        <button onClick={handleImportClick} className="flex-1 text-center bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-blue-500 transition-colors duration-200">
           Import Data
         </button>
         <input

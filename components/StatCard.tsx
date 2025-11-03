@@ -37,14 +37,14 @@ const StatCard: React.FC<StatCardProps> = ({ title, currentHours, goalHours, col
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
   
-  const progressColor = colorTag ? getTagColor(colorTag) : '#34d399'; // default is mint-400
+  const progressColor = colorTag ? getTagColor(colorTag) : '#fafafa'; // default is white
 
   return (
     <div className="flex flex-col items-center transition-transform duration-200 hover:scale-105">
       <div className="relative w-28 h-28">
         <svg className="w-full h-full" viewBox="0 0 100 100">
           <circle
-            className="text-gray-700"
+            className="text-gray-800"
             strokeWidth="9"
             stroke="currentColor"
             fill="transparent"

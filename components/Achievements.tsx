@@ -10,12 +10,12 @@ const Achievements: React.FC<AchievementsProps> = ({ unlockedCount, totalCount, 
   const percentage = totalCount > 0 ? (unlockedCount / totalCount) * 100 : 0;
 
   return (
-    <div className="bg-gray-900/60 backdrop-blur-lg border border-white/5 rounded-xl shadow-2xl p-6 transition-all duration-300 hover:border-white/10 hover:shadow-mint-500/10">
+    <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6 transition-colors hover:border-gray-600">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-gray-100">Achievements</h2>
+        <h2 className="text-xl font-semibold text-white">Achievements</h2>
         <button 
           onClick={onView}
-          className="text-sm text-mint-400 hover:text-mint-300 transition-colors font-medium"
+          className="text-sm text-gray-300 hover:text-white transition-colors font-medium px-3 py-1 rounded-md hover:bg-gray-700"
         >
           View All
         </button>
@@ -24,11 +24,11 @@ const Achievements: React.FC<AchievementsProps> = ({ unlockedCount, totalCount, 
         <p className="text-3xl font-bold text-white">
           <span role="img" aria-label="trophy">🏆</span> {unlockedCount} / {totalCount}
         </p>
-        <p className="text-sm text-gray-400">Unlocked</p>
+        <p className="text-sm text-gray-300">Unlocked</p>
       </div>
-      <div className="w-full bg-gray-700/50 rounded-full h-2.5">
+      <div className="w-full bg-gray-900/50 rounded-full h-2.5">
         <div 
-          className="bg-gradient-to-r from-amber-500 to-amber-400 h-2.5 rounded-full transition-all duration-500 ease-out" 
+          className="bg-white h-2.5 rounded-full transition-all duration-500 ease-out" 
           style={{ width: `${percentage}%` }}
         ></div>
       </div>

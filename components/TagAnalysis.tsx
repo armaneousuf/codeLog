@@ -30,9 +30,9 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
 
   if (tagData.length === 0) {
     return (
-      <div className="bg-gray-900/60 backdrop-blur-lg border border-white/5 rounded-xl shadow-2xl p-6 transition-all duration-300 hover:border-white/10 hover:shadow-mint-500/10">
-         <h2 className="text-xl font-semibold text-gray-100 mb-4">Tech Breakdown</h2>
-         <p className="text-gray-400 text-sm">Log your hours with tags to see a breakdown here.</p>
+      <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6 transition-colors hover:border-gray-600">
+         <h2 className="text-xl font-semibold text-white mb-4">Tech Breakdown</h2>
+         <p className="text-gray-300 text-sm">Log your hours with tags to see a breakdown here.</p>
       </div>
     );
   }
@@ -49,8 +49,8 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
   });
 
   return (
-    <div className="bg-gray-900/60 backdrop-blur-lg border border-white/5 rounded-xl shadow-2xl p-6 transition-all duration-300 hover:border-white/10 hover:shadow-mint-500/10">
-      <h2 className="text-xl font-semibold text-gray-100 mb-4">Tech Breakdown</h2>
+    <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6 transition-colors hover:border-gray-600">
+      <h2 className="text-xl font-semibold text-white mb-4">Tech Breakdown</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
         <div className="relative w-40 h-40 mx-auto">
             <svg viewBox="-1.2 -1.2 2.4 2.4" style={{transform: 'rotate(-90deg)'}}>
@@ -78,18 +78,18 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
             {tagData.slice(0, 10).map(({ tag, hours }, index) => (
                 <div 
                   key={tag} 
-                  className={`p-1.5 rounded-md transition-colors ${hoveredTag === tag ? 'bg-gray-800/50' : ''}`}
+                  className={`p-1.5 rounded-md transition-colors ${hoveredTag === tag ? 'bg-gray-700' : ''}`}
                   onMouseEnter={() => setHoveredTag(tag)}
                   onMouseLeave={() => setHoveredTag(null)}
                 >
                     <div className="flex items-center justify-between mb-0.5">
                       <div className="flex items-center gap-2 min-w-0">
                           <div className="w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: getTagColor(tag, index) }}></div>
-                          <span className="text-gray-300 truncate">{tag}</span>
+                          <span className="text-gray-200 truncate">{tag}</span>
                       </div>
-                      <span className="font-mono text-gray-400 flex-shrink-0 pl-2">{hours.toFixed(1)} hrs</span>
+                      <span className="font-mono text-gray-300 flex-shrink-0 pl-2">{hours.toFixed(1)} hrs</span>
                     </div>
-                    <div className="w-full bg-gray-700/50 rounded-full h-1">
+                    <div className="w-full bg-gray-600 rounded-full h-1">
                       <div
                         className="h-1 rounded-full"
                         style={{

@@ -15,23 +15,23 @@ const RefreshIcon = ({ className }: { className?: string }) => (
 
 const QuoteCard: React.FC<QuoteCardProps> = ({ quote, author, isLoading, onRefresh }) => {
   return (
-    <div className="bg-gray-900/60 backdrop-blur-lg border border-white/5 rounded-xl shadow-2xl p-6 transition-all duration-300 hover:border-white/10 hover:shadow-mint-500/10 relative">
-      <h2 className="text-xl font-semibold text-gray-100 mb-4">Quote of the Day</h2>
+    <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6 transition-colors hover:border-gray-600 relative">
+      <h2 className="text-xl font-semibold text-white mb-4">Quote of the Day</h2>
       {isLoading ? (
         <div className="flex items-center justify-center h-24">
-          <div className="w-6 h-6 border-2 border-mint-400 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : (
         <>
-          <blockquote className="border-l-4 border-mint-500 pl-4">
-            <p className="text-gray-300 italic">"{quote}"</p>
+          <blockquote className="border-l-4 border-gray-500 pl-4">
+            <p className="text-gray-200 italic">"{quote}"</p>
           </blockquote>
-          <p className="text-right text-gray-400 mt-2 text-sm">— {author}</p>
+          <p className="text-right text-gray-300 mt-2 text-sm">— {author}</p>
         </>
       )}
       <button 
         onClick={onRefresh} 
-        className="absolute top-4 right-4 text-gray-500 hover:text-mint-400 transition-colors disabled:opacity-50"
+        className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors disabled:opacity-50"
         disabled={isLoading}
         aria-label="Refresh quote"
       >

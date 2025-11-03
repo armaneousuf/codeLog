@@ -29,13 +29,13 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
   const paddingDays = Array(firstDayOfWeek === 0 ? 6 : firstDayOfWeek -1).fill(null); // Adjust for Monday start
 
   const getColor = (hours: number | undefined) => {
-    if (hours === undefined || hours <= 0) return 'bg-gray-800/50';
-    if (hours <= 1.5) return 'bg-mint-900';
-    if (hours <= 3) return 'bg-mint-800';
-    if (hours <= 4.5) return 'bg-mint-700';
-    if (hours <= 6) return 'bg-mint-600';
-    if (hours <= 7.5) return 'bg-mint-500';
-    return 'bg-mint-400';
+    if (hours === undefined || hours <= 0) return 'bg-gray-800';
+    if (hours <= 1.5) return 'bg-gray-700';
+    if (hours <= 3) return 'bg-gray-600';
+    if (hours <= 4.5) return 'bg-gray-500';
+    if (hours <= 6) return 'bg-gray-400';
+    if (hours <= 7.5) return 'bg-gray-300';
+    return 'bg-gray-200';
   };
   
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -54,10 +54,10 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
   });
 
   return (
-    <div className="bg-gray-900/60 backdrop-blur-lg border border-white/5 rounded-xl shadow-2xl p-6 transition-all duration-300 hover:border-white/10 hover:shadow-mint-500/10">
-      <h2 className="text-xl font-semibold text-gray-100 mb-4">Last Year's Activity</h2>
+    <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6 transition-colors hover:border-gray-600">
+      <h2 className="text-xl font-semibold text-white mb-4">Last Year's Activity</h2>
       <div className="flex">
-        <div className="flex flex-col text-xs text-gray-500 pr-2 space-y-2 justify-around pt-8">
+        <div className="flex flex-col text-xs text-gray-400 pr-2 space-y-2 justify-around pt-8">
             <span>Mon</span>
             <span className="h-full"></span>
             <span>Wed</span>
@@ -67,7 +67,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
         </div>
         <div className="flex-1 overflow-x-auto pb-2">
             <div className="relative" style={{ minWidth: '850px' }}>
-                <div className="flex text-xs text-gray-500 mb-2 h-4">
+                <div className="flex text-xs text-gray-400 mb-2 h-4">
                     {monthLabels.map((month, i) => (
                         <div key={i} className="absolute" style={{left: `calc(${(month.index / 53) * 100}%)`}}>
                             {month.label}
@@ -94,11 +94,11 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
                       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onDateSelect(dateString); }}
                     >
                         <div
-                          className={`aspect-square rounded-sm ${getColor(hours)} transition-all duration-150 group-hover:ring-2 group-hover:ring-mint-300 ring-offset-2 ring-offset-gray-950`}
+                          className={`aspect-square rounded-sm ${getColor(hours)} transition-all duration-150 group-hover:ring-2 group-hover:ring-white ring-offset-2 ring-offset-black`}
                         />
-                        <div className="heatmap-tooltip absolute bottom-full mb-2 w-max px-3 py-2 bg-gray-800/70 backdrop-blur-md text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 -translate-x-1/2 left-1/2 shadow-lg border border-white/5">
+                        <div className="heatmap-tooltip absolute bottom-full mb-2 w-max px-3 py-2 bg-black text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 -translate-x-1/2 left-1/2 shadow-lg border border-gray-700">
                           <p className="font-bold">{hours ? `${hours.toFixed(1)} hours` : 'No activity'}</p>
-                          <p className="text-gray-400">{formattedDate}</p>
+                          <p className="text-gray-300">{formattedDate}</p>
                         </div>
                     </div>
                     );
@@ -107,15 +107,13 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
             </div>
         </div>
       </div>
-      <div className="flex justify-end items-center mt-4 space-x-2 text-xs text-gray-500">
+      <div className="flex justify-end items-center mt-4 space-x-2 text-xs text-gray-400">
         <span>Less</span>
         <div className="w-3 h-3 bg-gray-800 rounded-sm"></div>
-        <div className="w-3 h-3 bg-mint-900 rounded-sm"></div>
-        <div className="w-3 h-3 bg-mint-800 rounded-sm"></div>
-        <div className="w-3 h-3 bg-mint-700 rounded-sm"></div>
-        <div className="w-3 h-3 bg-mint-600 rounded-sm"></div>
-        <div className="w-3 h-3 bg-mint-500 rounded-sm"></div>
-        <div className="w-3 h-3 bg-mint-400 rounded-sm"></div>
+        <div className="w-3 h-3 bg-gray-700 rounded-sm"></div>
+        <div className="w-3 h-3 bg-gray-600 rounded-sm"></div>
+        <div className="w-3 h-3 bg-gray-400 rounded-sm"></div>
+        <div className="w-3 h-3 bg-gray-200 rounded-sm"></div>
         <span>More</span>
       </div>
     </div>

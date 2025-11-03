@@ -41,9 +41,9 @@ const MovingAverageChart: React.FC<MovingAverageChartProps> = ({ logs }) => {
 
   if (chartData.length === 0) {
     return (
-        <div className="bg-gray-900/60 backdrop-blur-lg border border-white/5 rounded-xl shadow-2xl p-6 transition-all duration-300 hover:border-white/10 hover:shadow-mint-500/10">
-            <h2 className="text-xl font-semibold text-gray-100 mb-4">7-Day Moving Average</h2>
-             <p className="text-sm text-gray-400 mb-6 -mt-3">Daily Hours</p>
+        <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6 transition-colors hover:border-gray-600">
+            <h2 className="text-xl font-semibold text-white mb-4">7-Day Moving Average</h2>
+             <p className="text-sm text-gray-300 mb-6 -mt-3">Daily Hours</p>
             <p className="text-gray-400 text-sm">Log at least 7 days of data to see your moving average trend.</p>
         </div>
     );
@@ -57,26 +57,26 @@ const MovingAverageChart: React.FC<MovingAverageChartProps> = ({ logs }) => {
   }).join(' ');
 
   return (
-    <div className="bg-gray-900/60 backdrop-blur-lg border border-white/5 rounded-xl shadow-2xl p-6 transition-all duration-300 hover:border-white/10 hover:shadow-mint-500/10">
-      <h2 className="text-xl font-semibold text-gray-100 mb-4">7-Day Moving Average</h2>
-       <p className="text-sm text-gray-400 mb-6 -mt-3">Daily Hours</p>
+    <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6 transition-colors hover:border-gray-600">
+      <h2 className="text-xl font-semibold text-white mb-4">7-Day Moving Average</h2>
+       <p className="text-sm text-gray-300 mb-6 -mt-3">Daily Hours</p>
        <div className="h-48 relative">
         <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
             <polyline
                 fill="none"
-                stroke="#34d399"
+                stroke="#fafafa"
                 strokeWidth="2"
                 points={points}
             />
             <defs>
                 <linearGradient id="movingAvgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" style={{stopColor: '#34d399', stopOpacity: 0.2}} />
-                    <stop offset="100%" style={{stopColor: '#34d399', stopOpacity: 0}} />
+                    <stop offset="0%" style={{stopColor: '#fafafa', stopOpacity: 0.2}} />
+                    <stop offset="100%" style={{stopColor: '#fafafa', stopOpacity: 0}} />
                 </linearGradient>
             </defs>
             <polygon fill="url(#movingAvgGradient)" points={`0,100 ${points} 100,100`} />
         </svg>
-        <div className="absolute -bottom-4 left-0 right-0 flex justify-between text-xs text-gray-500 px-1">
+        <div className="absolute -bottom-4 left-0 right-0 flex justify-between text-xs text-gray-400 px-1">
             <span>{new Date(chartData[0].date + 'T00:00:00').toLocaleDateString('en-GB')}</span>
             <span>{new Date(chartData[chartData.length-1].date + 'T00:00:00').toLocaleDateString('en-GB')}</span>
         </div>

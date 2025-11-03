@@ -2,13 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="UTF--8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236ee7b7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='16 18 22 12 16 6'%3E%3C/polyline%3E%3Cpolyline points='8 6 2 12 8 18'%3E%3C/polyline%3E%3C/svg%3E" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50,15 100,85 0,85' fill='%23fafafa'/%3E%3C/svg%3E" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CodeLog: Daily Hour Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         theme: {
@@ -17,29 +17,25 @@
               sans: ['Inter', 'sans-serif'],
             },
             colors: {
-              'gray-950': '#0A0A0A',
-              'gray-900': '#111111',
-              'gray-800': '#181818',
-              'gray-700': '#282828',
-              'gray-600': '#404040',
-              'mint': {
-                '50': '#f0fdfa',
-                '100': '#ccfbf1',
-                '200': '#99f6e4',
-                '300': '#6ee7b7',
-                '400': '#34d399',
-                '500': '#10b981',
-                '600': '#059669',
-                '700': '#047857',
-                '800': '#065f46',
-                '900': '#064e3b',
-                '950': '#022c22'
+              'gray-50': '#fafafa',
+              'gray-100': '#eaeaea',
+              'gray-200': '#999999',
+              'gray-300': '#888888',
+              'gray-400': '#666666',
+              'gray-500': '#444444',
+              'gray-600': '#333333',
+              'gray-700': '#222222',
+              'gray-800': '#111111',
+              'gray-900': '#0a0a0a',
+              blue: {
+                '400': '#60a5fa',
+                '500': '#3b82f6',
+                '600': '#2563eb',
               },
-              'amber': {
+              amber: {
                 '300': '#fcd34d',
                 '400': '#fbbf24',
                 '500': '#f59e0b',
-                '600': '#d97706',
               }
             },
             animation: {
@@ -57,34 +53,32 @@
     </script>
     <style>
       body {
-        background-color: #0A0A0A;
-        background-image: 
-          radial-gradient(ellipse at 5% 5%, rgba(16, 185, 129, 0.15), transparent 60%),
-          radial-gradient(ellipse at 95% 5%, rgba(59, 130, 246, 0.1), transparent 60%),
-          radial-gradient(ellipse at 80% 95%, rgba(139, 92, 246, 0.1), transparent 60%);
-        background-attachment: fixed;
+        background-color: #000;
+        background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+        background-size: 20px 20px;
       }
       /* For Webkit-based browsers (Chrome, Safari, Edge) */
       ::-webkit-scrollbar {
         width: 10px;
       }
       ::-webkit-scrollbar-track {
-        background: #0A0A0A;
+        background: #000;
       }
       ::-webkit-scrollbar-thumb {
-        background-color: #059669; /* mint-600 */
+        background-color: #444444;
         border-radius: 5px;
+        border: 2px solid #000;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background-color: #10b981; /* mint-500 */
+        background-color: #555555;
       }
       /* For Firefox */
       html {
         scrollbar-width: thin;
-        scrollbar-color: #059669 #0A0A0A;
+        scrollbar-color: #444444 #000;
       }
       *:focus-visible {
-        outline: 2px solid #6ee7b7 !important; /* mint-300 */
+        outline: 2px solid #3b82f6 !important; /* blue-500 */
         outline-offset: 2px !important;
       }
       .heatmap-tooltip::after {
@@ -95,7 +89,7 @@
         transform: translateX(-50%);
         border-width: 5px;
         border-style: solid;
-        border-color: rgba(17, 17, 17, 0.8) transparent transparent transparent; /* gray-900 with opacity */
+        border-color: black transparent transparent transparent;
       }
     </style>
   <script type="importmap">
@@ -109,7 +103,7 @@
 }
 </script>
 </head>
-  <body class="bg-gray-950 text-gray-200 font-sans">
+  <body class="bg-black text-gray-200 font-sans">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>
