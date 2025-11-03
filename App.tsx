@@ -12,6 +12,7 @@ import ProductivityChart from './components/ProductivityChart';
 import Achievements from './components/Achievements';
 import AchievementsModal from './components/AchievementsModal';
 import AchievementToast from './components/AchievementToast';
+// Fix: Corrected typo in imported member name to match the export from './lib/achievements'.
 import { ALL_ACHIEVEMENTS } from './lib/achievements';
 import MovingAverageChart from './components/MovingAverageChart';
 import QuoteCard from './components/QuoteCard';
@@ -253,14 +254,18 @@ const App: React.FC = () => {
     <div className="min-h-screen font-sans p-4 sm:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
         <Header totalHours={totalHours} />
-        <main className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-1 space-y-8">
+        <main className="mt-8 grid grid-cols-12 gap-6 lg:gap-8">
+          
+          <div className="col-span-12 lg:col-span-5 xl:col-span-4">
             <LogForm 
               onAddLog={handleAddLog} 
               logs={logs}
               date={selectedDate}
               onDateChange={setSelectedDate}
             />
+          </div>
+
+          <div className="col-span-12 lg:col-span-7 xl:col-span-8">
             <StatsDashboard 
               weeklyTotal={weeklyTotal}
               monthlyTotal={monthlyTotal}
@@ -270,18 +275,42 @@ const App: React.FC = () => {
               currentStreak={currentStreak}
               longestStreak={longestStreak}
             />
+          </div>
+
+          <div className="col-span-12">
+            <Heatmap logs={logs} onDateSelect={setSelectedDate} />
+          </div>
+          
+          <div className="col-span-12 xl:col-span-8">
+             <MovingAverageChart logs={logs} />
+          </div>
+          
+          <div className="col-span-12 xl:col-span-4">
+            <ProductivityChart logs={logs} />
+          </div>
+
+          <div className="col-span-12 md:col-span-6 xl:col-span-4">
+            <TagAnalysis logs={logs} />
+          </div>
+
+          <div className="col-span-12 md:col-span-6 xl:col-span-4">
+            <Achievements
+              unlockedCount={Object.keys(unlockedAchievements).length}
+              totalCount={ALL_ACHIEVEMENTS.length}
+              onView={() => setIsAchievementsModalOpen(true)}
+            />
+          </div>
+
+          <div className="col-span-12 xl:col-span-4">
             <QuoteCard
               quote={quote.text}
               author={quote.author}
               isLoading={isQuoteLoading}
               onRefresh={fetchQuote}
             />
-            <Achievements
-              unlockedCount={Object.keys(unlockedAchievements).length}
-              totalCount={ALL_ACHIEVEMENTS.length}
-              onView={() => setIsAchievementsModalOpen(true)}
-            />
-            <TagAnalysis logs={logs} />
+          </div>
+          
+          <div className="col-span-12">
             <DataManagement
               logs={logs}
               goals={goals}
@@ -290,11 +319,6 @@ const App: React.FC = () => {
               setGoals={setGoals}
               setUnlockedAchievements={setUnlockedAchievements}
             />
-          </div>
-          <div className="lg:col-span-2 space-y-8">
-            <Heatmap logs={logs} onDateSelect={setSelectedDate} />
-            <MovingAverageChart logs={logs} />
-            <ProductivityChart logs={logs} />
           </div>
         </main>
       </div>

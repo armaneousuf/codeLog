@@ -16,13 +16,13 @@ const Header: React.FC<HeaderProps> = ({ totalHours }) => {
         <div className="flex items-center space-x-4">
             <CodeIcon />
             <div>
-              <h1 className="text-3xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-mint-300 to-mint-500">
+              <h1 className="text-4xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-mint-300 to-mint-500">
                   CodeLog
               </h1>
               <p className="text-sm text-gray-400 -mt-1">Your personal coding companion.</p>
             </div>
         </div>
-        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl px-4 py-2 text-right">
+        <div className="bg-gray-900/50 backdrop-blur-md border border-white/10 rounded-xl px-6 py-2 text-right shadow-lg">
             <p className="text-sm text-gray-400">Total Hours Logged</p>
             <p className="text-2xl font-bold text-white">{totalHours.toFixed(1)}</p>
         </div>

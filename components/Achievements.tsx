@@ -10,7 +10,7 @@ const Achievements: React.FC<AchievementsProps> = ({ unlockedCount, totalCount, 
   const percentage = totalCount > 0 ? (unlockedCount / totalCount) * 100 : 0;
 
   return (
-    <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-lg p-6">
+    <div className="bg-gray-950/20 backdrop-blur-xl border border-white/10 rounded-2xl shadow-lg p-6 transition-all duration-300 hover:border-white/20">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-100">Achievements</h2>
         <button 

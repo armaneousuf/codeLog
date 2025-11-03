@@ -53,9 +53,9 @@ const WeeklyReviewModal: React.FC<WeeklyReviewModalProps> = ({ isOpen, onClose, 
   if (!isOpen || !stats) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 transition-opacity duration-300" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300" onClick={onClose}>
       <div 
-        className="bg-gray-900/80 backdrop-blur-md border border-gray-700 rounded-xl p-6 sm:p-8 shadow-2xl w-full max-w-md transform transition-transform duration-300 scale-95" 
+        className="bg-gray-900/80 backdrop-blur-xl border border-white/10 rounded-xl p-6 sm:p-8 shadow-2xl w-full max-w-md transform transition-transform duration-300 scale-95" 
         onClick={e => e.stopPropagation()}
       >
         <div className="text-center">

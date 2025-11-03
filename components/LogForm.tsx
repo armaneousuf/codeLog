@@ -88,7 +88,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
   }, [tagSearch, selectedTags]);
 
   return (
-    <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl shadow-lg p-6">
+    <div className="bg-gray-950/20 backdrop-blur-xl border border-white/10 rounded-2xl shadow-lg p-6 transition-all duration-300 hover:border-white/20">
       <h2 className="text-2xl font-bold text-gray-100 mb-4">Log Your Hours</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -185,7 +185,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
         <div>
           <button
             type="submit"
-            className="w-full bg-mint-600 text-white font-semibold py-2.5 px-4 rounded-md hover:bg-mint-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-950 focus:ring-mint-500 transition-all duration-300 transform hover:scale-105"
+            className="w-full bg-gradient-to-r from-mint-600 to-mint-500 text-white font-semibold py-2.5 px-4 rounded-lg hover:from-mint-500 hover:to-mint-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-950 focus:ring-mint-500 transition-all duration-300 transform hover:scale-105"
           >
             Save Log
           </button>
