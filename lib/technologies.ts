@@ -10,5 +10,5 @@ export const TECHNOLOGIES = [
   'Vite', 'Webpack', 'Babel', 'ESLint', 'Prettier',
   'Redux', 'GraphQL', 'Apollo', 'Prisma', 'Docker', 'Kubernetes',
   'Flutter', 'React Native', 'Firebase', 'AWS', 'Azure', 'Google Cloud',
-  'TensorFlow', 'PyTorch'
+  'TensorFlow', 'PyTorch', 'Git', 'Markdown', 'Text'
 ].sort();

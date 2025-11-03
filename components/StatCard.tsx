@@ -18,11 +18,6 @@ const StatCard: React.FC<StatCardProps> = ({ title, currentHours, goalHours }) =
     <div className="flex flex-col items-center transition-transform duration-200 hover:scale-105">
       <div className="relative w-24 h-24">
         <svg className="w-full h-full" viewBox="0 0 100 100">
-           <defs>
-            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="0" stdDeviation="3.5" floodColor="#6ee7b7"/>
-            </filter>
-          </defs>
           <circle
             className="text-gray-700"
             strokeWidth="8"
@@ -43,7 +38,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, currentHours, goalHours }) =
             r={radius}
             cx="50"
             cy="50"
-            style={{ transition: 'stroke-dashoffset 0.5s ease-out', filter: 'url(#glow)' }}
+            style={{ transition: 'stroke-dashoffset 0.5s ease-out' }}
             transform="rotate(-90 50 50)"
           />
         </svg>
