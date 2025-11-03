@@ -88,7 +88,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
   }, [tagSearch, selectedTags]);
 
   return (
-    <div className="bg-gray-950/20 backdrop-blur-xl border border-white/10 rounded-2xl shadow-lg p-6 transition-all duration-300 hover:border-white/20">
+    <div className="bg-gray-900/60 backdrop-blur-lg border border-white/5 rounded-2xl shadow-2xl p-6 transition-all duration-300 hover:border-white/10 hover:shadow-mint-500/10">
       <h2 className="text-2xl font-bold text-gray-100 mb-4">Log Your Hours</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -98,7 +98,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
             id="date"
             value={date}
             onChange={(e) => onDateChange(e.target.value)}
-            className="w-full bg-gray-900/50 border border-white/10 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-mint-400"
+            className="w-full bg-gray-800/60 border border-white/10 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-mint-400"
             max={today}
             required
           />
@@ -113,7 +113,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
                 id="hours"
                 value={h}
                 onChange={(e) => setH(e.target.value)}
-                className="w-full bg-gray-900/50 border border-white/10 rounded-md pl-3 pr-10 py-2 text-white focus:ring-2 focus:ring-mint-400"
+                className="w-full bg-gray-800/60 border border-white/10 rounded-lg pl-3 pr-10 py-2 text-white focus:ring-2 focus:ring-mint-400"
                 placeholder="Hours"
                 min="0"
                 aria-label="Hours coded"
@@ -131,7 +131,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
                     setM(val);
                   }
                 }}
-                className="w-full bg-gray-900/50 border border-white/10 rounded-md pl-3 pr-10 py-2 text-white focus:ring-2 focus:ring-mint-400"
+                className="w-full bg-gray-800/60 border border-white/10 rounded-lg pl-3 pr-10 py-2 text-white focus:ring-2 focus:ring-mint-400"
                 placeholder="Mins"
                 min="0"
                 max="59"
@@ -150,20 +150,20 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
             rows={2}
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            className="w-full bg-gray-900/50 border border-white/10 rounded-md px-3 py-2 text-white focus:ring-2 focus:ring-mint-400"
+            className="w-full bg-gray-800/60 border border-white/10 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-mint-400"
             placeholder="What did you work on?"
           />
         </div>
         
         <div>
           <label className="block text-sm font-medium text-gray-400 mb-1">Technologies (Optional)</label>
-          <div className="bg-gray-900/50 border border-white/10 rounded-md p-2">
+          <div className="bg-gray-800/60 border border-white/10 rounded-lg p-2">
             <input
                 type="text"
                 placeholder="Search technologies..."
                 value={tagSearch}
                 onChange={(e) => setTagSearch(e.target.value)}
-                className="w-full bg-gray-800 border border-white/10 rounded-md px-3 py-1.5 text-white focus:ring-2 focus:ring-mint-400 text-sm mb-2"
+                className="w-full bg-gray-800 border border-white/10 rounded-lg px-3 py-1.5 text-white focus:ring-2 focus:ring-mint-400 text-sm mb-2"
             />
             <div className="max-h-36 overflow-y-auto pr-1">
               <div className="flex flex-wrap gap-2">
@@ -185,7 +185,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
         <div>
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-mint-600 to-mint-500 text-white font-semibold py-2.5 px-4 rounded-lg hover:from-mint-500 hover:to-mint-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-950 focus:ring-mint-500 transition-all duration-300 transform hover:scale-105"
+            className="w-full bg-gradient-to-r from-mint-500 to-mint-600 text-white font-semibold py-2.5 px-4 rounded-lg shadow-md hover:shadow-lg hover:shadow-mint-500/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-950 focus:ring-mint-500 transition-all duration-300 hover:from-mint-400 hover:to-mint-500 hover:-translate-y-0.5"
           >
             Save Log
           </button>

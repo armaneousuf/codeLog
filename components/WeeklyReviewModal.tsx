@@ -53,9 +53,9 @@ const WeeklyReviewModal: React.FC<WeeklyReviewModalProps> = ({ isOpen, onClose, 
   if (!isOpen || !stats) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 transition-opacity duration-300" onClick={onClose}>
       <div 
-        className="bg-gray-900/80 backdrop-blur-xl border border-white/10 rounded-xl p-6 sm:p-8 shadow-2xl w-full max-w-md transform transition-transform duration-300 scale-95" 
+        className="bg-gray-900/70 backdrop-blur-lg border border-white/10 rounded-xl p-6 sm:p-8 shadow-2xl w-full max-w-md transform transition-transform duration-300 scale-95" 
         onClick={e => e.stopPropagation()}
       >
         <div className="text-center">
@@ -92,7 +92,7 @@ const WeeklyReviewModal: React.FC<WeeklyReviewModalProps> = ({ isOpen, onClose, 
         </div>
         
         <div className="mt-8 flex justify-center">
-          <button onClick={onClose} className="px-6 py-2 rounded-md bg-mint-600 text-white font-semibold hover:bg-mint-700 transition-colors">
+          <button onClick={onClose} className="px-6 py-2 rounded-lg bg-gradient-to-r from-mint-500 to-mint-600 text-white font-semibold shadow-md hover:shadow-lg hover:shadow-mint-500/20 transition-all duration-300 hover:from-mint-400 hover:to-mint-500 hover:-translate-y-0.5">
             Start New Week
           </button>
         </div>

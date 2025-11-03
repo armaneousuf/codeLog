@@ -30,7 +30,7 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
 
   if (tagData.length === 0) {
     return (
-      <div className="bg-gray-950/20 backdrop-blur-xl border border-white/10 rounded-2xl shadow-lg p-6 transition-all duration-300 hover:border-white/20">
+      <div className="bg-gray-900/60 backdrop-blur-lg border border-white/5 rounded-xl shadow-2xl p-6 transition-all duration-300 hover:border-white/10 hover:shadow-mint-500/10">
          <h2 className="text-xl font-semibold text-gray-100 mb-4">Tech Breakdown</h2>
          <p className="text-gray-400 text-sm">Log your hours with tags to see a breakdown here.</p>
       </div>
@@ -49,7 +49,7 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
   });
 
   return (
-    <div className="bg-gray-950/20 backdrop-blur-xl border border-white/10 rounded-2xl shadow-lg p-6 transition-all duration-300 hover:border-white/20">
+    <div className="bg-gray-900/60 backdrop-blur-lg border border-white/5 rounded-xl shadow-2xl p-6 transition-all duration-300 hover:border-white/10 hover:shadow-mint-500/10">
       <h2 className="text-xl font-semibold text-gray-100 mb-4">Tech Breakdown</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
         <div className="relative w-40 h-40 mx-auto">
@@ -78,7 +78,7 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
             {tagData.slice(0, 10).map(({ tag, hours }, index) => (
                 <div 
                   key={tag} 
-                  className={`p-1.5 rounded-md transition-colors ${hoveredTag === tag ? 'bg-black/20' : ''}`}
+                  className={`p-1.5 rounded-md transition-colors ${hoveredTag === tag ? 'bg-gray-800/50' : ''}`}
                   onMouseEnter={() => setHoveredTag(tag)}
                   onMouseLeave={() => setHoveredTag(null)}
                 >

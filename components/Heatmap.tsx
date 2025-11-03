@@ -29,7 +29,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
   const paddingDays = Array(firstDayOfWeek === 0 ? 6 : firstDayOfWeek -1).fill(null); // Adjust for Monday start
 
   const getColor = (hours: number | undefined) => {
-    if (hours === undefined || hours <= 0) return 'bg-gray-800/80';
+    if (hours === undefined || hours <= 0) return 'bg-gray-800/50';
     if (hours <= 1.5) return 'bg-mint-900';
     if (hours <= 3) return 'bg-mint-800';
     if (hours <= 4.5) return 'bg-mint-700';
@@ -54,7 +54,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
   });
 
   return (
-    <div className="bg-gray-950/20 backdrop-blur-xl border border-white/10 rounded-2xl shadow-lg p-6 transition-all duration-300 hover:border-white/20">
+    <div className="bg-gray-900/60 backdrop-blur-lg border border-white/5 rounded-xl shadow-2xl p-6 transition-all duration-300 hover:border-white/10 hover:shadow-mint-500/10">
       <h2 className="text-xl font-semibold text-gray-100 mb-4">Last Year's Activity</h2>
       <div className="flex">
         <div className="flex flex-col text-xs text-gray-500 pr-2 space-y-2 justify-around pt-8">
@@ -96,7 +96,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
                         <div
                           className={`aspect-square rounded-sm ${getColor(hours)} transition-all duration-150 group-hover:ring-2 group-hover:ring-mint-300 ring-offset-2 ring-offset-gray-950`}
                         />
-                        <div className="heatmap-tooltip absolute bottom-full mb-2 w-max px-3 py-2 bg-gray-900/80 backdrop-blur-sm text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 -translate-x-1/2 left-1/2 shadow-lg border border-white/10">
+                        <div className="heatmap-tooltip absolute bottom-full mb-2 w-max px-3 py-2 bg-gray-800/70 backdrop-blur-md text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 -translate-x-1/2 left-1/2 shadow-lg border border-white/5">
                           <p className="font-bold">{hours ? `${hours.toFixed(1)} hours` : 'No activity'}</p>
                           <p className="text-gray-400">{formattedDate}</p>
                         </div>

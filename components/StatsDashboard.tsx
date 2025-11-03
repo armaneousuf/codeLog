@@ -36,7 +36,7 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({
   longestStreak,
 }) => {
   return (
-    <div className="bg-gray-950/20 backdrop-blur-xl border border-white/10 rounded-2xl shadow-lg p-6 transition-all duration-300 hover:border-white/20 h-full flex flex-col">
+    <div className="bg-gray-900/60 backdrop-blur-lg border border-white/5 rounded-xl shadow-2xl p-6 transition-all duration-300 hover:border-white/10 hover:shadow-mint-500/10 h-full flex flex-col">
        <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-gray-100">Dashboard</h2>
         <button 
@@ -49,14 +49,14 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({
 
       <div className="flex-grow md:flex md:items-center md:justify-between md:gap-8">
         <div className="flex-1 grid grid-cols-2 gap-4 text-center border-b md:border-b-0 md:border-r border-white/10 pb-6 md:pb-0 md:pr-8 mb-6 md:mb-0">
-          <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-black/10 transition-transform duration-200 hover:scale-105">
+          <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-gray-800/50 transition-colors duration-200">
               <p className="text-gray-400 text-sm mb-1">Current Streak</p>
               <div className="flex items-center gap-2">
                   <FireIcon />
                   <p className="text-3xl font-bold text-white">{currentStreak}</p>
               </div>
           </div>
-          <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-black/10 transition-transform duration-200 hover:scale-105">
+          <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-gray-800/50 transition-colors duration-200">
               <p className="text-gray-400 text-sm mb-1">Longest Streak</p>
               <div className="flex items-center gap-2">
                   <TrophyIcon />

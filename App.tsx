@@ -343,7 +343,7 @@ const App: React.FC = () => {
         onComplete={(id) => setNewlyUnlocked(prev => prev.filter(aId => aId !== id))}
       />
       <div className={`fixed bottom-5 right-5 z-50 transition-all duration-300 ${showSaveToast ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
-        <div className="bg-gray-800 border border-mint-500/50 rounded-lg shadow-2xl p-4 flex items-center space-x-4 max-w-sm overflow-hidden backdrop-blur-sm bg-opacity-80">
+        <div className="bg-gray-800/70 border border-mint-500/50 rounded-lg shadow-2xl p-4 flex items-center space-x-4 max-w-sm overflow-hidden backdrop-blur-md">
           <p className="font-semibold text-mint-400">Log Saved!</p>
         </div>
       </div>

@@ -26,9 +26,9 @@ const AchievementsModal: React.FC<AchievementsModalProps> = ({ isOpen, onClose, 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 transition-opacity duration-300" onClick={onClose}>
       <div 
-        className="bg-gray-900/80 backdrop-blur-xl border border-white/10 rounded-xl p-6 sm:p-8 shadow-2xl w-full max-w-3xl transform transition-transform duration-300 scale-95 max-h-[90vh] flex flex-col" 
+        className="bg-gray-900/70 backdrop-blur-lg border border-white/10 rounded-xl p-6 sm:p-8 shadow-2xl w-full max-w-3xl transform transition-transform duration-300 scale-95 max-h-[90vh] flex flex-col" 
         onClick={e => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-6">

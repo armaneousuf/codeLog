@@ -15,7 +15,7 @@ const RefreshIcon = ({ className }: { className?: string }) => (
 
 const QuoteCard: React.FC<QuoteCardProps> = ({ quote, author, isLoading, onRefresh }) => {
   return (
-    <div className="bg-gray-950/20 backdrop-blur-xl border border-white/10 rounded-2xl shadow-lg p-6 transition-all duration-300 hover:border-white/20 relative">
+    <div className="bg-gray-900/60 backdrop-blur-lg border border-white/5 rounded-xl shadow-2xl p-6 transition-all duration-300 hover:border-white/10 hover:shadow-mint-500/10 relative">
       <h2 className="text-xl font-semibold text-gray-100 mb-4">Quote of the Day</h2>
       {isLoading ? (
         <div className="flex items-center justify-center h-24">
