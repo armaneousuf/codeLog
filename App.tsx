@@ -18,6 +18,14 @@ import MovingAverageChart from './components/MovingAverageChart';
 import WeeklyReviewModal from './components/WeeklyReviewModal';
 import ComparisonDashboard from './components/ComparisonDashboard';
 
+const getLocalDateString = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+
 const App: React.FC = () => {
   const [logs, setLogs] = useLocalStorage<LogEntry[]>('codingLogs', []);
   const [goals, setGoals] = useLocalStorage<Goals>('codingGoals', { weekly: 20, monthly: 80, yearly: 1000 });
@@ -28,7 +36,7 @@ const App: React.FC = () => {
   const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false);
   const [isAchievementsModalOpen, setIsAchievementsModalOpen] = useState(false);
   const [isWeeklyReviewOpen, setIsWeeklyReviewOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState(getLocalDateString(new Date()));
   const [newlyUnlocked, setNewlyUnlocked] = useState<string[]>([]);
   const [showSaveToast, setShowSaveToast] = useState(false);
   
@@ -129,19 +137,20 @@ const App: React.FC = () => {
 
   const comparisonStats = useMemo(() => {
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const todayStr = today.toISOString().split('T')[0];
+    const todayStr = getLocalDateString(today);
     const todayHours = logs.find(l => l.date === todayStr)?.hours || 0;
     
-    const yesterday = new Date(today);
+    const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().split('T')[0];
+    const yesterdayStr = getLocalDateString(yesterday);
     const yesterdayHours = logs.find(l => l.date === yesterdayStr)?.hours || 0;
 
-    // Last Week
-    const startOfThisWeek = new Date(today);
-    startOfThisWeek.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1)); // Monday start
-    startOfThisWeek.setHours(0, 0, 0, 0);
+    const now = new Date(); // Use a clean date for period calculations
+    now.setHours(0, 0, 0, 0);
+
+    // Last Week Calculation
+    const startOfThisWeek = new Date(now);
+    startOfThisWeek.setDate(now.getDate() - (now.getDay() === 0 ? 6 : now.getDay() - 1)); // Monday start
 
     const startOfLastWeek = new Date(startOfThisWeek);
     startOfLastWeek.setDate(startOfThisWeek.getDate() - 7);
@@ -155,9 +164,9 @@ const App: React.FC = () => {
       return logDate >= startOfLastWeek && logDate <= endOfLastWeek;
     }).reduce((sum, log) => sum + log.hours, 0);
 
-    // Last Month
-    const startOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const startOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    // Last Month Calculation
+    const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
     
     const endOfLastMonth = new Date(startOfThisMonth);
     endOfLastMonth.setDate(startOfThisMonth.getDate() - 1);
@@ -182,11 +191,11 @@ const App: React.FC = () => {
     let streak = 0;
     let currentDate = new Date();
 
-    if (!logDates.has(currentDate.toISOString().split('T')[0])) {
+    if (!logDates.has(getLocalDateString(currentDate))) {
         currentDate.setDate(currentDate.getDate() - 1);
     }
     
-    while (logDates.has(currentDate.toISOString().split('T')[0])) {
+    while (logDates.has(getLocalDateString(currentDate))) {
         streak++;
         currentDate.setDate(currentDate.getDate() - 1);
     }
