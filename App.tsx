@@ -16,6 +16,7 @@ import AchievementToast from './components/AchievementToast';
 import { ALL_ACHIEVEMENTS } from './lib/achievements';
 import MovingAverageChart from './components/MovingAverageChart';
 import WeeklyReviewModal from './components/WeeklyReviewModal';
+import ComparisonDashboard from './components/ComparisonDashboard';
 
 const App: React.FC = () => {
   const [logs, setLogs] = useLocalStorage<LogEntry[]>('codingLogs', []);
@@ -67,7 +68,9 @@ const App: React.FC = () => {
     const now = new Date();
     
     const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay());
+    const dayOfWeek = now.getDay(); // 0=Sun, 1=Mon...
+    const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    startOfWeek.setDate(now.getDate() - daysSinceMonday);
     startOfWeek.setHours(0, 0, 0, 0);
 
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -121,6 +124,55 @@ const App: React.FC = () => {
         mostUsedTechWeek: findTopTag(weeklyTagHours),
         mostUsedTechMonth: findTopTag(monthlyTagHours),
         mostUsedTechYear: findTopTag(yearlyTagHours),
+    };
+  }, [logs]);
+
+  const comparisonStats = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayStr = today.toISOString().split('T')[0];
+    const todayHours = logs.find(l => l.date === todayStr)?.hours || 0;
+    
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split('T')[0];
+    const yesterdayHours = logs.find(l => l.date === yesterdayStr)?.hours || 0;
+
+    // Last Week
+    const startOfThisWeek = new Date(today);
+    startOfThisWeek.setDate(today.getDate() - (today.getDay() === 0 ? 6 : today.getDay() - 1)); // Monday start
+    startOfThisWeek.setHours(0, 0, 0, 0);
+
+    const startOfLastWeek = new Date(startOfThisWeek);
+    startOfLastWeek.setDate(startOfThisWeek.getDate() - 7);
+    
+    const endOfLastWeek = new Date(startOfThisWeek);
+    endOfLastWeek.setDate(startOfThisWeek.getDate() - 1);
+    endOfLastWeek.setHours(23, 59, 59, 999);
+
+    const lastWeekHours = logs.filter(log => {
+      const logDate = new Date(log.date + 'T00:00:00');
+      return logDate >= startOfLastWeek && logDate <= endOfLastWeek;
+    }).reduce((sum, log) => sum + log.hours, 0);
+
+    // Last Month
+    const startOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const startOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+    
+    const endOfLastMonth = new Date(startOfThisMonth);
+    endOfLastMonth.setDate(startOfThisMonth.getDate() - 1);
+    endOfLastMonth.setHours(23, 59, 59, 999);
+    
+    const lastMonthHours = logs.filter(log => {
+      const logDate = new Date(log.date + 'T00:00:00');
+      return logDate >= startOfLastMonth && logDate <= endOfLastMonth;
+    }).reduce((sum, log) => sum + log.hours, 0);
+
+    return {
+      todayHours,
+      yesterdayHours,
+      lastWeekHours,
+      lastMonthHours,
     };
   }, [logs]);
 
@@ -266,17 +318,28 @@ const App: React.FC = () => {
           <div className="col-span-12">
             <Heatmap logs={logs} onDateSelect={setSelectedDate} />
           </div>
+
+          <div className="col-span-12">
+            <ComparisonDashboard
+              todayHours={comparisonStats.todayHours}
+              yesterdayHours={comparisonStats.yesterdayHours}
+              thisWeekHours={weeklyTotal}
+              lastWeekHours={comparisonStats.lastWeekHours}
+              thisMonthHours={monthlyTotal}
+              lastMonthHours={comparisonStats.lastMonthHours}
+            />
+          </div>
           
           <div className="col-span-12 xl:col-span-8">
              <MovingAverageChart logs={logs} />
           </div>
           
           <div className="col-span-12 xl:col-span-4">
-            <ProductivityChart logs={logs} />
+             <TagAnalysis logs={logs} />
           </div>
 
           <div className="col-span-12 md:col-span-6">
-            <TagAnalysis logs={logs} />
+             <ProductivityChart logs={logs} />
           </div>
 
           <div className="col-span-12 md:col-span-6">
