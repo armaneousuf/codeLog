@@ -65,7 +65,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
             <span>Fri</span>
             <span className="h-full"></span>
         </div>
-        <div className="flex-1 overflow-x-auto pb-2">
+        <div className="flex-1 overflow-x-auto pb-2 min-w-0">
             <div className="relative" style={{ minWidth: '850px' }}>
                 <div className="flex text-xs text-gray-400 mb-2 h-4">
                     {monthLabels.map((month, i) => (

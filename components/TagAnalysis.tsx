@@ -13,12 +13,16 @@ const FALLBACK_COLORS = [
 
 const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
   const [hoveredTag, setHoveredTag] = useState<string | null>(null);
-  const [period, setPeriod] = useState<'all' | '30d' | '7d'>('all');
+  const [period, setPeriod] = useState<'daily' | '7d' | '30d'>('7d');
 
   const tagData = useMemo(() => {
     let filteredLogs = logs;
 
-    if (period !== 'all') {
+    if (period === 'daily') {
+        const today = new Date();
+        const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        filteredLogs = logs.filter(log => log.date === todayStr);
+    } else { // '7d' or '30d'
       const now = new Date();
       now.setHours(0, 0, 0, 0);
 
@@ -54,9 +58,9 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
   });
   
   const periodTextMap = {
+    'daily': 'today',
     '7d': 'the last 7 days',
     '30d': 'the last 30 days',
-    'all': 'all time',
   };
 
   return (
@@ -64,6 +68,12 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-white">Tech Breakdown</h2>
         <div className="flex bg-black/20 p-1 rounded-lg text-sm">
+            <button 
+              onClick={() => setPeriod('daily')} 
+              className={`px-3 py-1 text-xs font-semibold rounded-md transition-colors ${period === 'daily' ? 'bg-white text-black' : 'text-gray-300 hover:bg-white/10'}`}
+            >
+              Daily
+            </button>
             <button 
               onClick={() => setPeriod('7d')} 
               className={`px-3 py-1 text-xs font-semibold rounded-md transition-colors ${period === '7d' ? 'bg-white text-black' : 'text-gray-300 hover:bg-white/10'}`}
@@ -75,12 +85,6 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
               className={`px-3 py-1 text-xs font-semibold rounded-md transition-colors ${period === '30d' ? 'bg-white text-black' : 'text-gray-300 hover:bg-white/10'}`}
             >
               30 Days
-            </button>
-            <button 
-              onClick={() => setPeriod('all')} 
-              className={`px-3 py-1 text-xs font-semibold rounded-md transition-colors ${period === 'all' ? 'bg-white text-black' : 'text-gray-300 hover:bg-white/10'}`}
-            >
-              All Time
             </button>
         </div>
       </div>
