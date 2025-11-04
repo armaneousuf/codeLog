@@ -324,7 +324,7 @@ const App: React.FC = () => {
             />
           </div>
 
-          <div className="col-span-12">
+          <div className="col-span-12 min-w-0">
             <Heatmap logs={logs} onDateSelect={setSelectedDate} />
           </div>
 
