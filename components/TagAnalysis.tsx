@@ -120,7 +120,7 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
                   ))}
               </svg>
           </div>
-          <div className="space-y-2 text-sm max-h-52 overflow-y-auto pr-2 -mr-2">
+          <div className="space-y-2 text-sm max-h-52 overflow-y-auto pr-2">
               {tagData.slice(0, 10).map(({ tag, hours }, index) => (
                   <div 
                     key={tag} 

@@ -300,7 +300,7 @@ const App: React.FC = () => {
         <Header totalHours={totalHours} />
         <main className="mt-8 grid grid-cols-12 gap-8">
           
-          <div className="col-span-12 lg:col-span-5 xl:col-span-4">
+          <div className="col-span-12 lg:col-span-5 xl:col-span-4 min-w-0">
             <LogForm 
               onAddLog={handleAddLog} 
               logs={logs}
@@ -309,7 +309,7 @@ const App: React.FC = () => {
             />
           </div>
 
-          <div className="col-span-12 lg:col-span-7 xl:col-span-8">
+          <div className="col-span-12 lg:col-span-7 xl:col-span-8 min-w-0">
             <StatsDashboard 
               weeklyTotal={weeklyTotal}
               monthlyTotal={monthlyTotal}
@@ -328,7 +328,7 @@ const App: React.FC = () => {
             <Heatmap logs={logs} onDateSelect={setSelectedDate} />
           </div>
 
-          <div className="col-span-12">
+          <div className="col-span-12 min-w-0">
             <ComparisonDashboard
               todayHours={comparisonStats.todayHours}
               yesterdayHours={comparisonStats.yesterdayHours}
@@ -339,19 +339,19 @@ const App: React.FC = () => {
             />
           </div>
           
-          <div className="col-span-12 xl:col-span-8">
+          <div className="col-span-12 xl:col-span-8 min-w-0">
              <MovingAverageChart logs={logs} />
           </div>
           
-          <div className="col-span-12 xl:col-span-4">
+          <div className="col-span-12 xl:col-span-4 min-w-0">
              <TagAnalysis logs={logs} />
           </div>
 
-          <div className="col-span-12 md:col-span-6">
+          <div className="col-span-12 md:col-span-6 min-w-0">
              <ProductivityChart logs={logs} />
           </div>
 
-          <div className="col-span-12 md:col-span-6">
+          <div className="col-span-12 md:col-span-6 min-w-0">
             <Achievements
               unlockedCount={Object.keys(unlockedAchievements).length}
               totalCount={ALL_ACHIEVEMENTS.length}
@@ -359,7 +359,7 @@ const App: React.FC = () => {
             />
           </div>
           
-          <div className="col-span-12">
+          <div className="col-span-12 min-w-0">
             <DataManagement
               logs={logs}
               goals={goals}

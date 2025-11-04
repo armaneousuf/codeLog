@@ -165,7 +165,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
                 onChange={(e) => setTagSearch(e.target.value)}
                 className="w-full bg-black/30 border border-gray-600 rounded-lg px-3 py-1.5 text-white focus:ring-2 focus:ring-violet-500 text-sm mb-2"
             />
-            <div className="max-h-36 overflow-y-auto pr-1">
+            <div className="max-h-36 overflow-y-auto pr-2">
               <div className="flex flex-wrap gap-2">
                 {filteredTechnologies.map(tech => (
                   <button

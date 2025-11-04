@@ -35,7 +35,7 @@ const AchievementsModal: React.FC<AchievementsModalProps> = ({ isOpen, onClose, 
             <h2 className="text-2xl font-bold text-white">All Achievements</h2>
             <button onClick={onClose} className="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
         </div>
-        <div className="overflow-y-auto pr-2 -mr-2">
+        <div className="overflow-y-auto pr-2">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {ALL_ACHIEVEMENTS.map(ach => (
                 <AchievementCard 
