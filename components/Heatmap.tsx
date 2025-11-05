@@ -54,7 +54,7 @@ const Heatmap: React.FC<HeatmapProps> = ({ logs, onDateSelect }) => {
   });
 
   return (
-    <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-6">
+    <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-2 sm:p-4 md:p-6">
       <h2 className="text-xl font-semibold text-white mb-4">Last Year's Activity</h2>
       <div className="flex">
         <div className="flex flex-col text-xs text-gray-400 pr-2 space-y-2 justify-around pt-8">

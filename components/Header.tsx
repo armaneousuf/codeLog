@@ -30,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ totalHours }) => {
         <div className="flex items-center space-x-4">
             <CodeIcon />
             <div>
-              <h1 className="text-5xl font-extrabold tracking-tight text-violet-400">
+              <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-violet-400">
                   CodeLog
               </h1>
               <p className="text-sm text-gray-300 -mt-1">Your personal coding companion.</p>

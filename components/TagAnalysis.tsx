@@ -64,9 +64,9 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
   };
 
   return (
-    <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-white">Tech Breakdown</h2>
+    <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold text-white mb-3 sm:mb-0">Tech Breakdown</h2>
         <div className="flex bg-black/20 p-1 rounded-lg text-sm">
             <button 
               onClick={() => setPeriod('daily')} 

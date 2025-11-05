@@ -88,7 +88,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
   }, [tagSearch, selectedTags]);
 
   return (
-    <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-6">
+    <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-4 sm:p-6">
       <h2 className="text-2xl font-bold text-white mb-4">Log Your Hours</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

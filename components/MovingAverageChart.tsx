@@ -76,7 +76,7 @@ const MovingAverageChart: React.FC<MovingAverageChartProps> = ({ logs }) => {
 
   if (!show7Day && !show30Day) {
     return (
-        <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-6">
+        <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-4 sm:p-6">
             <h2 className="text-xl font-semibold text-white mb-4">Productivity Trends</h2>
             <p className="text-sm text-gray-300 mb-6 -mt-3">7 & 30-Day Moving Averages</p>
             <p className="text-gray-400 text-sm">Log data across a 7 day period to see your short-term trend. 30 days needed for the long-term trend.</p>
@@ -105,7 +105,7 @@ const MovingAverageChart: React.FC<MovingAverageChartProps> = ({ logs }) => {
   const firstDate = allDates.length > 0 ? new Date(allDates[0] + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '';
 
   return (
-    <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-6">
+    <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-4 sm:p-6">
       <div className="flex justify-between items-start">
         <div>
           <h2 className="text-xl font-semibold text-white mb-1">Productivity Trends</h2>

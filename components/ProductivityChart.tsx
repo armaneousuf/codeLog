@@ -20,7 +20,7 @@ const ProductivityChart: React.FC<ProductivityChartProps> = ({ logs }) => {
 
   if (logs.length === 0) {
      return (
-        <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-6">
+        <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-4 sm:p-6">
             <h2 className="text-xl font-semibold text-white mb-4">Productivity Breakdown</h2>
             <p className="text-sm text-gray-300 mb-6 -mt-3">Total Hours per Day of Week</p>
             <p className="text-gray-400 text-sm">No data for this period. Log some hours to see your productivity breakdown.</p>
@@ -29,7 +29,7 @@ const ProductivityChart: React.FC<ProductivityChartProps> = ({ logs }) => {
   }
 
   return (
-    <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-6">
+    <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-4 sm:p-6">
       <h2 className="text-xl font-semibold text-white mb-4">Productivity Breakdown</h2>
        <p className="text-sm text-gray-300 mb-6 -mt-3">Total Hours per Day of Week</p>
       <div className="space-y-3">

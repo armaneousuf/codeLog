@@ -32,7 +32,7 @@ const GoalsModal: React.FC<GoalsModalProps> = ({ isOpen, onClose, onSave, curren
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 transition-opacity duration-300" onClick={onClose}>
-      <div className="bg-gray-900/60 border border-white/10 rounded-2xl shadow-lg p-8 w-full max-w-md transform transition-transform duration-300 scale-95" onClick={e => e.stopPropagation()}>
+      <div className="bg-gray-900/60 border border-white/10 rounded-2xl shadow-lg p-6 sm:p-8 w-full max-w-md transform transition-transform duration-300 scale-95" onClick={e => e.stopPropagation()}>
         <h2 className="text-2xl font-bold text-white mb-6">Set Your Goals</h2>
         <div className="space-y-4">
             <div>

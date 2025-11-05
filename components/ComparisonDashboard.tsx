@@ -72,7 +72,7 @@ const ComparisonDashboard: React.FC<ComparisonDashboardProps> = ({
 }) => {
   return (
     <div className="border-b border-white/10 pb-6">
-        <div className="flex flex-col sm:flex-row gap-8 sm:gap-6 justify-around">
+        <div className="flex flex-col sm:flex-row gap-6 justify-around">
             <ComparisonCard title="Today" current={todayHours} previous={yesterdayHours} period="yesterday" unit="hrs" />
             <ComparisonCard title="This Week" current={thisWeekHours} previous={lastWeekHours} period="last week" unit="hrs" />
             <ComparisonCard title="This Month" current={thisMonthHours} previous={lastMonthHours} period="last month" unit="hrs" />

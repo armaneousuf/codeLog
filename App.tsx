@@ -295,10 +295,10 @@ const App: React.FC = () => {
   }, [logs, isWeeklyReviewOpen]);
 
   return (
-    <div className="min-h-screen font-sans p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen font-sans p-2 sm:p-4 md:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
         <Header totalHours={totalHours} />
-        <main className="mt-8 grid grid-cols-12 gap-8">
+        <main className="mt-8 grid grid-cols-12 gap-4 md:gap-8">
           
           <div className="col-span-12 lg:col-span-5 xl:col-span-4 min-w-0">
             <LogForm 

@@ -41,7 +41,7 @@ const StatsDashboard: React.FC<StatsDashboardProps> = ({
   mostUsedTechYear
 }) => {
   return (
-    <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-6 h-full flex flex-col">
+    <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-4 sm:p-6 h-full flex flex-col">
        <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold text-white">Dashboard</h2>
         <button 
