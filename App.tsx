@@ -99,9 +99,17 @@ const App: React.FC = () => {
       const logDate = new Date(log.date + 'T00:00:00');
       
       const processTags = (map: Map<string, number>) => {
-        log.tags?.forEach(tag => {
-          map.set(tag, (map.get(tag) || 0) + log.hours);
-        });
+        if (log.techBreakdown) {
+          log.techBreakdown.forEach(tech => {
+            map.set(tech.tag, (map.get(tech.tag) || 0) + tech.hours);
+          });
+        } else if (log.tags) { // Handle old format
+          // Distribute total hours evenly among tags for approximation
+          const hoursPerTag = log.tags.length > 0 ? log.hours / log.tags.length : 0;
+          log.tags.forEach(tag => {
+            map.set(tag, (map.get(tag) || 0) + hoursPerTag);
+          });
+        }
       };
 
       if (logDate >= startOfYear) {

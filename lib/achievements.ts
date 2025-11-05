@@ -235,7 +235,13 @@ export const ALL_ACHIEVEMENTS: Achievement[] = [
     icon: '🏷️',
     isUnlocked: (logs) => {
         const allTags = new Set<string>();
-        logs.forEach(log => log.tags?.forEach(tag => allTags.add(tag)));
+        logs.forEach(log => {
+            if (log.techBreakdown) {
+                log.techBreakdown.forEach(tech => allTags.add(tech.tag));
+            } else if (log.tags) {
+                log.tags.forEach(tag => allTags.add(tag));
+            }
+        });
         return allTags.size >= 5;
     }
   },
@@ -246,7 +252,13 @@ export const ALL_ACHIEVEMENTS: Achievement[] = [
     icon: '🗣️',
     isUnlocked: (logs) => {
         const allTags = new Set<string>();
-        logs.forEach(log => log.tags?.forEach(tag => allTags.add(tag)));
+        logs.forEach(log => {
+            if (log.techBreakdown) {
+                log.techBreakdown.forEach(tech => allTags.add(tech.tag));
+            } else if (log.tags) {
+                log.tags.forEach(tag => allTags.add(tag));
+            }
+        });
         return allTags.size >= 10;
     }
   },
@@ -258,26 +270,19 @@ export const ALL_ACHIEVEMENTS: Achievement[] = [
     isUnlocked: (logs) => {
         const tagHours = new Map<string, number>();
         logs.forEach(log => {
-            log.tags?.forEach(tag => {
-                tagHours.set(tag, (tagHours.get(tag) || 0) + log.hours);
-            });
+            if (log.techBreakdown) {
+                log.techBreakdown.forEach(tech => {
+                    tagHours.set(tech.tag, (tagHours.get(tech.tag) || 0) + tech.hours);
+                });
+            } else if (log.tags) {
+                const hoursPerTag = log.tags.length > 0 ? log.hours / log.tags.length : 0;
+                log.tags.forEach(tag => {
+                    tagHours.set(tag, (tagHours.get(tag) || 0) + hoursPerTag);
+                });
+            }
         });
         return Array.from(tagHours.values()).some(hours => hours >= 100);
     }
-  },
-  {
-    id: 'note_taker',
-    name: 'Detail Oriented',
-    description: 'Write notes for at least 10 log entries.',
-    icon: '📝',
-    isUnlocked: (logs) => logs.filter(log => log.note && log.note.trim() !== '').length >= 10,
-  },
-  {
-    id: 'scribe',
-    name: 'The Scribe',
-    description: 'Write notes for 50 log entries.',
-    icon: '📜',
-    isUnlocked: (logs) => logs.filter(log => log.note && log.note.trim() !== '').length >= 50,
   },
   {
     id: 'elite_average',

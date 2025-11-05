@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { LogEntry } from '../types';
+import { LogEntry, TechTime } from '../types';
 import { TECHNOLOGIES } from '../lib/technologies';
 
 interface LogFormProps {
@@ -11,11 +11,8 @@ interface LogFormProps {
 
 const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange }) => {
   const today = new Date().toISOString().split('T')[0];
-  const [h, setH] = useState('');
-  const [m, setM] = useState('');
-  const [note, setNote] = useState('');
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [tagSearch, setTagSearch] = useState('');
+  const [breakdown, setBreakdown] = useState<{ tag: string; h: string; m: string }[]>([]);
 
   const justSaved = useRef(false);
 
@@ -26,31 +23,54 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
     }
     const existingLog = logs.find(log => log.date === date);
     if (existingLog) {
-        const totalHours = existingLog.hours;
-        const hoursPart = Math.floor(totalHours);
-        const minutesPart = Math.round((totalHours - hoursPart) * 60);
-        setH(hoursPart > 0 ? String(hoursPart) : '');
-        setM(minutesPart > 0 ? String(minutesPart) : '');
+      if (existingLog.techBreakdown) {
+        // New format with detailed breakdown
+        const newBreakdown = existingLog.techBreakdown.map(tech => {
+          const totalHours = tech.hours;
+          const hoursPart = Math.floor(totalHours);
+          const minutesPart = Math.round((totalHours - hoursPart) * 60);
+          return {
+            tag: tech.tag,
+            h: hoursPart > 0 ? String(hoursPart) : '',
+            m: minutesPart > 0 ? String(minutesPart) : '',
+          };
+        });
+        setBreakdown(newBreakdown);
+      } else if (existingLog.tags) {
+        // Old format, prompt user to fill times
+        const newBreakdown = existingLog.tags.map(tag => ({
+          tag,
+          h: '',
+          m: '',
+        }));
+        setBreakdown(newBreakdown);
+      } else {
+        setBreakdown([]);
+      }
     } else {
-        setH('');
-        setM('');
+      setBreakdown([]);
     }
-    setNote(existingLog?.note || '');
-    setSelectedTags(existingLog?.tags || []);
   }, [date, logs]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const hoursNum = parseInt(h, 10) || 0;
-    const minutesNum = parseInt(m, 10) || 0;
-    const totalHours = hoursNum + (minutesNum / 60);
+    
+    const techBreakdown: TechTime[] = breakdown
+      .map(({ tag, h, m }) => {
+        const hoursNum = parseInt(h, 10) || 0;
+        const minutesNum = parseInt(m, 10) || 0;
+        const totalHours = hoursNum + (minutesNum / 60);
+        return { tag, hours: totalHours };
+      })
+      .filter(item => item.hours > 0);
+
+    const totalHours = techBreakdown.reduce((sum, item) => sum + item.hours, 0);
     
     if (date) {
       onAddLog({ 
         date, 
         hours: totalHours, 
-        note, 
-        tags: selectedTags,
+        techBreakdown,
       });
       justSaved.current = true;
       
@@ -62,30 +82,74 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
         onDateChange(nextDayString);
       }
       
-      setH('');
-      setM('');
-      setNote('');
-      setSelectedTags([]);
+      setBreakdown([]);
       setTagSearch('');
     }
   };
   
-  const handleTagToggle = (tag: string) => {
-    setSelectedTags(prev =>
-      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag].sort()
-    );
+  const handleTagAdd = (tag: string) => {
+    if (!breakdown.some(item => item.tag === tag)) {
+      setBreakdown(prev => [...prev, { tag, h: '', m: '' }].sort((a,b) => a.tag.localeCompare(b.tag)));
+    }
+    setTagSearch('');
   };
+
+  const handleTagRemove = (tagToRemove: string) => {
+    setBreakdown(prev => prev.filter(item => item.tag !== tagToRemove));
+  };
+  
+  const handleTimeChange = (tag: string, unit: 'h' | 'm', value: string) => {
+    setBreakdown(prev => prev.map(item => {
+      if (item.tag === tag) {
+        if (unit === 'm') {
+          // Allow empty, or numbers between 0 and 59
+          if (value === '' || (Number(value) >= 0 && Number(value) <= 59 && !value.includes('.'))) {
+            return { ...item, [unit]: value };
+          }
+          return item;
+        }
+        // Allow any non-negative number for hours
+        if (value === '' || Number(value) >= 0) {
+            return { ...item, [unit]: value };
+        }
+        return item;
+      }
+      return item;
+    }));
+  };
+
+  const handleTimePreset = (tag: string, minutesToAdd: number) => {
+    setBreakdown(prev => prev.map(item => {
+        if (item.tag === tag) {
+            const currentHours = parseInt(item.h, 10) || 0;
+            const currentMinutes = parseInt(item.m, 10) || 0;
+            let totalMinutes = (currentHours * 60) + currentMinutes + minutesToAdd;
+            
+            const newHours = Math.floor(totalMinutes / 60);
+            const newMinutes = totalMinutes % 60;
+
+            return { ...item, h: String(newHours), m: String(newMinutes) };
+        }
+        return item;
+    }));
+  };
+
+  const selectedTags = useMemo(() => breakdown.map(item => item.tag), [breakdown]);
 
   const filteredTechnologies = useMemo(() => {
     return TECHNOLOGIES
       .filter(tech => tech.toLowerCase().includes(tagSearch.toLowerCase()))
-      .sort((a, b) => {
-        const aIsSelected = selectedTags.includes(a);
-        const bIsSelected = selectedTags.includes(b);
-        if (aIsSelected === bIsSelected) return a.localeCompare(b);
-        return aIsSelected ? -1 : 1;
-      });
+      .filter(tech => !selectedTags.includes(tech)) // Exclude already added tags
+      .sort();
   }, [tagSearch, selectedTags]);
+
+  const totalHours = useMemo(() => {
+    return breakdown.reduce((sum, { h, m }) => {
+        const hoursNum = parseFloat(h) || 0;
+        const minutesNum = parseInt(m, 10) || 0;
+        return sum + hoursNum + (minutesNum / 60);
+    }, 0);
+  }, [breakdown]);
 
   return (
     <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-4 sm:p-6">
@@ -105,81 +169,59 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">Time Coded</label>
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1">
-              <input
-                type="number"
-                id="hours"
-                value={h}
-                onChange={(e) => setH(e.target.value)}
-                className="w-full bg-black/30 border border-gray-700 rounded-lg pl-3 pr-10 py-2 text-white focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
-                placeholder="Hours"
-                min="0"
-                aria-label="Hours coded"
-              />
-              <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 pointer-events-none">hr</span>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Time & Tech Breakdown</label>
+            <div className="bg-black/30 border border-gray-700 rounded-lg p-2 space-y-3">
+                <input
+                    type="text"
+                    placeholder="Search to add technology..."
+                    value={tagSearch}
+                    onChange={(e) => setTagSearch(e.target.value)}
+                    className="w-full bg-black/30 border border-gray-600 rounded-lg px-3 py-1.5 text-white focus:ring-2 focus:ring-violet-500 text-sm"
+                />
+                {tagSearch && (
+                    <div className="max-h-36 overflow-y-auto pr-2">
+                        <div className="flex flex-wrap gap-2">
+                            {filteredTechnologies.map(tech => (
+                                <button
+                                    type="button"
+                                    key={tech}
+                                    onClick={() => handleTagAdd(tech)}
+                                    className="px-2.5 py-1 text-xs font-medium rounded-full transition-colors bg-gray-700 hover:bg-gray-600 text-gray-200"
+                                >
+                                    + {tech}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                <div className="space-y-2 pr-1 max-h-48 overflow-y-auto">
+                    {breakdown.map(({tag, h, m}) => (
+                        <div key={tag} className="bg-gray-900/50 p-3 rounded-lg">
+                            <div className="flex flex-wrap items-center gap-2">
+                                <button type="button" onClick={() => handleTagRemove(tag)} className="text-red-400 hover:text-red-300 rounded-full w-5 h-5 flex items-center justify-center bg-red-900/30 hover:bg-red-900/60 transition-colors">&times;</button>
+                                <span className="flex-grow font-medium text-sm text-gray-100 truncate" title={tag}>{tag}</span>
+                                <div className="flex items-center gap-1.5">
+                                    <input type="number" value={h} onChange={e => handleTimeChange(tag, 'h', e.target.value)} placeholder="H" min="0" className="w-16 bg-black/40 border border-gray-600 rounded-md px-2 py-1 text-white text-sm" />
+                                    <span className="text-gray-400 text-sm">hr</span>
+                                    <input type="number" value={m} onChange={e => handleTimeChange(tag, 'm', e.target.value)} placeholder="M" min="0" max="59" step="1" className="w-16 bg-black/40 border border-gray-600 rounded-md px-2 py-1 text-white text-sm" />
+                                    <span className="text-gray-400 text-sm">min</span>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-end gap-2 mt-2 pt-2 border-t border-white/5">
+                                <button type="button" onClick={() => handleTimePreset(tag, 15)} className="text-xs font-semibold px-2 py-1 rounded-md bg-white/5 hover:bg-white/10 text-gray-300 transition-colors">+15m</button>
+                                <button type="button" onClick={() => handleTimePreset(tag, 30)} className="text-xs font-semibold px-2 py-1 rounded-md bg-white/5 hover:bg-white/10 text-gray-300 transition-colors">+30m</button>
+                                <button type="button" onClick={() => handleTimePreset(tag, 60)} className="text-xs font-semibold px-2 py-1 rounded-md bg-white/5 hover:bg-white/10 text-gray-300 transition-colors">+1h</button>
+                            </div>
+                        </div>
+                    ))}
+                    {breakdown.length === 0 && <p className="text-center text-xs text-gray-400 py-2">Add a technology to begin logging time.</p>}
+                </div>
             </div>
-            <div className="relative flex-1">
-              <input
-                type="number"
-                id="minutes"
-                value={m}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  if (val === '' || (Number(val) >= 0 && Number(val) <= 59 && !val.includes('.'))) {
-                    setM(val);
-                  }
-                }}
-                className="w-full bg-black/30 border border-gray-700 rounded-lg pl-3 pr-10 py-2 text-white focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
-                placeholder="Mins"
-                min="0"
-                max="59"
-                step="1"
-                aria-label="Minutes coded"
-              />
-              <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 pointer-events-none">min</span>
-            </div>
-          </div>
         </div>
         
-        <div>
-          <label htmlFor="note" className="block text-sm font-medium text-gray-300 mb-1">Note (Optional)</label>
-          <textarea
-            id="note"
-            rows={2}
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            className="w-full bg-black/30 border border-gray-700 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
-            placeholder="What did you work on?"
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">Technologies (Optional)</label>
-          <div className="bg-black/30 border border-gray-700 rounded-lg p-2">
-            <input
-                type="text"
-                placeholder="Search technologies..."
-                value={tagSearch}
-                onChange={(e) => setTagSearch(e.target.value)}
-                className="w-full bg-black/30 border border-gray-600 rounded-lg px-3 py-1.5 text-white focus:ring-2 focus:ring-violet-500 text-sm mb-2"
-            />
-            <div className="max-h-36 overflow-y-auto pr-2">
-              <div className="flex flex-wrap gap-2">
-                {filteredTechnologies.map(tech => (
-                  <button
-                    type="button"
-                    key={tech}
-                    onClick={() => handleTagToggle(tech)}
-                    className={`px-2.5 py-1 text-xs font-medium rounded-full transition-colors ${selectedTags.includes(tech) ? 'bg-white text-black' : 'bg-gray-700 hover:bg-gray-600 text-gray-200'}`}
-                  >
-                    {tech}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
+        <div className="text-right text-gray-200">
+            Total: <span className="font-bold text-lg">{totalHours.toFixed(2)}</span> hours
         </div>
 
         <div>

@@ -35,9 +35,14 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
     
     const tagMap = new Map<string, number>();
     filteredLogs.forEach(log => {
-      if (log.tags) {
+      if (log.techBreakdown) {
+        log.techBreakdown.forEach(tech => {
+            tagMap.set(tech.tag, (tagMap.get(tech.tag) || 0) + tech.hours);
+        });
+      } else if (log.tags) {
+        const hoursPerTag = log.tags.length > 0 ? log.hours / log.tags.length : 0;
         log.tags.forEach(tag => {
-          tagMap.set(tag, (tagMap.get(tag) || 0) + log.hours);
+          tagMap.set(tag, (tagMap.get(tag) || 0) + hoursPerTag);
         });
       }
     });

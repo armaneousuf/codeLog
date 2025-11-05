@@ -1,9 +1,14 @@
 
+export interface TechTime {
+  tag: string;
+  hours: number;
+}
+
 export interface LogEntry {
   date: string; // YYYY-MM-DD format
   hours: number;
-  note?: string;
-  tags?: string[];
+  tags?: string[]; // Kept for backward compatibility with old data in localStorage
+  techBreakdown?: TechTime[];
 }
 
 export interface Goals {
