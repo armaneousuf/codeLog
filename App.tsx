@@ -372,7 +372,7 @@ const App: React.FC = () => {
         </main>
         <footer className="text-center text-gray-400 text-sm mt-12 py-4">
           <p>
-            This website was created by{' '}
+            This website was crafted by{' '}
             <a
               href="https://github.com/armaneousuf"
               target="_blank"
@@ -381,7 +381,7 @@ const App: React.FC = () => {
             >
               Arman Eousuf
             </a>{' '}
-            with the help of Google Gemini.
+            in collaboration with Google Gemini.
           </p>
         </footer>
       </div>
