@@ -4,7 +4,7 @@ import { useLocalStorage } from './hooks/useLocalStorage';
 import Header from './components/Header';
 import LogForm from './components/LogForm';
 import StatsDashboard from './components/StatsDashboard';
-import Heatmap from './components/Heatmap';
+import HexbinHeatmap from './components/HexbinHeatmap';
 import GoalsModal from './components/GoalsModal';
 import TagAnalysis from './components/TagAnalysis';
 import DataManagement from './components/DataManagement';
@@ -333,7 +333,7 @@ const App: React.FC = () => {
           </div>
 
           <div className="col-span-12 min-w-0">
-            <Heatmap logs={logs} onDateSelect={setSelectedDate} />
+            <HexbinHeatmap logs={logs} onDateSelect={setSelectedDate} />
           </div>
 
           <div className="col-span-12 min-w-0">
