@@ -10,17 +10,28 @@ interface LogFormProps {
 }
 
 const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange }) => {
-  const today = new Date().toISOString().split('T')[0];
+  const today = useMemo(() => new Date().toISOString().split('T')[0], []);
   const [tagSearch, setTagSearch] = useState('');
   const [breakdown, setBreakdown] = useState<{ tag: string; h: string; m: string }[]>([]);
 
   const justSaved = useRef(false);
+  const isInitialLoad = useRef(true);
 
   useEffect(() => {
+    // On initial page load for today's date, start with a blank form.
+    // This prevents re-populating the form after a refresh.
+    if (isInitialLoad.current && date === today) {
+      isInitialLoad.current = false;
+      setBreakdown([]);
+      return;
+    }
+
+    // After saving, don't re-populate with the data that was just saved.
     if (justSaved.current) {
       justSaved.current = false;
       return;
     }
+    
     const existingLog = logs.find(log => log.date === date);
     if (existingLog) {
       if (existingLog.techBreakdown) {
@@ -50,7 +61,7 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
     } else {
       setBreakdown([]);
     }
-  }, [date, logs]);
+  }, [date, logs, today]);
 
   const totalHours = useMemo(() => {
     return breakdown.reduce((sum, { h, m }) => {

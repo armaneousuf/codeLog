@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useRef, useCallback } from 'react';
 import { LogEntry } from '../types';
 
 interface MovingAverageChartProps {
@@ -6,146 +6,200 @@ interface MovingAverageChartProps {
 }
 
 const MovingAverageChart: React.FC<MovingAverageChartProps> = ({ logs }) => {
-  const chartData = useMemo(() => {
-    if (logs.length === 0) return { avg7: [], avg30: [] };
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
 
+  const chartData = useMemo(() => {
     const logsByDate = new Map<string, number>();
     logs.forEach(log => {
       logsByDate.set(log.date, (logsByDate.get(log.date) || 0) + log.hours);
     });
 
-    const sortedDates = Array.from(logsByDate.keys()).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
-    const firstLogDate = new Date(sortedDates[0] + 'T00:00:00');
-    const lastLogDate = new Date(sortedDates[sortedDates.length - 1] + 'T00:00:00');
-    
-    const movingAverages7 = [];
-    const movingAverages30 = [];
+    const dataPoints = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-    // Check if the span of days is enough to calculate the averages
-    const daySpan = (lastLogDate.getTime() - firstLogDate.getTime()) / (1000 * 3600 * 24);
-    const canCalc7 = daySpan >= 6;
-    const canCalc30 = daySpan >= 29;
+    for (let i = 89; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+      const dateString = date.toISOString().split('T')[0];
+      
+      const hours = logsByDate.get(dateString) || 0;
 
-    let currentDate = new Date(firstLogDate);
-    
-    while (currentDate <= lastLogDate) {
-        // 7-day average
-        if (canCalc7) {
-            let sum7 = 0;
-            for (let i = 0; i < 7; i++) {
-                const day = new Date(currentDate);
-                day.setDate(day.getDate() - i);
-                const dateString = day.toISOString().split('T')[0];
-                sum7 += logsByDate.get(dateString) || 0;
-            }
-            movingAverages7.push({
-                date: currentDate.toISOString().split('T')[0],
-                avg: sum7 / 7,
-            });
-        }
+      let sum7 = 0;
+      for (let j = 0; j < 7; j++) {
+        const avgDate = new Date(date);
+        avgDate.setDate(date.getDate() - j);
+        const avgDateString = avgDate.toISOString().split('T')[0];
+        sum7 += logsByDate.get(avgDateString) || 0;
+      }
+      const avg7 = sum7 / 7;
 
-        // 30-day average
-        if (canCalc30) {
-             let sum30 = 0;
-             for (let i = 0; i < 30; i++) {
-                 const day = new Date(currentDate);
-                 day.setDate(day.getDate() - i);
-                 const dateString = day.toISOString().split('T')[0];
-                 sum30 += logsByDate.get(dateString) || 0;
-             }
-             movingAverages30.push({
-                date: currentDate.toISOString().split('T')[0],
-                avg: sum30 / 30,
-            });
-        }
-        
-        currentDate.setDate(currentDate.getDate() + 1);
+      dataPoints.push({
+        date,
+        dateString,
+        hours,
+        avg7,
+      });
     }
+
+    const maxHours = Math.max(...dataPoints.map(d => d.hours), 1);
+    const maxAvg = Math.max(...dataPoints.map(d => d.avg7), 1);
     
-    return { 
-        avg7: movingAverages7.slice(-30), // Get last 30 points
-        avg30: movingAverages30.slice(-30) 
-    };
+    return { dataPoints, maxHours, maxAvg };
   }, [logs]);
 
+  const { dataPoints, maxHours, maxAvg } = chartData;
+  const overallMax = Math.max(maxHours, maxAvg);
 
-  const { avg7, avg30 } = chartData;
+  const getPathData = useCallback(() => {
+    if (dataPoints.length === 0) return "";
+    
+    const points = dataPoints.map((d, i) => {
+        const x = (i / (dataPoints.length - 1)) * 100;
+        const y = 100 - (d.avg7 / overallMax) * 90 - 5; // 90% height, 5% top padding
+        return `${x},${y}`;
+    }).join(' L ');
 
-  const show7Day = avg7.length > 0;
-  const show30Day = avg30.length > 0;
+    const firstPoint = `0,${100 - (dataPoints[0].avg7 / overallMax) * 90 - 5}`;
+    const lastPoint = `100,${100 - (dataPoints[dataPoints.length-1].avg7 / overallMax) * 90 - 5}`;
 
-  if (!show7Day && !show30Day) {
-    return (
-        <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-4 sm:p-6">
-            <h2 className="text-xl font-semibold text-white mb-4">Productivity Trends</h2>
-            <p className="text-sm text-gray-300 mb-6 -mt-3">7 & 30-Day Moving Averages</p>
-            <p className="text-gray-400 text-sm">Log data across a 7 day period to see your short-term trend. 30 days needed for the long-term trend.</p>
+    return `M ${firstPoint} L ${points} L ${lastPoint} L 100,100 L 0,100 Z`;
+  }, [dataPoints, overallMax]);
+
+  const getLineData = useCallback(() => {
+    if (dataPoints.length < 2) return "";
+    return dataPoints.map((d, i) => {
+        const x = (i / (dataPoints.length - 1)) * 100;
+        const y = 100 - (d.avg7 / overallMax) * 90 - 5;
+        return `${i === 0 ? 'M' : 'L'} ${x},${y}`;
+    }).join(' ');
+  }, [dataPoints, overallMax]);
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const x = event.clientX - containerRect.left;
+    const y = event.clientY - containerRect.top;
+    const relativeX = (x / containerRect.width);
+    const index = Math.min(Math.max(Math.round(relativeX * (dataPoints.length - 1)), 0), dataPoints.length - 1);
+    
+    setHoveredIndex(index);
+    setTooltipPosition({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredIndex(null);
+  };
+  
+  const hoveredData = hoveredIndex !== null ? dataPoints[hoveredIndex] : null;
+
+  if (logs.length < 7) {
+     return (
+        <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-4 sm:p-6 h-full flex flex-col justify-center items-center min-h-[292px]">
+            <h2 className="text-xl font-semibold text-white mb-2">Coding Rhythm</h2>
+            <p className="text-sm text-gray-400 text-center">Log at least 7 days of activity to see your momentum.</p>
         </div>
     );
   }
 
-  const combinedData = [...avg7.map(d => d.avg), ...avg30.map(d => d.avg)];
-  const maxAvg = Math.max(...combinedData, 1);
-  
-  const generatePoints = (data: {date: string, avg: number}[]) => {
-      if (data.length <= 1) return '';
-      return data.map((d, i) => {
-        const x = (i / (data.length - 1)) * 100;
-        const y = 100 - (d.avg / maxAvg) * 90; // 90 to leave some top padding
-        return `${x},${y}`;
-      }).join(' ');
-  }
-  
-  const points7 = generatePoints(avg7);
-  const points30 = generatePoints(avg30);
-  
-  const allDates = [...new Set([...avg7.map(d=>d.date), ...avg30.map(d=>d.date)])].sort();
-
-  const lastDate = allDates.length > 0 ? new Date(allDates[allDates.length-1] + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '';
-  const firstDate = allDates.length > 0 ? new Date(allDates[0] + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '';
-
   return (
     <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-4 sm:p-6">
-      <div className="flex justify-between items-start">
-        <div>
-          <h2 className="text-xl font-semibold text-white mb-1">Productivity Trends</h2>
-          <p className="text-sm text-gray-300 -mt-1">7 & 30-Day Moving Averages</p>
-        </div>
-        <div className="flex flex-col items-end text-xs space-y-1">
-          {show7Day && (
-            <div className="flex items-center gap-2">
-              <span className="text-gray-300">7-Day Avg</span>
-              <div className="w-4 h-1 bg-violet-400 rounded-full"></div>
-            </div>
+      <h2 className="text-xl font-semibold text-white mb-1">Coding Rhythm</h2>
+      <p className="text-sm text-gray-300 -mt-1">Last 90 Days Momentum</p>
+      
+      <div 
+        ref={containerRef}
+        className="relative h-52 mt-4 cursor-crosshair"
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+      >
+        <svg
+          className="w-full h-full"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <linearGradient id="rhythmGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.3"/>
+              <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0"/>
+            </linearGradient>
+          </defs>
+
+          {/* Daily Bars */}
+          {dataPoints.map((d, i) => {
+            const barHeight = Math.max((d.hours / overallMax) * 90, 0);
+            const x = (i / dataPoints.length) * 100;
+            const barWidth = 100 / dataPoints.length * 0.8;
+            return (
+              <rect
+                key={d.dateString}
+                x={x}
+                y={100 - barHeight}
+                width={barWidth}
+                height={barHeight}
+                className="fill-gray-700/50"
+              />
+            );
+          })}
+          
+          {/* 7-day Average Area */}
+          <path d={getPathData()} fill="url(#rhythmGradient)" />
+          <path d={getLineData()} fill="none" stroke="#a78bfa" strokeWidth="0.5" />
+
+          {/* Hover effects */}
+          {hoveredData && hoveredIndex !== null && (
+            <>
+              <line
+                x1={(hoveredIndex / (dataPoints.length - 1)) * 100}
+                y1="0"
+                x2={(hoveredIndex / (dataPoints.length - 1)) * 100}
+                y2="100"
+                stroke="#fafafa"
+                strokeWidth="0.2"
+                strokeDasharray="1 1"
+              />
+              <circle
+                cx={(hoveredIndex / (dataPoints.length - 1)) * 100}
+                cy={100 - (hoveredData.avg7 / overallMax) * 90 - 5}
+                r="1"
+                fill="#fafafa"
+                stroke="#8b5cf6"
+                strokeWidth="0.5"
+              />
+               <rect
+                x={(hoveredIndex / dataPoints.length) * 100}
+                y={100 - (hoveredData.hours / overallMax) * 90}
+                width={100 / dataPoints.length * 0.8}
+                height={(hoveredData.hours / overallMax) * 90}
+                className="fill-violet-500/50"
+              />
+            </>
           )}
-          {show30Day && (
-            <div className="flex items-center gap-2">
-              <span className="text-gray-300">30-Day Avg</span>
-              <div className="w-4 h-1 bg-gray-500 rounded-full"></div>
-            </div>
-          )}
-        </div>
-      </div>
-       <div className="h-48 relative mt-4">
-        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-            {show30Day && <polyline
-                fill="none"
-                stroke="#6b7280"
-                strokeWidth="1.5"
-                points={points30}
-            />}
-            {show7Day && <polyline
-                fill="none"
-                stroke="#a78bfa"
-                strokeWidth="2"
-                points={points7}
-            />}
         </svg>
-        <div className="absolute -bottom-4 left-0 right-0 flex justify-between text-xs text-gray-400 px-1">
-            <span>{firstDate}</span>
-            <span>{lastDate}</span>
-        </div>
-       </div>
+
+        {hoveredData && (
+          <div 
+            className="absolute bg-black/70 backdrop-blur-sm border border-gray-600 rounded-lg shadow-xl px-3 py-2 text-xs pointer-events-none z-10"
+            style={{ 
+              top: `${tooltipPosition.y}px`, 
+              left: `${tooltipPosition.x}px`,
+              transform: 'translate(15px, -100%)' // Position tooltip to the side and above cursor
+            }}
+          >
+            <p className="font-bold text-white mb-1 whitespace-nowrap">{hoveredData.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+            <div className="space-y-0.5">
+                <p className="text-gray-300">Logged: <span className="font-semibold text-white">{hoveredData.hours.toFixed(1)} hrs</span></p>
+                <p className="text-violet-300">7-Day Avg: <span className="font-semibold text-violet-200">{hoveredData.avg7.toFixed(1)} hrs</span></p>
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="flex justify-between text-xs text-gray-400 mt-1">
+        <span>90 days ago</span>
+        <span>Today</span>
+      </div>
     </div>
   );
 };
