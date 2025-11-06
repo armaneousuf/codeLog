@@ -155,6 +155,42 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
       .sort();
   }, [tagSearch, selectedTags]);
 
+  const recentTechnologies = useMemo(() => {
+    const recent = new Set<string>();
+    const reversedLogs = [...logs].reverse();
+    for (const log of reversedLogs) {
+      if (log.techBreakdown) {
+        for (const tech of log.techBreakdown) {
+          recent.add(tech.tag);
+          if (recent.size >= 8) break;
+        }
+      }
+      if (recent.size >= 8) break;
+    }
+    return Array.from(recent);
+  }, [logs]);
+
+  const filteredRecentTechnologies = recentTechnologies.filter(tech => !selectedTags.includes(tech));
+
+  const yesterdaysLog = useMemo(() => {
+    if (!date) return null;
+    const current = new Date(date + 'T00:00:00');
+    current.setDate(current.getDate() - 1);
+    const yesterdayString = current.toISOString().split('T')[0];
+    return logs.find(log => log.date === yesterdayString);
+  }, [date, logs]);
+
+  const handleCopyYesterday = () => {
+    if (yesterdaysLog?.techBreakdown) {
+        const newBreakdown = yesterdaysLog.techBreakdown.map(tech => ({
+            tag: tech.tag,
+            h: '',
+            m: ''
+        })).sort((a,b) => a.tag.localeCompare(b.tag));
+        setBreakdown(newBreakdown);
+    }
+  };
+
   return (
     <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-4 sm:p-6">
       <h2 className="text-2xl font-bold text-white mb-4">Log Your Hours</h2>
@@ -173,7 +209,20 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
         </div>
 
         <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">Time & Tech Breakdown</label>
+            <div className="flex justify-between items-center mb-1">
+              <label className="block text-sm font-medium text-gray-300">Time & Tech Breakdown</label>
+              {yesterdaysLog?.techBreakdown && yesterdaysLog.techBreakdown.length > 0 && (
+                <button 
+                  type="button" 
+                  onClick={handleCopyYesterday}
+                  className="text-xs font-semibold px-2 py-1 rounded-md bg-white/5 hover:bg-white/10 text-gray-300 transition-colors"
+                  aria-label="Copy technologies from yesterday's log"
+                >
+                  Copy Yesterday's
+                </button>
+              )}
+            </div>
+
             <div className="bg-black/30 border border-gray-700 rounded-lg p-2 space-y-3">
                 <input
                     type="text"
@@ -198,6 +247,25 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
                         </div>
                     </div>
                 )}
+                
+                {filteredRecentTechnologies.length > 0 && !tagSearch && (
+                  <div className="pt-2">
+                      <p className="text-xs font-medium text-gray-400 mb-2">Recently Used:</p>
+                      <div className="flex flex-wrap gap-2">
+                          {filteredRecentTechnologies.map(tech => (
+                              <button
+                                  type="button"
+                                  key={tech}
+                                  onClick={() => handleTagAdd(tech)}
+                                  className="px-2.5 py-1 text-xs font-medium rounded-full transition-colors bg-violet-900/50 hover:bg-violet-900/80 text-violet-200"
+                              >
+                                  + {tech}
+                              </button>
+                          ))}
+                      </div>
+                  </div>
+                )}
+
 
                 <div className="space-y-2 pr-1 max-h-48 overflow-y-auto">
                     {breakdown.map(({tag, h, m}) => (
