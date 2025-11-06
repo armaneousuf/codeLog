@@ -80,7 +80,7 @@ const DataManagement: React.FC<DataManagementProps> = ({
   };
 
   return (
-    <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-4 sm:p-6">
+    <div>
       <h2 className="text-xl font-semibold text-white mb-4">Data Management</h2>
       <div className="flex flex-col sm:flex-row gap-4">
         <button onClick={handleExport} className="flex-1 text-center bg-white/5 text-white font-semibold py-2 px-4 rounded-lg hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-violet-500 transition-colors duration-200">

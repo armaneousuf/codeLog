@@ -3,7 +3,6 @@ import { LogEntry } from '../types';
 
 interface HexbinHeatmapProps {
   logs: LogEntry[];
-  onDateSelect: (date: string) => void;
 }
 
 const formatDate = (date: Date): string => {
@@ -30,7 +29,7 @@ const getHexPoints = (cx: number, cy: number): string => {
 // --- End Hexagon Math ---
 
 
-const HexbinHeatmap: React.FC<HexbinHeatmapProps> = ({ logs, onDateSelect }) => {
+const HexbinHeatmap: React.FC<HexbinHeatmapProps> = ({ logs }) => {
   const logsMap = new Map<string, LogEntry>(logs.map(log => [log.date, log]));
 
   const endDate = new Date();
@@ -120,16 +119,11 @@ const HexbinHeatmap: React.FC<HexbinHeatmapProps> = ({ logs, onDateSelect }) => 
                     return (
                         <g 
                           key={dateString}
-                          className="group cursor-pointer"
-                          onClick={() => onDateSelect(dateString)}
-                          role="button"
-                          tabIndex={0}
-                          aria-label={`Log for ${formatDate(day)}: ${hours ? `${hours.toFixed(1)} hours` : 'No activity'}`}
-                          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onDateSelect(dateString); }}
+                          className="group"
                         >
                             <polygon
                                 points={getHexPoints(cx, cy)}
-                                className={`${getColor(hours)} transition-all duration-150 group-hover:stroke-white stroke-2 stroke-transparent`}
+                                className={`${getColor(hours)} transition-opacity duration-150 group-hover:opacity-75`}
                             />
                             <title>{`${hours ? `${hours.toFixed(1)} hours` : 'No activity'} on ${formatDate(day)}`}</title>
                         </g>

@@ -16,6 +16,8 @@ import AchievementToast from './components/AchievementToast';
 import { ALL_ACHIEVEMENTS } from './lib/achievements';
 import MovingAverageChart from './components/MovingAverageChart';
 import WeeklyReviewModal from './components/WeeklyReviewModal';
+import LogHistory from './components/LogHistory';
+import AdvancedControls from './components/AdvancedControls';
 
 const getLocalDateString = (date: Date): string => {
   const year = date.getFullYear();
@@ -65,6 +67,11 @@ const App: React.FC = () => {
         setTimeout(() => setShowSaveToast(false), 3000);
     }
   };
+
+  const handleDeleteLog = (date: string) => {
+    setLogs(prevLogs => prevLogs.filter(log => log.date !== date));
+  };
+
 
   const handleSetGoals = (newGoals: Goals) => {
     setGoals(newGoals);
@@ -307,7 +314,7 @@ const App: React.FC = () => {
         <Header totalHours={totalHours} />
         <main className="mt-8 grid grid-cols-12 gap-4 md:gap-8">
           
-          <div className="col-span-12 lg:col-span-4 min-w-0">
+          <div className="col-span-12 lg:col-span-4 min-w-0 flex flex-col gap-4 md:gap-8">
             <LogForm 
               onAddLog={handleAddLog} 
               logs={logs}
@@ -338,7 +345,7 @@ const App: React.FC = () => {
           </div>
 
           <div className="col-span-12 min-w-0">
-            <HexbinHeatmap logs={logs} onDateSelect={setSelectedDate} />
+            <HexbinHeatmap logs={logs} />
           </div>
           
           <div className="col-span-12 xl:col-span-8 min-w-0">
@@ -361,17 +368,21 @@ const App: React.FC = () => {
             />
           </div>
           
-          <div className="col-span-12 min-w-0">
-            <DataManagement
-              logs={logs}
-              goals={goals}
-              unlockedAchievements={unlockedAchievements}
-              setLogs={setLogs}
-              setGoals={setGoals}
-              setUnlockedAchievements={setUnlockedAchievements}
-            />
-          </div>
         </main>
+
+        <div className="mt-8 md:mt-12">
+          <AdvancedControls
+            logs={logs}
+            onDateSelect={setSelectedDate}
+            onDeleteLog={handleDeleteLog}
+            goals={goals}
+            unlockedAchievements={unlockedAchievements}
+            setLogs={setLogs}
+            setGoals={setGoals}
+            setUnlockedAchievements={setUnlockedAchievements}
+          />
+        </div>
+        
         <footer className="text-center text-gray-400 text-sm mt-12 py-4">
           <p>
             This website was crafted by{' '}
