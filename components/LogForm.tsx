@@ -52,24 +52,36 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
     }
   }, [date, logs]);
 
+  const totalHours = useMemo(() => {
+    return breakdown.reduce((sum, { h, m }) => {
+        const hoursNum = parseFloat(h) || 0;
+        const minutesNum = parseInt(m, 10) || 0;
+        return sum + hoursNum + (minutesNum / 60);
+    }, 0);
+  }, [breakdown]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (totalHours === 0) {
+      return; // Do not save an empty log
+    }
     
     const techBreakdown: TechTime[] = breakdown
       .map(({ tag, h, m }) => {
-        const hoursNum = parseInt(h, 10) || 0;
+        const hoursNum = parseFloat(h) || 0; // Use parseFloat for consistency
         const minutesNum = parseInt(m, 10) || 0;
-        const totalHours = hoursNum + (minutesNum / 60);
-        return { tag, hours: totalHours };
+        const calculatedHours = hoursNum + (minutesNum / 60);
+        return { tag, hours: calculatedHours };
       })
       .filter(item => item.hours > 0);
 
-    const totalHours = techBreakdown.reduce((sum, item) => sum + item.hours, 0);
+    const finalTotalHours = techBreakdown.reduce((sum, item) => sum + item.hours, 0);
     
     if (date) {
       onAddLog({ 
         date, 
-        hours: totalHours, 
+        hours: finalTotalHours, 
         techBreakdown,
       });
       justSaved.current = true;
@@ -142,14 +154,6 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
       .filter(tech => !selectedTags.includes(tech)) // Exclude already added tags
       .sort();
   }, [tagSearch, selectedTags]);
-
-  const totalHours = useMemo(() => {
-    return breakdown.reduce((sum, { h, m }) => {
-        const hoursNum = parseFloat(h) || 0;
-        const minutesNum = parseInt(m, 10) || 0;
-        return sum + hoursNum + (minutesNum / 60);
-    }, 0);
-  }, [breakdown]);
 
   return (
     <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 p-4 sm:p-6">
@@ -227,7 +231,8 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
         <div>
           <button
             type="submit"
-            className="w-full bg-violet-600 text-white font-semibold py-2.5 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-violet-500 transition-all duration-200 hover:bg-violet-700 hover:shadow-[0_0_15px_rgba(124,58,237,0.5)]"
+            disabled={totalHours === 0}
+            className="w-full bg-violet-600 text-white font-semibold py-2.5 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-violet-500 transition-all duration-200 hover:bg-violet-700 hover:shadow-[0_0_15px_rgba(124,58,237,0.5)] disabled:bg-gray-700 disabled:text-gray-400 disabled:cursor-not-allowed disabled:shadow-none"
           >
             Save Log
           </button>

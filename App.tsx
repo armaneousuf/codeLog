@@ -39,7 +39,7 @@ const App: React.FC = () => {
   const [isWeeklyReviewOpen, setIsWeeklyReviewOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(getLocalDateString(new Date()));
   const [newlyUnlocked, setNewlyUnlocked] = useState<string[]>([]);
-  const [showSaveToast, setShowSaveToast] = useState(false);
+  const [infoToast, setInfoToast] = useState<string | null>(null);
   
   const handleAddLog = (newLog: LogEntry) => {
     let wasUpdated = false;
@@ -63,13 +63,22 @@ const App: React.FC = () => {
     });
 
     if (wasUpdated) {
-        setShowSaveToast(true);
-        setTimeout(() => setShowSaveToast(false), 3000);
+      setInfoToast("Log Saved!");
+      setTimeout(() => setInfoToast(null), 3000);
     }
   };
 
   const handleDeleteLog = (date: string) => {
     setLogs(prevLogs => prevLogs.filter(log => log.date !== date));
+    setInfoToast("Log Deleted!");
+    setTimeout(() => setInfoToast(null), 3000);
+  };
+
+  const handleSelectDateForEdit = (date: string) => {
+    setSelectedDate(date);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setInfoToast("Form is ready for editing at the top of the page.");
+    setTimeout(() => setInfoToast(null), 4000);
   };
 
 
@@ -373,7 +382,7 @@ const App: React.FC = () => {
         <div className="mt-8 md:mt-12">
           <AdvancedControls
             logs={logs}
-            onDateSelect={setSelectedDate}
+            onDateSelect={handleSelectDateForEdit}
             onDeleteLog={handleDeleteLog}
             goals={goals}
             unlockedAchievements={unlockedAchievements}
@@ -418,9 +427,9 @@ const App: React.FC = () => {
         newlyUnlocked={newlyUnlocked}
         onComplete={(id) => setNewlyUnlocked(prev => prev.filter(aId => aId !== id))}
       />
-      <div className={`fixed bottom-5 right-5 z-50 transition-all duration-300 ${showSaveToast ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+      <div className={`fixed bottom-5 left-5 z-50 transition-all duration-300 ${infoToast ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
         <div className="bg-gray-800/80 backdrop-blur-sm border border-gray-600 rounded-lg shadow-2xl p-4 flex items-center space-x-4 max-w-sm overflow-hidden">
-          <p className="font-semibold text-white">Log Saved!</p>
+          <p className="font-semibold text-white">{infoToast}</p>
         </div>
       </div>
     </div>

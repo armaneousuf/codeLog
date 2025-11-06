@@ -65,8 +65,8 @@ const LogHistory: React.FC<LogHistoryProps> = ({ logs, onDateSelect, onDeleteLog
               key={log.date}
               className="group w-full text-left p-3 rounded-lg bg-black/20"
             >
-              <div className="flex justify-between items-center">
-                <div className="min-w-0">
+              <div className="flex justify-between items-start">
+                <div>
                     <span className="font-semibold text-sm text-gray-200">{formatDate(log.date)}</span>
                     {log.techBreakdown && log.techBreakdown.length > 0 && (
                         <div className="flex flex-wrap gap-1.5 mt-2">
@@ -85,7 +85,7 @@ const LogHistory: React.FC<LogHistoryProps> = ({ logs, onDateSelect, onDeleteLog
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0 ml-2">
                     <span className="font-mono text-sm text-white">{log.hours.toFixed(1)} hrs</span>
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
+                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button onClick={() => onDateSelect(log.date)} className="p-1.5 rounded-md text-gray-300 hover:bg-white/10 hover:text-white transition-colors" aria-label={`Edit log for ${log.date}`}>
                           <PencilIcon />
                       </button>
