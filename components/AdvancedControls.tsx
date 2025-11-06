@@ -35,7 +35,7 @@ const AdvancedControls: React.FC<AdvancedControlsProps> = (props) => {
       </button>
       <div className={`transition-all duration-300 ease-in-out grid ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
         <div className="overflow-hidden">
-            <div className="p-4 sm:p-6 pt-0 border-t border-white/10 space-y-6">
+            <div className="p-4 sm:p-6 pt-0 border-t border-white/10 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
                 <LogHistory
                     logs={props.logs}
                     onDateSelect={props.onDateSelect}
