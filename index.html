@@ -44,21 +44,12 @@
             },
             animation: {
               'progress': 'progress 4s linear forwards',
-              'pulse-glow': 'pulse-glow 3s ease-in-out infinite',
             },
             keyframes: {
               progress: {
                 '0%': { width: '100%' },
                 '100%': { width: '0%' },
               },
-              'pulse-glow': {
-                '0%, 100%': { 
-                  'box-shadow': '0 0 8px rgba(167, 139, 250, 0.3), 0 0 12px rgba(167, 139, 250, 0.2), inset 0 0 6px rgba(167, 139, 250, 0.2)' 
-                },
-                '50%': { 
-                  'box-shadow': '0 0 16px rgba(196, 181, 253, 0.4), 0 0 24px rgba(196, 181, 253, 0.3), inset 0 0 8px rgba(196, 181, 253, 0.3)' 
-                },
-              }
             }
           }
         }

@@ -28,7 +28,7 @@ const StreakCard: React.FC<StreakCardProps> = ({ title, value, isPrimary = false
         bg-black/20 rounded-xl p-4 h-full
         flex flex-col justify-center items-center text-center 
         transition-all duration-300 hover:bg-black/40
-        ${isPrimary ? 'border border-violet-500/50 animate-pulse-glow' : ''}
+        ${isPrimary ? 'border border-violet-500/50' : ''}
       `}
     >
       <div className="flex items-center gap-2">
