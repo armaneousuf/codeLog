@@ -3,7 +3,7 @@ import { LogEntry, Goals, UnlockedAchievements } from './types';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import Header from './components/Header';
 import LogForm from './components/LogForm';
-import StatsDashboard from './components/StatsDashboard';
+import Dashboard from './components/Dashboard';
 import HexbinHeatmap from './components/HexbinHeatmap';
 import GoalsModal from './components/GoalsModal';
 import TagAnalysis from './components/TagAnalysis';
@@ -16,7 +16,6 @@ import AchievementToast from './components/AchievementToast';
 import { ALL_ACHIEVEMENTS } from './lib/achievements';
 import MovingAverageChart from './components/MovingAverageChart';
 import WeeklyReviewModal from './components/WeeklyReviewModal';
-import ComparisonDashboard from './components/ComparisonDashboard';
 
 const getLocalDateString = (date: Date): string => {
   const year = date.getFullYear();
@@ -308,7 +307,7 @@ const App: React.FC = () => {
         <Header totalHours={totalHours} />
         <main className="mt-8 grid grid-cols-12 gap-4 md:gap-8">
           
-          <div className="col-span-12 lg:col-span-5 xl:col-span-4 min-w-0">
+          <div className="col-span-12 lg:col-span-4 min-w-0">
             <LogForm 
               onAddLog={handleAddLog} 
               logs={logs}
@@ -317,8 +316,8 @@ const App: React.FC = () => {
             />
           </div>
 
-          <div className="col-span-12 lg:col-span-7 xl:col-span-8 min-w-0">
-            <StatsDashboard 
+          <div className="col-span-12 lg:col-span-8 min-w-0">
+            <Dashboard
               weeklyTotal={weeklyTotal}
               monthlyTotal={monthlyTotal}
               yearlyTotal={yearlyTotal}
@@ -329,15 +328,6 @@ const App: React.FC = () => {
               mostUsedTechWeek={mostUsedTechWeek}
               mostUsedTechMonth={mostUsedTechMonth}
               mostUsedTechYear={mostUsedTechYear}
-            />
-          </div>
-
-          <div className="col-span-12 min-w-0">
-            <HexbinHeatmap logs={logs} onDateSelect={setSelectedDate} />
-          </div>
-
-          <div className="col-span-12 min-w-0">
-            <ComparisonDashboard
               todayHours={comparisonStats.todayHours}
               yesterdayHours={comparisonStats.yesterdayHours}
               thisWeekHours={weeklyTotal}
@@ -345,6 +335,10 @@ const App: React.FC = () => {
               thisMonthHours={monthlyTotal}
               lastMonthHours={comparisonStats.lastMonthHours}
             />
+          </div>
+
+          <div className="col-span-12 min-w-0">
+            <HexbinHeatmap logs={logs} onDateSelect={setSelectedDate} />
           </div>
           
           <div className="col-span-12 xl:col-span-8 min-w-0">
