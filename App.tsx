@@ -14,7 +14,7 @@ import AchievementsModal from './components/AchievementsModal';
 import AchievementToast from './components/AchievementToast';
 // Fix: Corrected typo in imported member name to match the export from './lib/achievements'.
 import { ALL_ACHIEVEMENTS } from './lib/achievements';
-import TechConstellation from './components/MovingAverageChart';
+import MovingAverageChart from './components/MovingAverageChart';
 import WeeklyReviewModal from './components/WeeklyReviewModal';
 import LogHistory from './components/LogHistory';
 import AdvancedControls from './components/AdvancedControls';
@@ -358,7 +358,7 @@ const App: React.FC = () => {
           </div>
           
           <div className="col-span-12 xl:col-span-8 min-w-0">
-             <TechConstellation logs={logs} />
+             <MovingAverageChart logs={logs} />
           </div>
           
           <div className="col-span-12 xl:col-span-4 min-w-0">
