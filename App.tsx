@@ -18,6 +18,7 @@ import MovingAverageChart from './components/MovingAverageChart';
 import WeeklyReviewModal from './components/WeeklyReviewModal';
 import LogHistory from './components/LogHistory';
 import AdvancedControls from './components/AdvancedControls';
+import ReportsPage from './components/ReportsPage';
 
 const getLocalDateString = (date: Date): string => {
   const year = date.getFullYear();
@@ -33,7 +34,7 @@ const App: React.FC = () => {
   const [unlockedAchievements, setUnlockedAchievements] = useLocalStorage<UnlockedAchievements>('unlockedAchievements', {});
   const [lastSeenWeeklyReview, setLastSeenWeeklyReview] = useLocalStorage<string>('lastSeenWeeklyReview', '');
 
-
+  const [view, setView] = useState<'dashboard' | 'reports'>('dashboard');
   const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false);
   const [isAchievementsModalOpen, setIsAchievementsModalOpen] = useState(false);
   const [isWeeklyReviewOpen, setIsWeeklyReviewOpen] = useState(false);
@@ -87,7 +88,7 @@ const App: React.FC = () => {
     setIsGoalsModalOpen(false);
   };
   
-  const { weeklyTotal, monthlyTotal, yearlyTotal, totalHours, mostUsedTechWeek, mostUsedTechMonth, mostUsedTechYear } = useMemo(() => {
+  const { weeklyTotal, monthlyTotal, yearlyTotal, totalHours, mostUsedTechWeek, mostUsedTechMonth, mostUsedTechYear, lastYearTotal } = useMemo(() => {
     const now = new Date();
     
     const startOfWeek = new Date(now);
@@ -101,10 +102,17 @@ const App: React.FC = () => {
 
     const startOfYear = new Date(now.getFullYear(), 0, 1);
     startOfYear.setHours(0, 0, 0, 0);
+    
+    const startOfLastYear = new Date(now.getFullYear() - 1, 0, 1);
+    startOfLastYear.setHours(0,0,0,0);
+    const endOfLastYear = new Date(startOfYear);
+    endOfLastYear.setDate(startOfYear.getDate() - 1);
+    endOfLastYear.setHours(23,59,59,999);
 
     let weekly = 0;
     let monthly = 0;
     let yearly = 0;
+    let lastYearly = 0;
     
     const weeklyTagHours = new Map<string, number>();
     const monthlyTagHours = new Map<string, number>();
@@ -139,6 +147,10 @@ const App: React.FC = () => {
           }
         }
       }
+
+      if (logDate >= startOfLastYear && logDate <= endOfLastYear) {
+          lastYearly += log.hours;
+      }
     }
     
     const findTopTag = (map: Map<string, number>): string | undefined => {
@@ -155,6 +167,7 @@ const App: React.FC = () => {
         mostUsedTechWeek: findTopTag(weeklyTagHours),
         mostUsedTechMonth: findTopTag(monthlyTagHours),
         mostUsedTechYear: findTopTag(yearlyTagHours),
+        lastYearTotal: lastYearly,
     };
   }, [logs]);
 
@@ -320,90 +333,103 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen font-sans p-2 sm:p-4 md:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
-        <Header totalHours={totalHours} />
-        <main className="mt-8 grid grid-cols-12 gap-4 md:gap-8">
-          
-          <div className="col-span-12 lg:col-span-4 min-w-0 flex flex-col gap-4 md:gap-8">
-            <LogForm 
-              onAddLog={handleAddLog} 
-              logs={logs}
-              date={selectedDate}
-              onDateChange={setSelectedDate}
-            />
-          </div>
+        <Header totalHours={totalHours} view={view} setView={setView} />
 
-          <div className="col-span-12 lg:col-span-8 min-w-0">
-            <Dashboard
-              weeklyTotal={weeklyTotal}
-              monthlyTotal={monthlyTotal}
-              yearlyTotal={yearlyTotal}
-              goals={goals}
-              onEditGoals={() => setIsGoalsModalOpen(true)}
-              currentStreak={currentStreak}
-              longestStreak={longestStreak}
-              mostUsedTechWeek={mostUsedTechWeek}
-              mostUsedTechMonth={mostUsedTechMonth}
-              mostUsedTechYear={mostUsedTechYear}
-              todayHours={comparisonStats.todayHours}
-              yesterdayHours={comparisonStats.yesterdayHours}
-              thisWeekHours={weeklyTotal}
-              lastWeekHours={comparisonStats.lastWeekHours}
-              thisMonthHours={monthlyTotal}
-              lastMonthHours={comparisonStats.lastMonthHours}
-            />
-          </div>
+        {view === 'dashboard' ? (
+          <>
+            <main className="mt-8 grid grid-cols-12 gap-4 md:gap-8">
+              <div className="col-span-12 lg:col-span-4 min-w-0 flex flex-col gap-4 md:gap-8">
+                <LogForm 
+                  onAddLog={handleAddLog} 
+                  logs={logs}
+                  date={selectedDate}
+                  onDateChange={setSelectedDate}
+                />
+              </div>
 
-          <div className="col-span-12 min-w-0">
-            <HexbinHeatmap logs={logs} />
-          </div>
-          
-          <div className="col-span-12 xl:col-span-8 min-w-0">
-             <MovingAverageChart logs={logs} />
-          </div>
-          
-          <div className="col-span-12 xl:col-span-4 min-w-0">
-             <TagAnalysis logs={logs} />
-          </div>
+              <div className="col-span-12 lg:col-span-8 min-w-0">
+                <Dashboard
+                  weeklyTotal={weeklyTotal}
+                  monthlyTotal={monthlyTotal}
+                  yearlyTotal={yearlyTotal}
+                  goals={goals}
+                  onEditGoals={() => setIsGoalsModalOpen(true)}
+                  currentStreak={currentStreak}
+                  longestStreak={longestStreak}
+                  mostUsedTechWeek={mostUsedTechWeek}
+                  mostUsedTechMonth={mostUsedTechMonth}
+                  mostUsedTechYear={mostUsedTechYear}
+                  todayHours={comparisonStats.todayHours}
+                  yesterdayHours={comparisonStats.yesterdayHours}
+                  thisWeekHours={weeklyTotal}
+                  lastWeekHours={comparisonStats.lastWeekHours}
+                  thisMonthHours={monthlyTotal}
+                  lastMonthHours={comparisonStats.lastMonthHours}
+                />
+              </div>
 
-          <div className="col-span-12 md:col-span-6 min-w-0">
-             <ProductivityChart logs={logs} />
-          </div>
+              <div className="col-span-12 min-w-0">
+                <HexbinHeatmap logs={logs} />
+              </div>
+              
+              <div className="col-span-12 xl:col-span-8 min-w-0">
+                 <MovingAverageChart logs={logs} />
+              </div>
+              
+              <div className="col-span-12 xl:col-span-4 min-w-0">
+                 <TagAnalysis logs={logs} />
+              </div>
 
-          <div className="col-span-12 md:col-span-6 min-w-0">
-            <Achievements
-              unlockedCount={Object.keys(unlockedAchievements).length}
-              totalCount={ALL_ACHIEVEMENTS.length}
-              onView={() => setIsAchievementsModalOpen(true)}
-            />
-          </div>
-          
-        </main>
+              <div className="col-span-12 md:col-span-6 min-w-0">
+                 <ProductivityChart logs={logs} />
+              </div>
 
-        <div className="mt-8 md:mt-12">
-          <AdvancedControls
+              <div className="col-span-12 md:col-span-6 min-w-0">
+                <Achievements
+                  unlockedCount={Object.keys(unlockedAchievements).length}
+                  totalCount={ALL_ACHIEVEMENTS.length}
+                  onView={() => setIsAchievementsModalOpen(true)}
+                />
+              </div>
+            </main>
+
+            <div className="mt-8 md:mt-12">
+              <AdvancedControls
+                logs={logs}
+                onDateSelect={handleSelectDateForEdit}
+                onDeleteLog={handleDeleteLog}
+                goals={goals}
+                setLogs={setLogs}
+                setGoals={setGoals}
+              />
+            </div>
+            
+            <footer className="text-center text-gray-400 text-sm mt-12 py-4">
+              <p>
+                This website was crafted by{' '}
+                <a
+                  href="https://github.com/armaneousuf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-200 hover:text-white underline transition-colors"
+                >
+                  Arman Eousuf
+                </a>{' '}
+                in collaboration with Google Gemini.
+              </p>
+            </footer>
+          </>
+        ) : (
+          <ReportsPage
             logs={logs}
-            onDateSelect={handleSelectDateForEdit}
-            onDeleteLog={handleDeleteLog}
-            goals={goals}
-            setLogs={setLogs}
-            setGoals={setGoals}
+            thisWeekHours={weeklyTotal}
+            lastWeekHours={comparisonStats.lastWeekHours}
+            thisMonthHours={monthlyTotal}
+            lastMonthHours={comparisonStats.lastMonthHours}
+            thisYearHours={yearlyTotal}
+            lastYearHours={lastYearTotal}
           />
-        </div>
-        
-        <footer className="text-center text-gray-400 text-sm mt-12 py-4">
-          <p>
-            This website was crafted by{' '}
-            <a
-              href="https://github.com/armaneousuf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-200 hover:text-white underline transition-colors"
-            >
-              Arman Eousuf
-            </a>{' '}
-            in collaboration with Google Gemini.
-          </p>
-        </footer>
+        )}
       </div>
       <GoalsModal
         isOpen={isGoalsModalOpen}
