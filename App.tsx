@@ -385,10 +385,8 @@ const App: React.FC = () => {
             onDateSelect={handleSelectDateForEdit}
             onDeleteLog={handleDeleteLog}
             goals={goals}
-            unlockedAchievements={unlockedAchievements}
             setLogs={setLogs}
             setGoals={setGoals}
-            setUnlockedAchievements={setUnlockedAchievements}
           />
         </div>
         

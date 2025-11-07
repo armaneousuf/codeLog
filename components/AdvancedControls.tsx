@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import { LogEntry, Goals, UnlockedAchievements } from '../types';
+import { LogEntry, Goals } from '../types';
 import LogHistory from './LogHistory';
 import DataManagement from './DataManagement';
 
 interface AdvancedControlsProps {
   logs: LogEntry[];
   goals: Goals;
-  unlockedAchievements: UnlockedAchievements;
   setLogs: React.Dispatch<React.SetStateAction<LogEntry[]>>;
   setGoals: React.Dispatch<React.SetStateAction<Goals>>;
-  setUnlockedAchievements: React.Dispatch<React.SetStateAction<UnlockedAchievements>>;
   onDateSelect: (date: string) => void;
   onDeleteLog: (date: string) => void;
 }
@@ -44,10 +42,8 @@ const AdvancedControls: React.FC<AdvancedControlsProps> = (props) => {
                 <DataManagement
                     logs={props.logs}
                     goals={props.goals}
-                    unlockedAchievements={props.unlockedAchievements}
                     setLogs={props.setLogs}
                     setGoals={props.setGoals}
-                    setUnlockedAchievements={props.setUnlockedAchievements}
                 />
             </div>
         </div>
