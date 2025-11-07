@@ -42,7 +42,7 @@ const DataManagement: React.FC<DataManagementProps> = ({
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (!window.confirm("Are you sure? Importing a file will overwrite your current logs and goals. This action cannot be undone.")) {
+    if (!window.confirm("Are you sure? Importing a file will overwrite your current logs and/or goals. This action cannot be undone.")) {
         if(fileInputRef.current) fileInputRef.current.value = "";
         return;
     }
@@ -55,13 +55,31 @@ const DataManagement: React.FC<DataManagementProps> = ({
         
         const importedData = JSON.parse(text);
 
-        // Basic validation for logs and goals
-        if (Array.isArray(importedData.logs) && importedData.goals) {
-          setLogs(importedData.logs || []);
-          setGoals(importedData.goals);
-          alert("Logs and goals imported successfully!");
+        const importedLogs = importedData.logs;
+        const importedGoals = importedData.goals;
+        let importOccurred = false;
+
+        if (Array.isArray(importedLogs)) {
+            // Basic validation for log entries to ensure they have the minimum required fields
+            const validLogs = importedLogs.filter(log => 
+              log && typeof log === 'object' && 'date' in log && 'hours' in log
+            );
+            setLogs(validLogs);
+            importOccurred = true;
+        }
+
+        if (importedGoals && typeof importedGoals === 'object' && !Array.isArray(importedGoals)) {
+            const { weekly, monthly, yearly } = importedGoals;
+            if (typeof weekly === 'number' && typeof monthly === 'number' && typeof yearly === 'number') {
+                setGoals({ weekly, monthly, yearly });
+                importOccurred = true;
+            }
+        }
+
+        if (importOccurred) {
+          alert("Data imported successfully! Your logs and/or goals have been updated.");
         } else {
-          throw new Error("Invalid data structure in JSON file.");
+          throw new Error("Invalid data structure. The file must contain a 'logs' array or a 'goals' object.");
         }
       } catch (error) {
         console.error("Failed to import data:", error);
