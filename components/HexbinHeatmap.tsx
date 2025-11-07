@@ -127,16 +127,6 @@ const HexbinHeatmap: React.FC<HexbinHeatmapProps> = ({ logs }) => {
                                 stroke="rgba(255, 255, 255, 0.08)"
                                 strokeWidth="1"
                             />
-                             {hours && hours > 0 && (
-                                <path 
-                                    d={`M ${cx - 2.5} ${cy} l 2 2 l 3.5 -4`} 
-                                    stroke="rgba(255,255,255,0.6)" 
-                                    strokeWidth="1.2" 
-                                    fill="none" 
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                />
-                            )}
                             <title>{`${hours ? `${hours.toFixed(1)} hours` : 'No activity'} on ${formatDate(day)}`}</title>
                         </g>
                     );
