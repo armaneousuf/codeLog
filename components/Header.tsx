@@ -22,14 +22,11 @@ const PalestineFlagIcon: React.FC<{ className?: string }> = ({ className }) => (
 
 interface HeaderProps {
     totalHours: number;
-    view: 'dashboard' | 'reports';
-    setView: (view: 'dashboard' | 'reports') => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ totalHours, view, setView }) => {
+const Header: React.FC<HeaderProps> = ({ totalHours }) => {
   return (
     <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <div className="flex flex-col gap-4">
         <div className="flex items-center space-x-4">
             <CodeIcon />
             <div>
@@ -43,22 +40,7 @@ const Header: React.FC<HeaderProps> = ({ totalHours, view, setView }) => {
               </p>
             </div>
         </div>
-        <nav className="flex items-center gap-2 rounded-lg bg-gray-900/40 p-1 self-start">
-            <button
-              onClick={() => setView('dashboard')}
-              className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${view === 'dashboard' ? 'bg-white text-black' : 'text-gray-300 hover:bg-white/10'}`}
-            >
-              Dashboard
-            </button>
-            <button
-              onClick={() => setView('reports')}
-              className={`px-3 py-1 text-sm font-semibold rounded-md transition-colors ${view === 'reports' ? 'bg-white text-black' : 'text-gray-300 hover:bg-white/10'}`}
-            >
-              Reports
-            </button>
-          </nav>
-      </div>
-        <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 px-6 py-2 text-right self-start sm:self-center">
+        <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 px-6 py-2 text-right">
             <p className="text-sm text-gray-300">Total Hours Logged</p>
             <p className="text-2xl font-bold text-white">{totalHours.toFixed(1)}</p>
         </div>
