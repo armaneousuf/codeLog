@@ -6,12 +6,6 @@ const CodeIcon: React.FC = () => (
   </svg>
 );
 
-const ShareIcon: React.FC = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-    </svg>
-);
-
 const PalestineFlagIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className={className} aria-hidden="true">
     {/* Black stripe */}
@@ -28,10 +22,9 @@ const PalestineFlagIcon: React.FC<{ className?: string }> = ({ className }) => (
 
 interface HeaderProps {
     totalHours: number;
-    onShareClick: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ totalHours, onShareClick }) => {
+const Header: React.FC<HeaderProps> = ({ totalHours }) => {
   return (
     <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center space-x-4">
@@ -47,18 +40,9 @@ const Header: React.FC<HeaderProps> = ({ totalHours, onShareClick }) => {
               </p>
             </div>
         </div>
-        <div className="flex items-center gap-2">
-            <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 px-6 py-2 text-right">
-                <p className="text-sm text-gray-300">Total Hours Logged</p>
-                <p className="text-2xl font-bold text-white">{totalHours.toFixed(1)}</p>
-            </div>
-             <button
-                onClick={onShareClick}
-                className="h-full bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 px-4 flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
-                aria-label="Share your progress"
-             >
-                <ShareIcon />
-            </button>
+        <div className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 px-6 py-2 text-right">
+            <p className="text-sm text-gray-300">Total Hours Logged</p>
+            <p className="text-2xl font-bold text-white">{totalHours.toFixed(1)}</p>
         </div>
     </header>
   );

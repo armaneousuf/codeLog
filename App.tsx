@@ -18,7 +18,6 @@ import MovingAverageChart from './components/MovingAverageChart';
 import WeeklyReviewModal from './components/WeeklyReviewModal';
 import LogHistory from './components/LogHistory';
 import AdvancedControls from './components/AdvancedControls';
-import ShareModal from './components/ShareModal';
 
 const getLocalDateString = (date: Date): string => {
   const year = date.getFullYear();
@@ -38,7 +37,6 @@ const App: React.FC = () => {
   const [isGoalsModalOpen, setIsGoalsModalOpen] = useState(false);
   const [isAchievementsModalOpen, setIsAchievementsModalOpen] = useState(false);
   const [isWeeklyReviewOpen, setIsWeeklyReviewOpen] = useState(false);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(getLocalDateString(new Date()));
   const [newlyUnlocked, setNewlyUnlocked] = useState<string[]>([]);
   const [infoToast, setInfoToast] = useState<string | null>(null);
@@ -89,7 +87,7 @@ const App: React.FC = () => {
     setIsGoalsModalOpen(false);
   };
   
-  const { weeklyTotal, monthlyTotal, yearlyTotal, totalHours, mostUsedTechWeek, mostUsedTechMonth, mostUsedTechYear, topTechAllTime } = useMemo(() => {
+  const { weeklyTotal, monthlyTotal, yearlyTotal, totalHours, mostUsedTechWeek, mostUsedTechMonth, mostUsedTechYear } = useMemo(() => {
     const now = new Date();
     
     const startOfWeek = new Date(now);
@@ -111,7 +109,6 @@ const App: React.FC = () => {
     const weeklyTagHours = new Map<string, number>();
     const monthlyTagHours = new Map<string, number>();
     const yearlyTagHours = new Map<string, number>();
-    const allTimeTagHours = new Map<string, number>();
 
     for (const log of logs) {
       const logDate = new Date(log.date + 'T00:00:00');
@@ -129,8 +126,6 @@ const App: React.FC = () => {
           });
         }
       };
-
-      processTags(allTimeTagHours); // Process all-time tags for every log
 
       if (logDate >= startOfYear) {
         yearly += log.hours;
@@ -151,13 +146,6 @@ const App: React.FC = () => {
         return Array.from(map.entries()).sort((a, b) => b[1] - a[1])[0][0];
     };
 
-    const getTopThreeTags = (map: Map<string, number>): {tag: string, hours: number}[] => {
-       return Array.from(map.entries())
-        .map(([tag, hours]) => ({ tag, hours }))
-        .sort((a, b) => b.hours - a.hours)
-        .slice(0, 3);
-    };
-
     const allTimeTotal = logs.reduce((sum, log) => sum + log.hours, 0);
     return { 
         weeklyTotal: weekly, 
@@ -167,7 +155,6 @@ const App: React.FC = () => {
         mostUsedTechWeek: findTopTag(weeklyTagHours),
         mostUsedTechMonth: findTopTag(monthlyTagHours),
         mostUsedTechYear: findTopTag(yearlyTagHours),
-        topTechAllTime: getTopThreeTags(allTimeTagHours),
     };
   }, [logs]);
 
@@ -333,7 +320,7 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen font-sans p-2 sm:p-4 md:p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
-        <Header totalHours={totalHours} onShareClick={() => setIsShareModalOpen(true)} />
+        <Header totalHours={totalHours} />
         <main className="mt-8 grid grid-cols-12 gap-4 md:gap-8">
           
           <div className="col-span-12 lg:col-span-4 min-w-0 flex flex-col gap-4 md:gap-8">
@@ -433,16 +420,6 @@ const App: React.FC = () => {
         isOpen={isWeeklyReviewOpen}
         onClose={handleCloseWeeklyReview}
         lastWeekLogs={lastWeekLogs}
-      />
-       <ShareModal
-        isOpen={isShareModalOpen}
-        onClose={() => setIsShareModalOpen(false)}
-        stats={{
-            totalHours,
-            currentStreak,
-            longestStreak,
-            topTech: topTechAllTime,
-        }}
       />
       <AchievementToast
         newlyUnlocked={newlyUnlocked}
