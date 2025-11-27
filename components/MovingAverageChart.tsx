@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { LogEntry } from '../types';
+import { formatDuration } from '../lib/utils';
 
 interface MovingAverageChartProps {
   logs: LogEntry[];
@@ -143,11 +144,11 @@ const MovingAverageChart: React.FC<MovingAverageChartProps> = ({ logs }) => {
             <p className="text-gray-200 font-semibold mb-2">{hoveredData.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-sm flex-shrink-0 bg-violet-400"/>
-              <span className="text-gray-300">7-day avg: <span className="font-mono text-white">{hoveredData.avg7.toFixed(1)} hrs</span></span>
+              <span className="text-gray-300">7-day avg: <span className="font-mono text-white">{formatDuration(hoveredData.avg7)}</span></span>
             </div>
             <div className="flex items-center gap-2 mt-1">
               <div className="w-3 h-3 rounded-sm flex-shrink-0 bg-amber-400"/>
-              <span className="text-gray-300">30-day avg: <span className="font-mono text-white">{hoveredData.avg30.toFixed(1)} hrs</span></span>
+              <span className="text-gray-300">30-day avg: <span className="font-mono text-white">{formatDuration(hoveredData.avg30)}</span></span>
             </div>
           </div>
         )}

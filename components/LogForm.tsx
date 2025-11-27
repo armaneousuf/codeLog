@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { LogEntry, TechTime } from '../types';
 import { TECHNOLOGIES } from '../lib/technologies';
+import { formatDuration } from '../lib/utils';
 
 interface LogFormProps {
   onAddLog: (log: LogEntry) => void;
@@ -303,8 +304,16 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
             </div>
         </div>
         
-        <div className="text-right text-gray-200">
-            Total: <span className="font-bold text-lg">{totalHours.toFixed(2)}</span> hours
+        <div className="text-right text-gray-200 flex justify-end items-center gap-2">
+            <span>Total:</span>
+            <div className="flex flex-col items-end leading-tight">
+               <span className="font-bold text-lg">{formatDuration(totalHours)}</span>
+               {totalHours > 0 && (
+                   <span className="text-xs text-gray-400 font-mono">
+                     {totalHours.toFixed(2)} decimal hours
+                   </span>
+               )}
+            </div>
         </div>
 
         <div>

@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { LogEntry } from '../types';
 import { TECHNOLOGY_COLORS } from '../lib/techColors';
+import { formatDuration } from '../lib/utils';
 
 interface TagAnalysisProps {
   logs: LogEntry[];
@@ -120,7 +121,7 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
                           transform={hoveredTag === item.tag ? 'scale(1.05)' : 'scale(1)'}
                           onMouseEnter={() => setHoveredTag(item.tag)}
                           onMouseLeave={() => setHoveredTag(null)}
-                          aria-label={`${item.tag}: ${item.hours.toFixed(1)} hours`}
+                          aria-label={`${item.tag}: ${formatDuration(item.hours)}`}
                       />
                   ))}
               </svg>
@@ -138,7 +139,7 @@ const TagAnalysis: React.FC<TagAnalysisProps> = ({ logs }) => {
                             <div className="w-3 h-3 rounded-sm flex-shrink-0" style={{ backgroundColor: getTagColor(tag, index) }}></div>
                             <span className="text-gray-200 truncate">{tag}</span>
                         </div>
-                        <span className="font-mono text-gray-300 flex-shrink-0 pl-2">{hours.toFixed(1)} hrs</span>
+                        <span className="font-mono text-gray-300 flex-shrink-0 pl-2">{formatDuration(hours)}</span>
                       </div>
                       <div className="w-full bg-gray-600 rounded-full h-1">
                         <div

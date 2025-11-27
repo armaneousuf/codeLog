@@ -1,5 +1,6 @@
 import React from 'react';
 import { TECHNOLOGY_COLORS } from '../lib/techColors';
+import { formatDuration } from '../lib/utils';
 
 interface StatCardProps {
   title: string;
@@ -31,8 +32,7 @@ const getTagColor = (tag: string): string => {
 
 const StatCard: React.FC<StatCardProps> = ({ title, currentHours, goalHours, colorTag }) => {
   const percentage = goalHours > 0 ? Math.min((currentHours / goalHours) * 100, 100) : 0;
-  const displayHours = (hours: number) => parseFloat(hours.toFixed(1));
-
+  
   const radius = 42;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
@@ -67,8 +67,8 @@ const StatCard: React.FC<StatCardProps> = ({ title, currentHours, goalHours, col
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-           <span className="font-semibold text-white text-xl">{displayHours(currentHours)}</span>
-           <span className="text-xs text-gray-400">hrs</span>
+           <span className="font-semibold text-white text-lg">{formatDuration(currentHours)}</span>
+           <span className="text-[10px] text-gray-500 font-mono">{currentHours.toFixed(1)} hrs</span>
         </div>
       </div>
       <h3 className="text-sm font-medium text-gray-300 mt-3">{title}</h3>

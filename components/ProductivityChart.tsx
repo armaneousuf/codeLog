@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { LogEntry } from '../types';
+import { formatDuration } from '../lib/utils';
 
 interface ProductivityChartProps {
   logs: LogEntry[];
@@ -45,7 +46,7 @@ const ProductivityChart: React.FC<ProductivityChartProps> = ({ logs }) => {
                   style={{ width: `${percentage > 0 ? Math.max(percentage, 3) : 0}%` }} // min width for visibility
                 />
               </div>
-              <span className="w-16 text-right font-mono text-white">{hours.toFixed(1)} hrs</span>
+              <span className="w-16 text-right font-medium text-white">{formatDuration(hours)}</span>
             </div>
           );
         })}

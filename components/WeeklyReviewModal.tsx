@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { LogEntry } from '../types';
+import { formatDuration } from '../lib/utils';
 
 interface WeeklyReviewModalProps {
   isOpen: boolean;
@@ -66,7 +67,7 @@ const WeeklyReviewModal: React.FC<WeeklyReviewModalProps> = ({ isOpen, onClose, 
         <div className="space-y-4">
             <div className="bg-black/20 p-4 rounded-lg text-center">
                 <p className="text-sm text-gray-300">Total Hours Coded</p>
-                <p className="text-4xl font-bold text-white">{stats.totalHours.toFixed(1)}</p>
+                <p className="text-4xl font-bold text-white">{formatDuration(stats.totalHours)}</p>
             </div>
             <div className="grid grid-cols-2 gap-4">
                 <div className="bg-black/20 p-4 rounded-lg text-center">

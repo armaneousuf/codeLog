@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { LogEntry } from '../types';
+import { formatDuration } from '../lib/utils';
 
 interface LogHistoryProps {
   logs: LogEntry[];
@@ -84,7 +85,10 @@ const LogHistory: React.FC<LogHistoryProps> = ({ logs, onDateSelect, onDeleteLog
                     )}
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0 ml-2">
-                    <span className="font-mono text-sm text-white">{log.hours.toFixed(1)} hrs</span>
+                    <div className="text-right">
+                        <span className="block font-medium text-sm text-white">{formatDuration(log.hours)}</span>
+                        <span className="block text-xs text-gray-500 font-mono">{log.hours.toFixed(1)} hrs</span>
+                    </div>
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button onClick={() => onDateSelect(log.date)} className="p-1.5 rounded-md text-gray-300 hover:bg-white/10 hover:text-white transition-colors" aria-label={`Edit log for ${log.date}`}>
                           <PencilIcon />
