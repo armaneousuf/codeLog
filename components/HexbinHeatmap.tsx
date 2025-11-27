@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { LogEntry } from '../types';
 import { formatDuration } from '../lib/utils';
@@ -128,7 +129,7 @@ const HexbinHeatmap: React.FC<HexbinHeatmapProps> = ({ logs }) => {
                                 stroke="rgba(255, 255, 255, 0.08)"
                                 strokeWidth="1"
                             />
-                            <title>{`${hours ? `${formatDuration(hours)} (${hours.toFixed(1)} hrs)` : 'No activity'} on ${formatDate(day)}`}</title>
+                            <title>{`${hours ? `${formatDuration(hours)}` : 'No activity'} on ${formatDate(day)}`}</title>
                         </g>
                     );
                 })}

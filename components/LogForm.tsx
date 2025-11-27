@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { LogEntry, TechTime } from '../types';
 import { TECHNOLOGIES } from '../lib/technologies';
@@ -39,8 +40,10 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
         // New format with detailed breakdown
         const newBreakdown = existingLog.techBreakdown.map(tech => {
           const totalHours = tech.hours;
-          const hoursPart = Math.floor(totalHours);
-          const minutesPart = Math.round((totalHours - hoursPart) * 60);
+          const totalMinutes = Math.round(totalHours * 60);
+          const hoursPart = Math.floor(totalMinutes / 60);
+          const minutesPart = totalMinutes % 60;
+          
           return {
             tag: tech.tag,
             h: hoursPart > 0 ? String(hoursPart) : '',
@@ -308,11 +311,6 @@ const LogForm: React.FC<LogFormProps> = ({ onAddLog, logs, date, onDateChange })
             <span>Total:</span>
             <div className="flex flex-col items-end leading-tight">
                <span className="font-bold text-lg">{formatDuration(totalHours)}</span>
-               {totalHours > 0 && (
-                   <span className="text-xs text-gray-400 font-mono">
-                     {totalHours.toFixed(2)} decimal hours
-                   </span>
-               )}
             </div>
         </div>
 

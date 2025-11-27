@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { formatDuration } from '../lib/utils';
 
@@ -42,14 +43,10 @@ const Header: React.FC<HeaderProps> = ({ totalHours }) => {
             </div>
         </div>
         <div 
-          className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 px-6 py-2 text-right cursor-help group relative"
-          title={`${totalHours.toFixed(2)} decimal hours`}
+          className="bg-gray-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-lg shadow-black/20 px-6 py-2 text-right cursor-help"
         >
             <p className="text-sm text-gray-300">Total Hours Logged</p>
             <p className="text-2xl font-bold text-white">{formatDuration(totalHours)}</p>
-            <div className="absolute top-full right-0 mt-2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
-                {totalHours.toFixed(2)} decimal hours
-            </div>
         </div>
     </header>
   );
